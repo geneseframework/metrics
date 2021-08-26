@@ -1,5 +1,4 @@
 import { JsonReportLineInterface } from '../../core/interfaces/json-report/json-report-line.interface';
-import * as chalk from 'chalk';
 
 export class ReportLine implements JsonReportLineInterface {
 
@@ -18,7 +17,6 @@ export class ReportLine implements JsonReportLineInterface {
             return '';
         }
         const txt = `${this.text} // `;
-        console.log(chalk.blueBright('TXTTTTT'), txt);
         return this.comments ? `${txt.padEnd(maxLineLength + 10, '-')} ${this.comments}` : this.text;
     }
 

@@ -32,6 +32,14 @@ export function lastElement<T>(array: T[]): T {
 }
 
 /**
+ * Removes duplicates from array
+ * @param arr
+ */
+export function unique<T>(arr: T[]): T[] {
+    return [...new Set(arr)];
+}
+
+/**
  * Returns the average of an array of numbers
  * @param array
  */

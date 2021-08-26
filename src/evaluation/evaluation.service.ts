@@ -45,6 +45,6 @@ export class EvaluationService {
     private static setMeasure(reportSnippet: ReportSnippet, astMetric: AstMetric): void {
         // TODO: replace by getting measures from dataset.csv or xlsx
         const measures: Measure[] = MEASURES;
-        reportSnippet.measureValue = measures.find(m => m.fileName === reportSnippet.name)?.measureValue;
+        reportSnippet.measureValue = measures.find(m => m.fileName === reportSnippet.fileName)?.measureValue;
     }
 }
