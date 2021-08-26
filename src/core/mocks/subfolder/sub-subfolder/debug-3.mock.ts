@@ -3,7 +3,6 @@ let c = 3;
 // zzzzzzzzzz
 class Cl {
 
-
     // aaaaaaaa
 
     z(a: number): number {

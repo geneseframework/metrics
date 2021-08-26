@@ -4,9 +4,10 @@
 <head>
     <title>Genese metrics report</title>
     <meta charset="utf-8" />
-    <link rel="stylesheet" href="./templates/styles/prettify.css" />
-    <link rel="stylesheet" href="./templates/styles/report.css" />
-    <link rel="stylesheet" href="./templates/styles/styles.css" />
+    <link rel="stylesheet" href="./templates/css/prettify.css" />
+    <link rel="stylesheet" href="./templates/css/prism.css" />
+    <link rel="stylesheet" href="./templates/css/report.css" />
+    <link rel="stylesheet" href="./templates/css/styles.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 
@@ -99,12 +100,6 @@
 
 
     <div idclass="subfolders">
-<!--        <div class="clearfix file-methods-subtitle">-->
-<!--            <div class='fl pad1y space-right2'>-->
-<!--                <span id="spanDisplayMethodsArray" class="strong">Code snippets</span>-->
-<!--            </div>-->
-<!--        </div>-->
-
         <div id="methodsArray">
             {{#each divCodeMetrics}}
                 {{>divCodeMetric divCodeMetric=.}}
@@ -120,7 +115,8 @@
 
 
 
-<script src="./{{relativeRootReports}}/reports-styles/Chart.js"></script>
+<script src="./templates/js/Chart.js"></script>
+<script src="./templates/js/prism.js"></script>
 
 </body>
 
