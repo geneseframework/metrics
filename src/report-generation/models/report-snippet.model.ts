@@ -4,7 +4,7 @@ import { ReportLine } from './report-line.model';
 export class ReportSnippet implements JsonReportSnippetInterface {
 
     lines: ReportLine[] = [];
-    measure: number = undefined;
+    measureValue: number = undefined;
     name: string = undefined;
     metricName: string = undefined;
     score = 0;

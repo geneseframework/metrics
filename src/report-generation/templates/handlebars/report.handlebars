@@ -78,6 +78,9 @@
             <thead>
             <tr>
                 <th style="width: 80%;">File</th>
+                {{#if measure}}
+                    <th style="width: 10%;">{{measure}}</th>
+                {{/if}}
                 {{#each metricNames}}
                     <th style="width: 10%;">{{this}}</th>
                 {{/each}}

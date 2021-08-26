@@ -2,6 +2,7 @@ import { ReportMetric } from '../../../report-generation/models/report-metric.mo
 
 export interface JsonReportInterface {
 
+    measure?: string;
     reportMetrics: ReportMetric[];
 
 }
