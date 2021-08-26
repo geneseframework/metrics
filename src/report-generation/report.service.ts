@@ -17,7 +17,7 @@ import { MetricValue } from './models/metric-value.model';
 export class ReportService {
 
     static async start(jsonReport: JsonReportInterface): Promise<any> {
-        // console.log(chalk.greenBright('JSON REPORTTTTT '), jsonReport.reportMetrics.map(r => r.reportSnippets));
+        console.log(chalk.greenBright('JSON REPORTTTTT '), jsonReport.reportMetrics);
         this.createStyleFiles();
         const htmlReport = new HtmlReport();
         htmlReport.measure = jsonReport.measureName;
@@ -80,19 +80,19 @@ export class ReportService {
 
     private static setMetricValues(divCode: DivCode, fileName: string, reportMetrics: ReportMetric[]): void {
         const metricNames: string[] = unique(reportMetrics.map(r => r.metricName));
-        console.log(chalk.cyanBright('GEN DIV CODDDDD reportMetrics'), reportMetrics);
-        console.log(chalk.cyanBright('GEN DIV CODDDDD snippp'), flat(reportMetrics.map(r => r.reportSnippets)));
+        // console.log(chalk.cyanBright('GEN DIV CODDDDD reportMetrics'), reportMetrics);
+        // console.log(chalk.cyanBright('GEN DIV CODDDDD snippp'), flat(reportMetrics.map(r => r.reportSnippets)));
         for (const metricName of metricNames) {
             this.setMetricValue(divCode, fileName, reportMetrics, metricName);
         }
         const reportSnippetsForThisFile: ReportSnippet[] = flat(reportMetrics.map(r => r.reportSnippets)).filter(s => s.fileName === fileName);
-        console.log(chalk.magentaBright('REPRT FR FILEEEEEE'), reportSnippetsForThisFile);
+        // console.log(chalk.magentaBright('REPRT FR FILEEEEEE'), reportSnippetsForThisFile);
     }
 
     private static setMetricValue(divCode: DivCode, fileName: string, reportMetrics: ReportMetric[], metricName: string): void {
         const reportSnippets: ReportSnippet[] = flat(reportMetrics.map(r => r.reportSnippets));
         const reportSnippetForThisFileAndThisMetric: ReportSnippet = reportSnippets.find(s => s.fileName === fileName && s.metricName === metricName);
-        console.log(chalk.magentaBright('REPRT FR FILEEEEEE'), reportSnippetForThisFileAndThisMetric);
+        // console.log(chalk.magentaBright('REPRT FR FILEEEEEE'), reportSnippetForThisFileAndThisMetric);
         divCode.metricValues.push(new MetricValue(metricName, reportSnippetForThisFileAndThisMetric.score));
     }
 
@@ -111,7 +111,7 @@ export class ReportService {
      * Creates the file of the report
      */
     private static writeReport(htmlReport: HtmlReport, template: HandlebarsTemplateDelegate) {
-        console.log(chalk.cyanBright('HTML REPORTTTT'), htmlReport.divCodeMetrics[0]);
+        // console.log(chalk.cyanBright('HTML REPORTTTT'), htmlReport.divCodeMetrics[0]);
         const content = template(htmlReport);
         // const template = this.template({
         //     colors: Options.colors,

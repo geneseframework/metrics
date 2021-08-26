@@ -17,12 +17,12 @@ import { ReportModel } from './report-generation/models/report.model';
 
 const ARGS: string[] = process.argv.slice(2);
 const LANGUAGE = ARGS[1] ?? 'ts';
-const ENABLE_MARKDOWN_REPORT = ARGS[2] === 'true';
 const ENABLE_CONSOLE_REPORT = ARGS[3] === 'true';
 let FRAMEWORK = ARGS[5] ?? undefined;
 
 export async function startDebug(): Promise<number> {
-    const pathToAnalyse = `${process.cwd()}/src/core/mocks/subfolder/sub-subfolder`;
+    const pathToAnalyse = `${process.cwd()}/src/core/mocks/code-snippets`;
+    // const pathToAnalyse = `${process.cwd()}/src/core/mocks/subfolder/sub-subfolder`;
     FRAMEWORK = 'react';
     Options.setOptions(process.cwd(), pathToAnalyse, __dirname);
     if (!ENABLE_CONSOLE_REPORT) {
@@ -32,11 +32,11 @@ export async function startDebug(): Promise<number> {
     Options.setOptions(process.cwd(), pathToAnalyse, __dirname, FRAMEWORK as Framework);
     const jsonAst: JsonAstInterface = Options.generateJsonAst ? JsonAstCreationService.start(Options.pathFolderToAnalyze, LANGUAGE as Language) : require(Options.jsonAstPath);
     // console.log(chalk.magentaBright('JSON ASTTTT'), jsonAst);
-    console.log(chalk.yellowBright('Ast model generation...'), Options.generateJsonReport);
+    console.log(chalk.yellowBright('Ast model generation...'));
     const astModel: AstModel = AstModelService.generate(jsonAst);
-    console.log(chalk.yellowBright('Evaluation for each metric...'), Options.generateJsonReport);
+    console.log(chalk.yellowBright('Evaluation for each metric...'));
     const jsonReport: JsonReportInterface = Options.generateJsonReport ? EvaluationService.evaluate(astModel) : require(Options.jsonReportPath);
-    console.log(chalk.yellowBright('Json Report generation...'), Options.generateJsonReport);
+    console.log(chalk.yellowBright('Json Report generation...'));
     const reportModel: ReportModel = Options.generateJsonReport ? await ReportService.start(jsonReport) : require(Options.jsonReportPath);
     console.log(chalk.yellowBright('HTML report generation...'));
     // const reportResult = HtmlGenerationService.start(reportModel, Options.pathCommand, ENABLE_MARKDOWN_REPORT, ENABLE_CONSOLE_REPORT);

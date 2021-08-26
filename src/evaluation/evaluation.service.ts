@@ -15,10 +15,12 @@ export class EvaluationService {
 
     static evaluate(astModel: AstModel): JsonReportInterface {
         const reportModel = new ReportModel();
+        console.log(chalk.blueBright('AST MODELLLLL'), astModel);
         reportModel.measureName = astModel.measure;
         for (const astMetric of astModel.astMetrics) {
             this.evaluateAstMetric(reportModel, astMetric);
         }
+        console.log(chalk.blueBright('REPORT MODELLLLL'), reportModel);
         return reportModel;
     }
 
@@ -31,8 +33,8 @@ export class EvaluationService {
                 this.setMeasure(reportSnippet, astMetric);
                 // console.log(chalk.magentaBright('REPORT SNIPPET'), reportSnippet);
                 reportMetric.reportSnippets.push(reportSnippet);
-                reportModel.reportMetrics.push(reportMetric);
             }
+            reportModel.reportMetrics.push(reportMetric);
         } catch (err) {
             console.log(chalk.redBright('METRIC NOT FOUND'), err);
         }
