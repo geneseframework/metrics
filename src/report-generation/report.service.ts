@@ -14,21 +14,18 @@ import { ReportSnippet } from './models/report-snippet.model';
 export class ReportService {
 
     static async start(jsonReport: JsonReportInterface): Promise<any> {
-        // console.log(chalk.greenBright('JSON REPORTTTTT '), jsonReport.reportMetrics.map(r => r.reportSnippets));
+        console.log(chalk.greenBright('JSON REPORTTTTT '), jsonReport.reportMetrics.map(r => r.reportSnippets));
         this.createStyleFiles();
         const htmlReport = new HtmlReport();
-        htmlReport.measure = jsonReport.measure;
+        htmlReport.measure = jsonReport.measureName;
         htmlReport.metricNames = jsonReport.reportMetrics.map(r => r.metricName);
-        this.generateRowSnippets(!!jsonReport.measure, jsonReport.reportMetrics, htmlReport);
+        this.generateRowSnippets(!!jsonReport.measureName, jsonReport.reportMetrics, htmlReport);
         this.generateDivCodeMetrics(jsonReport.reportMetrics, htmlReport);
         const template: HandlebarsTemplateDelegate = this.setTemplate();
         this.writeReport(htmlReport, template);
         return htmlReport;
     }
 
-    /**
-     * Generates the file's report
-     */
     private static generateRowSnippets(hasMeasure: boolean, reportMetrics: ReportMetric[], htmlReport: HtmlReport): void {
         const fileNames: string[] = flat(reportMetrics.map(r => r.reportSnippets.map(s => s.name)));
         for (const fileName of fileNames) {
@@ -38,9 +35,6 @@ export class ReportService {
         }
     }
 
-    /**
-     * Generates the file's report
-     */
     private static generateRowSnippet(fileName: string, hasMeasure: boolean, measureValue: number, reportMetrics: ReportMetric[], htmlReport: HtmlReport): void {
         const rowSnippet = new RowSnippet(fileName, hasMeasure, measureValue);
         rowSnippet.scores = flat(reportMetrics.map(r => r.reportSnippets.map(r => r.score)));

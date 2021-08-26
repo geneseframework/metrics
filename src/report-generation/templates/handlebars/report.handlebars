@@ -27,7 +27,7 @@
         </div>
         <div class="clearfix">
             <div class='fl pad1y space-right2'>
-                <span>Files : </span>
+                <span>Code snippets : </span>
                 <span class="strong">{{stats.numberOfCodeSnippets}}</span>
             </div>
         </div>
@@ -71,13 +71,13 @@
     <div class="subfolders">
         <div class="clearfix cognitive-subtitle">
             <div class='fl pad1y space-right2'>
-                <span class="strong">Files <span class="italic">{{stats.subject}}</span></span>
+                <span class="strong">Code snippets <span class="italic">{{stats.subject}}</span></span>
             </div>
         </div>
         <table class="array-report short-table">
             <thead>
             <tr>
-                <th style="width: 80%;">File</th>
+                <th style="width: 80%;">Code snippet</th>
                 {{#if measure}}
                     <th style="width: 10%;">{{measure}}</th>
                 {{/if}}
@@ -99,11 +99,11 @@
 
 
     <div idclass="subfolders">
-        <div class="clearfix file-methods-subtitle">
-            <div class='fl pad1y space-right2'>
-                <span id="spanDisplayMethodsArray" class="strong">Code snippets</span>
-            </div>
-        </div>
+<!--        <div class="clearfix file-methods-subtitle">-->
+<!--            <div class='fl pad1y space-right2'>-->
+<!--                <span id="spanDisplayMethodsArray" class="strong">Code snippets</span>-->
+<!--            </div>-->
+<!--        </div>-->
 
         <div id="methodsArray">
             {{#each divCodeMetrics}}
