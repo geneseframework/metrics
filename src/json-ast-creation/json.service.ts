@@ -130,7 +130,7 @@ export class JsonService {
 
 
     /**
-     * If ths property name is specific to Ts, we rename it in the corresponding jsonAst property name
+     * If the property name is specific to Ts, we rename it in the corresponding jsonAst property name
      * In this case, this method returns the renamed property. If not, it returns the original property name.
      * @param obj       // The object to analyse
      */

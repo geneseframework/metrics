@@ -39,6 +39,7 @@ export class Options {
     static ignoreRegex: string = '';
     static jsonAstPath = './ast.json';
     static jsonReportPath = './report.json';
+    static measure = '';
     static metrics: MetricInterface[] = [COMPREHENSION_CPX, CYCLOMATIC_CPX];
     static pathCommand = '';                    // The path of the folder where the command-line was entered (can't be overridden)
     static pathFolderToAnalyze = './';          // The path of the folder to analyse (can be overridden)
@@ -102,6 +103,7 @@ export class Options {
         Options.generateJsonReport = config.complexity.generateJsonReport === true || Options.generateJsonReport;
         Options.jsonAstPath = config.complexity.jsonAstPath ?? Options.jsonAstPath;
         Options.jsonReportPath = config.complexity.jsonReportPath ?? Options.jsonReportPath;
+        Options.measure = config.complexity.measure ?? Options.measure;
         Options.metrics = config.complexity.metrics ?? Options.metrics;
         Options.typing = config.complexity.typing === true || Options.typing;
     }

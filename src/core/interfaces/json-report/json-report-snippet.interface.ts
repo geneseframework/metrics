@@ -4,7 +4,7 @@ export interface JsonReportSnippetInterface {
 
     name: string;
     lines: JsonReportLineInterface[];
-    measure?: number;
+    measureValue?: number;
     metricName: string;
     score?: number;
 

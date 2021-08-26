@@ -63,7 +63,8 @@ export class JsonAstCreationService {
     private static generateFromFiles(pathToAnalyze: string, language: Language): JsonAstInterface {
         const jsonAst: JsonAstInterface = {
             astFolder: undefined,
-            metrics: Options.metrics
+            measure: Options.measure,
+            metrics: Options.metrics,
         };
         let astFolder = new InitGenerationService().generateAll(pathToAnalyze, language).astFolder as any;
         astFolder = JsonService.astPropertyNames(astFolder);

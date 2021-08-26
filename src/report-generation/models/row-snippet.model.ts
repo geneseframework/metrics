@@ -1,10 +1,14 @@
 export class RowSnippet {
 
-    fileName: string;
+    fileName: string = undefined;
+    hasMeasure = false;
+    measureValue: number = undefined;
     scores: number[] = [];
 
-    constructor(fileName: string) {
+    constructor(fileName: string, hasMeasure = false, measureValue?: number) {
         this.fileName = fileName;
+        this.measureValue = measureValue;
+        this.hasMeasure = hasMeasure;
     }
 
 }

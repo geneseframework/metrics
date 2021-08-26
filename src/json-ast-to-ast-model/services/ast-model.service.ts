@@ -2,11 +2,13 @@ import { JsonAstInterface } from '../../core/interfaces/json-ast/json-ast.interf
 import { AstModel } from '../models/ast.model';
 import { AstMetricService } from './ast-metric.service';
 import { Metric } from '../../core/models/metric.model';
+import * as chalk from 'chalk';
 
 export class AstModelService {
 
     static generate(jsonAst: JsonAstInterface): AstModel {
         const astModel = new AstModel();
+        astModel.measure = jsonAst.measure;
         for (const metric of jsonAst.metrics) {
             const astMetric = new Metric(metric);
             astModel.astMetrics.push(AstMetricService.generate(jsonAst.astFolder, astMetric))

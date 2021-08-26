@@ -5,6 +5,7 @@ export class HtmlReport {
 
     divCodeMetrics: DivCodeMetric[] = [];
     rowSnippets: RowSnippet[] = [];
+    measure: string = undefined;
     metricNames: string[] = [];
 
 }

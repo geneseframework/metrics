@@ -13,6 +13,7 @@ export class EvaluationService {
 
     static evaluate(astModel: AstModel): JsonReportInterface {
         const reportModel = new ReportModel();
+        reportModel.measure = astModel.measure;
         for (const astMetric of astModel.astMetrics) {
             this.evaluateAstMetric(reportModel, astMetric);
         }
@@ -25,7 +26,7 @@ export class EvaluationService {
             for (const astFile of astMetric.astFiles) {
                 const reportSnippet = new ReportSnippet(astFile.name, astFile.code, astMetric.metric?.name);
                 this.evaluateAstFileForMetric(astFile, reportSnippet, astMetric.metric);
-                console.log(chalk.greenBright('REPORT SNIPPET'), reportSnippet);
+                // console.log(chalk.greenBright('REPORT SNIPPET'), reportSnippet);
                 reportMetric.reportSnippets.push(reportSnippet);
                 reportModel.reportMetrics.push(reportMetric);
             }

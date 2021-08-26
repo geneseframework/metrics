@@ -4,6 +4,7 @@ import { MetricInterface } from '../json-report/metric.interface';
 export interface JsonAstInterface {
 
     astFolder: JsonAstFolderInterface;
+    measure?: string;
     metrics?: MetricInterface[];
 
 }

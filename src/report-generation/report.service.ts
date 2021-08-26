@@ -9,15 +9,17 @@ import { HtmlReport } from './models/html-report.model';
 import { RowSnippet } from './models/row-snippet.model';
 import { flat } from '../core/utils/arrays.util';
 import { DivCodeMetric } from './models/div-code-metric.model';
+import { ReportSnippet } from './models/report-snippet.model';
 
 export class ReportService {
 
     static async start(jsonReport: JsonReportInterface): Promise<any> {
-        // console.log(chalk.greenBright('JSON REPORTTTTT '), jsonReport.reportMetrics[0].reportSnippets);
+        // console.log(chalk.greenBright('JSON REPORTTTTT '), jsonReport.reportMetrics.map(r => r.reportSnippets));
         this.createStyleFiles();
         const htmlReport = new HtmlReport();
+        htmlReport.measure = jsonReport.measure;
         htmlReport.metricNames = jsonReport.reportMetrics.map(r => r.metricName);
-        this.generateRowSnippets(jsonReport.reportMetrics, htmlReport);
+        this.generateRowSnippets(!!jsonReport.measure, jsonReport.reportMetrics, htmlReport);
         this.generateDivCodeMetrics(jsonReport.reportMetrics, htmlReport);
         const template: HandlebarsTemplateDelegate = this.setTemplate();
         this.writeReport(htmlReport, template);
@@ -27,18 +29,20 @@ export class ReportService {
     /**
      * Generates the file's report
      */
-    private static generateRowSnippets(reportMetrics: ReportMetric[], htmlReport: HtmlReport): void {
-        const fileNames: string[] = flat(reportMetrics.map(r => r.reportSnippets.map(r => r.name)));
+    private static generateRowSnippets(hasMeasure: boolean, reportMetrics: ReportMetric[], htmlReport: HtmlReport): void {
+        const fileNames: string[] = flat(reportMetrics.map(r => r.reportSnippets.map(s => s.name)));
         for (const fileName of fileNames) {
-            this.generateRowSnippet(fileName, reportMetrics, htmlReport);
+            const reportSnippets: ReportSnippet[] = flat(reportMetrics.map(r => r.reportSnippets));
+            const reportSnippet: ReportSnippet = reportSnippets.find(r => r.name === fileName);
+            this.generateRowSnippet(fileName, hasMeasure, reportSnippet.measureValue, reportMetrics, htmlReport);
         }
     }
 
     /**
      * Generates the file's report
      */
-    private static generateRowSnippet(fileName: string, reportMetrics: ReportMetric[], htmlReport: HtmlReport): void {
-        const rowSnippet = new RowSnippet(fileName);
+    private static generateRowSnippet(fileName: string, hasMeasure: boolean, measureValue: number, reportMetrics: ReportMetric[], htmlReport: HtmlReport): void {
+        const rowSnippet = new RowSnippet(fileName, hasMeasure, measureValue);
         rowSnippet.scores = flat(reportMetrics.map(r => r.reportSnippets.map(r => r.score)));
         htmlReport.rowSnippets.push(rowSnippet);
     }
@@ -62,9 +66,9 @@ export class ReportService {
      * Generates the file's report
      */
     private static generateDivCode(metricName: string, fileName: string, reportMetrics: ReportMetric[], htmlReport: HtmlReport): void {
-        console.log(chalk.blueBright('GEN DIV CODDDDD'), metricName, fileName);
-        console.log(chalk.cyanBright('GEN DIV CODDDDD reportMetrics'), reportMetrics);
-        console.log(chalk.blueBright('GEN DIV CODDDDD htmlReport'), htmlReport);
+        // console.log(chalk.blueBright('GEN DIV CODDDDD'), metricName, fileName);
+        // console.log(chalk.cyanBright('GEN DIV CODDDDD reportMetrics'), reportMetrics);
+        // console.log(chalk.blueBright('GEN DIV CODDDDD htmlReport'), htmlReport);
     }
 
     /**
@@ -82,7 +86,7 @@ export class ReportService {
      * Creates the file of the report
      */
     private static writeReport(htmlReport: HtmlReport, template: HandlebarsTemplateDelegate) {
-        console.log(chalk.cyanBright('HTML REPORTTTT'), htmlReport);
+        // console.log(chalk.cyanBright('HTML REPORTTTT'), htmlReport);
         const content = template(htmlReport);
         // const template = this.template({
         //     colors: Options.colors,
