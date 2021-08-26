@@ -12,4 +12,12 @@ export class ReportLine implements JsonReportLineInterface {
         this.text = text;
     }
 
+    getTextWithComments(maxLineLength: number): string {
+        if (this.text?.length === 0) {
+            return '';
+        }
+        const txt = `${this.text} // `;
+        return this.comments ? `${txt.padEnd(maxLineLength + 10, '-')} ${this.comments}` : this.text;
+    }
+
 }

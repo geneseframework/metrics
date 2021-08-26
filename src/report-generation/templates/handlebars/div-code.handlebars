@@ -1,14 +1,12 @@
-<div id="{{name}}">
+<div id="{{fileName}}">
     <table class="array-report method-table">
         <thead class="method-thead">
         <tr>
-            <th class="method-name-column">
-                <span class="strong">{{name}}</span>
-            </th>
-            <th class="right bgwhite">Comprehension complexity</th>
-            <th class="bg{{divCode.cognitiveColor}}">{{divCode.cpxIndex}}</th>
-            <th class="right bgwhite">Cyclomatic complexity</th>
-            <th class="bg{{divCode.cyclomaticColor}}">{{divCode.cyclomaticValue}}</th>
+            <th class="method-name-column">{{fileName}}</th>
+            {{#each metricValues}}
+                <th class="right bgwhite">{{this.name}}</th>
+                <th class="score">{{this.value}}</th>
+            {{/each}}
         </tr>
         </thead>
         <tbody class="method-body">

@@ -3,7 +3,7 @@ import { ReportMetric } from './report-metric.model';
 
 export class ReportModel implements JsonReportInterface {
 
-    measure: string = undefined;
+    measureName: string = undefined;
     reportMetrics: ReportMetric[] = [];
 
 }

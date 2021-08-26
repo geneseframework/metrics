@@ -5,4 +5,8 @@ export class DivCodeMetric {
     divCodes: DivCode[] = [];
     metricName: string = undefined;
 
+    constructor(metricName: string) {
+        this.metricName = metricName;
+    }
+
 }

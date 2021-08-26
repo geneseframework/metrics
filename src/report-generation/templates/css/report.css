@@ -163,16 +163,9 @@ th {
     background-color: white;
 }
 
-.array-report .bglowLvl {
-    background-color: #99ccff;
-}
-
-.array-report .bgmediumLvl {
-    background-color: #ffa31a;
-}
-
-.array-report .bghighLvl {
-    background-color: #ff3300;
+.array-report .score {
+    text-align: center;
+    width: 5%;
 }
 
 .file-methods-subtitle {
