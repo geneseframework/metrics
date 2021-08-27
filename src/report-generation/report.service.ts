@@ -17,7 +17,7 @@ import { MetricValue } from './models/metric-value.model';
 export class ReportService {
 
     static async start(jsonReport: JsonReportInterface): Promise<any> {
-        // console.log(chalk.greenBright('JSON REPORTTTTT '), jsonReport.reportMetrics[0]);
+        console.log(chalk.greenBright('JSON REPORTTTTT '), jsonReport.reportMetrics);
         this.createStyleFiles();
         const htmlReport = new HtmlReport();
         htmlReport.measure = jsonReport.measureName;
@@ -30,7 +30,7 @@ export class ReportService {
     }
 
     private static generateRowSnippets(hasMeasure: boolean, reportMetrics: ReportMetric[], htmlReport: HtmlReport): void {
-        const fileNames: string[] = flat(reportMetrics.map(r => r.reportSnippets.map(s => s.fileName)));
+        const fileNames: string[] = unique(flat(reportMetrics.map(r => r.reportSnippets.map(s => s.fileName))));
         for (const fileName of fileNames) {
             const reportSnippets: ReportSnippet[] = flat(reportMetrics.map(r => r.reportSnippets));
             const reportSnippet: ReportSnippet = reportSnippets.find(r => r.fileName === fileName);
@@ -53,7 +53,7 @@ export class ReportService {
 
     private static generateDivCodeMetric(metricName: string, reportMetrics: ReportMetric[], htmlReport: HtmlReport): void {
         const divCodeMetric = new DivCodeMetric(metricName);
-        const fileNames: string[] = flat(reportMetrics.map(r => r.reportSnippets.map(r => r.fileName)));
+        const fileNames: string[] = unique(flat(reportMetrics.map(r => r.reportSnippets.map(r => r.fileName))));
         for (const fileName of fileNames) {
             this.generateDivCode(metricName, fileName, reportMetrics, htmlReport, divCodeMetric);
         }

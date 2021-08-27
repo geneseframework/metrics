@@ -3,9 +3,15 @@
         "generateJsonAst": true,
         "jsonAstPath": "/Users/utilisateur/Documents/projets/genese/complexity/ast.json",
         "measure": "Time",
-        "metrics": [{
-            "id": "loc",
-            "name": "LOC"
-        }]
+        "metrics": [
+            {
+                "id": "identifiers",
+                "name": "#identifiers"
+            },
+            {
+                "id": "loc",
+                "name": "LOC"
+            }
+        ]
     }
 }
