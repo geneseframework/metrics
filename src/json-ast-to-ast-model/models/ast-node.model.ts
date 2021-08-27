@@ -15,26 +15,6 @@ export class AstNode {
         this.setChildren();
     }
 
-    get end(): number {
-        return this.jsonAstNode.end;
-    }
-
-    get interval(): Interval {
-        if (this.hasALineBreakBetweenPosAndStart()) {
-            return [this.getPosAfterFirstLineBreak(), this.jsonAstNode.end];
-        } else {
-            return [this.jsonAstNode.pos, this.jsonAstNode.end];
-        }
-    }
-
-    get kind(): string {
-        return this.jsonAstNode.kind;
-    }
-
-    get name(): string {
-        return this.jsonAstNode.name;
-    }
-
     get descendants(): AstNode[] {
         const nodes: AstNode[] = [];
         for (const child of this.children) {
@@ -43,6 +23,22 @@ export class AstNode {
 
         }
         return nodes;
+    }
+
+    get end(): number {
+        return this.jsonAstNode.end;
+    }
+
+    get interval(): Interval {
+        return this.hasALineBreakBetweenPosAndStart() ? [this.getPosAfterFirstLineBreak(), this.jsonAstNode.end] : [this.jsonAstNode.pos, this.jsonAstNode.end];
+    }
+
+    get kind(): string {
+        return this.jsonAstNode.kind;
+    }
+
+    get name(): string {
+        return this.jsonAstNode.name;
     }
 
     get pos(): number {
@@ -66,7 +62,7 @@ export class AstNode {
     }
 
     private getPosAfterFirstLineBreak(): number {
-        console.log(chalk.greenBright('GET POS AFTERRRR'), {zzz: this.textBetweenPosAndStart}, this.textBetweenPosAndStart.indexOf('\n'));
+        // console.log(chalk.greenBright('GET POS AFTERRRR'), {zzz: this.textBetweenPosAndStart}, this.textBetweenPosAndStart.indexOf('\n'));
         return this.pos + this.textBetweenPosAndStart.indexOf('\n') + 1;
     }
 

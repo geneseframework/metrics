@@ -12,19 +12,19 @@ export class AstCodeService {
 
     static generate(astAbstract: AstAbstract): AstCode {
         if (astAbstract.name === 'Cl') {
-            console.log(chalk.blueBright('AST ABSTRAAAA '), astAbstract);
+            // console.log(chalk.blueBright('AST ABSTRAAAA '), astAbstract);
         }
         const intervalsOutsideClassesAndFunctions: Interval[] = this.getComplementaryIntervals(astAbstract);
         const text: string = this.getText(astAbstract, intervalsOutsideClassesAndFunctions);
         if (astAbstract.name === 'Cl') {
-            console.log(chalk.greenBright('INTERVVVVV '), intervalsOutsideClassesAndFunctions);
-            console.log(chalk.greenBright('TXTTTTTT '), text);
+            // console.log(chalk.greenBright('INTERVVVVV '), intervalsOutsideClassesAndFunctions);
+            // console.log(chalk.greenBright('TXTTTTTT '), text);
         }
         const astCode = new AstCode(astAbstract, text);
         this.generateAstClassOrFunctionCodes(astAbstract, astCode);
         astCode.linesOutsideClassesAndFunctions = AstLineService.generate(astCode);
         if (astAbstract.name === 'Cl') {
-            console.log(chalk.cyanBright('LINES OUTSIDEEEE'), astCode.linesOutsideClassesAndFunctions);
+            // console.log(chalk.cyanBright('LINES OUTSIDEEEE'), astCode.linesOutsideClassesAndFunctions);
         }
         return astCode;
     }
@@ -37,7 +37,7 @@ export class AstCodeService {
         let position = astAbstract.jsonAstNode.pos;
         let intervals: Interval[] = [];
         if (astAbstract.name === 'Cl') {
-            console.log(chalk.magentaBright('NESTEDDDDD'), nestedIntervals);
+            // console.log(chalk.magentaBright('NESTEDDDDD'), nestedIntervals);
         }
         while (position < astAbstract.jsonAstNode.end) {
             const firstInterval: Interval = firstElement(nestedIntervals);
