@@ -1,7 +1,9 @@
-function selectAll(metricName, metricNames) {
+function selectAll(metricName, isSelected, metricNames) {
     console.log('ZZZZZZ', metricName);
+    console.log('ZZZZZZ isSelected', isSelected);
     console.log('ZZZZZZssss', metricNames);
-    const el = document.getElementById(`all-${metricName}`);
-    el.className = 'not-selected';
-    // alert('ok')
+    for (const name of metricNames) {
+        document.getElementById(`all-${name}`).className = 'not-selected';
+    }
+    document.getElementById(`all-${metricName}`).className = 'selected';
 }

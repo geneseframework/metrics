@@ -51,7 +51,7 @@
     <div class="subfolders">
         <div class="clearfix cognitive-subtitle">
             <div class='fl pad1y space-right2'>
-                <span class="strong">Code snipp {{metricNamesArray}}ets <span class="italic">{{stats.subject}}</span></span>
+                <span class="strong">Code snippets <span class="italic">{{stats.subject}}</span></span>
             </div>
         </div>
         <table class="array-report short-table">
@@ -63,9 +63,9 @@
                 {{/if}}
                 {{#each metricSelects}}
                     {{#if this.isSelected}}
-                        <th style="max-width: 10%;"><span id="all-{{this.metricName}}" class="selected" onclick="selectAll('{{this.metricName}}', {{this.metricNamesArray}})">{{this.metricName}}</span></th>
+                        <th style="max-width: 10%;"><span id="all-{{this.metricName}}" class="selected" onclick="selectAll('{{this.metricName}}', true, {{this.metricNamesArray}})">{{this.metricName}}</span></th>
                     {{else}}
-                        <th style="max-width: 10%;"><span id="all-{{this.metricName}}" class="not-selected">{{this.metricName}}</span></th>
+                        <th style="max-width: 10%;"><span id="all-{{this.metricName}}" class="not-selected" onclick="selectAll('{{this.metricName}}', false, {{this.metricNamesArray}})">{{this.metricName}}</span></th>
                     {{/if}}
                 {{/each}}
             </tr>
