@@ -33,7 +33,7 @@ export class AstNode {
     get interval(): Interval {
         if (this.hasALineBreakBetweenPosAndStart()) {
             if (this.jsonAstNode.kind === SyntaxKind.MethodDeclaration) {
-                console.log(chalk.blueBright('GET AST NODE INTERVALLL'), this.getPosAfterFirstLineBreak(), this.jsonAstNode.end);
+                // console.log(chalk.blueBright('GET AST NODE INTERVALLL'), this.getPosAfterFirstLineBreak(), this.jsonAstNode.end);
             }
             return [this.getPosAfterFirstLineBreak(), this.jsonAstNode.end];
         } else {
