@@ -1,10 +1,14 @@
-export class MetricValue {
+import { MetricSelect } from './metric-select.model';
 
-    name: string = undefined;
+export class MetricValueSelect {
+
+    isSelected = false;
+    metricName: string = undefined;
     value: number = undefined;
 
-    constructor(name: string, value: number) {
-        this.name = name;
+    constructor(metricSelect: MetricSelect, value: number) {
+        this.metricName = metricSelect.metricName;
+        this.isSelected = metricSelect.isSelected;
         this.value = value;
     }
 }

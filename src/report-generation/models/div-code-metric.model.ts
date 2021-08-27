@@ -1,12 +1,13 @@
 import { DivCode } from './div-code.model';
+import { MetricSelect } from './metric-select.model';
 
 export class DivCodeMetric {
 
     divCodes: DivCode[] = [];
-    metricName: string = undefined;
+    metricSelect: MetricSelect = undefined;
 
-    constructor(metricName: string) {
-        this.metricName = metricName;
+    constructor(metricSelect: MetricSelect) {
+        this.metricSelect = metricSelect;
     }
 
 }
