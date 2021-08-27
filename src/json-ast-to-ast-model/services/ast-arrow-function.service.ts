@@ -15,7 +15,7 @@ export class AstArrowFunctionService {
         const jsonArrowFunctionsVarDeclarations: JsonAstNodeInterface[] = this.getArrowFunctions(astFileOrClass);
         const astArrowFunction: AstArrowFunction[] = [];
         for (const jsonArrowFunctionsVarDeclaration of jsonArrowFunctionsVarDeclarations) {
-            astArrowFunction.push(AstFuncOrArrowFuncService.create(jsonArrowFunctionsVarDeclaration, astFileOrClass.text, astFileOrClass.jsonAstNode.pos));
+            astArrowFunction.push(AstFuncOrArrowFuncService.create(jsonArrowFunctionsVarDeclaration, astFileOrClass.text, astFileOrClass.jsonAstNode.pos, true));
         }
         return astArrowFunction;
     }

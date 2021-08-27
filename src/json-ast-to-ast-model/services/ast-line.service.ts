@@ -25,7 +25,13 @@ export class AstLineService {
             line.end = line.pos + textLine.length;
             line.astNodes = this.getAstNodes(astCode.astAbstract, line.pos, line.end);
             issue++;
+            if (astCode.astAbstract.name === 'Cl') {
+                console.log(chalk.redBright(' POSSSSS BEFORE'), position, textLine);
+            }
             position = this.getPositionAfterTextLineAndLineBreak(position, textLine);
+            if (astCode.astAbstract.name === 'Cl') {
+                console.log(chalk.redBright(' POSSSSS AFTER '), position);
+            }
             astLines.push(line);
         }
         return astLines;

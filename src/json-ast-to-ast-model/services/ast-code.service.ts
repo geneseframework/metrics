@@ -8,27 +8,30 @@ import { firstElement } from '../../core/utils/arrays.util';
 import { AstLineService } from './ast-line.service';
 import * as chalk from 'chalk';
 import { AstFile } from '../models/ast-file.model';
+import { SyntaxKind } from '../../core/enum/syntax-kind.enum';
 
 export class AstCodeService {
 
     static generate(astAbstract: AstAbstract): AstCode {
-        if (astAbstract.name === 'Cl') {
+        console.log(chalk.blueBright('AST ABSTRAAAA KINDDDD'), astAbstract.kind);
+        if (astAbstract.kind === SyntaxKind.MethodDeclaration) {
             console.log(chalk.blueBright('AST ABSTRAAAA '), astAbstract);
         }
         const intervalsOutsideClassesAndFunctions: Interval[] = this.getComplementaryIntervals(astAbstract);
         const text: string = this.getText(astAbstract, intervalsOutsideClassesAndFunctions);
-        // if (astAbstract instanceof AstFile) {
-            if (astAbstract.name === 'Cl') {
-            console.log(chalk.greenBright('INTERVVVVV '), intervalsOutsideClassesAndFunctions);
+        if (astAbstract.kind === SyntaxKind.MethodDeclaration) {
+            console.log(chalk.greenBright('INTERVVVVV OUTSIDE'), intervalsOutsideClassesAndFunctions);
             console.log(chalk.greenBright('TXTTTTTT '), text);
         }
         const astCode = new AstCode(astAbstract, text);
         this.generateAstClassOrFunctionCodes(astAbstract, astCode);
         astCode.linesOutsideClassesAndFunctions = AstLineService.generate(astCode);
         if (astAbstract.name === 'Cl') {
-            console.log(chalk.cyanBright('LINES OUTSIDEEEE'), astCode.linesOutsideClassesAndFunctions);
+            console.log(chalk.cyanBright('LINES OUTSIDEEEE'), astCode);
+            console.log(chalk.cyanBright('AST CODEEEEE CLASS'), astCode.astLines);
         }
         if (astAbstract instanceof AstFile) {
+            // console.log(chalk.cyanBright('LINES OUTSIDEEEE'), astCode);
             // console.log(chalk.cyanBright('AST CODEEEEE FILE'), astCode.astLines);
         }
         return astCode;
@@ -42,8 +45,10 @@ export class AstCodeService {
         let position = astAbstract.jsonAstNode.pos;
         let intervals: Interval[] = [];
         if (astAbstract instanceof AstFile) {
-        // if (astAbstract.name === 'Cl') {
-            console.log(chalk.magentaBright('NESTEDDDDD'), nestedIntervals);
+            console.log(chalk.magentaBright('NESTEDDDDD FILE'), nestedIntervals);
+        }
+        if (astAbstract.name === 'Cl') {
+            console.log(chalk.magentaBright('NESTEDDDDD CLASS'), nestedIntervals);
         }
         while (position < astAbstract.jsonAstNode.end) {
             const firstInterval: Interval = firstElement(nestedIntervals);

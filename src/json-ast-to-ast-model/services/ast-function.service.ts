@@ -14,7 +14,7 @@ export class AstFunctionService {
         const jsonAstFunctions: JsonAstNodeInterface[] = this.getFunctionDeclarations(astFileOrClass);
         const astFunctions: AstFunction[] = [];
         for (const jsonAstFunction of jsonAstFunctions) {
-            astFunctions.push(AstFuncOrArrowFuncService.create(jsonAstFunction, astFileOrClass.text, astFileOrClass.jsonAstNode.pos));
+            astFunctions.push(AstFuncOrArrowFuncService.create(jsonAstFunction, astFileOrClass.astFileText, astFileOrClass.jsonAstNode.pos));
         }
         return astFunctions;
     }
