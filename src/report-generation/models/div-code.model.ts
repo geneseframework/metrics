@@ -1,15 +1,14 @@
-import { MetricValueSelect } from './metric-value-select.model';
-
 export class DivCode {
 
     code: string = undefined;
-    displayedMetric: string = undefined;
+    display: 'none' | 'block' = undefined;
     fileName: string = undefined;
-    metricValues: MetricValueSelect[] = [];
+    metricName: string = undefined;
 
-    constructor(fileName: string, displayedMetric: string) {
+    constructor(fileName: string, metricName: string) {
         this.fileName = fileName;
-        this.displayedMetric = displayedMetric;
+        this.metricName = metricName;
+        // this.display = metricSelect.isSelected ? 'block' : 'none';
     }
 
 }
