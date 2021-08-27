@@ -13,7 +13,7 @@ import { SyntaxKind } from '../../core/enum/syntax-kind.enum';
 export class AstCodeService {
 
     static generate(astAbstract: AstAbstract): AstCode {
-        console.log(chalk.blueBright('AST ABSTRAAAA KINDDDD'), astAbstract.kind);
+        // console.log(chalk.blueBright('AST ABSTRAAAA KINDDDD'), astAbstract.kind);
         if (astAbstract.kind === SyntaxKind.MethodDeclaration) {
             // console.log(chalk.blueBright('AST ABSTRAAAA '), astAbstract);
         }

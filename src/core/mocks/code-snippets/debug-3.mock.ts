@@ -1,5 +1,12 @@
-let a;
+let a = 3;
+
+// zzz
 class Cl {
-    z() {
+
+    // trter
+    z(a: number) {
+        return a;
     }
 }
+
+a = a + 1;
