@@ -101,7 +101,7 @@ export class ReportService {
      * Creates the file of the report
      */
     private static writeReport(htmlReport: HtmlReport, template: HandlebarsTemplateDelegate) {
-        console.log(chalk.cyanBright('HTML REPORTTTT'), htmlReport.divCodeMetrics[0]);
+        // console.log(chalk.cyanBright('HTML REPORTTTT'), htmlReport.divCodeMetrics[0]);
         const content = template(htmlReport);
         // const template = this.template({
         //     colors: Options.colors,
