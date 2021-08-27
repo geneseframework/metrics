@@ -61,12 +61,8 @@ export class ReportService {
     }
 
     private static generateDivCode(metricName: string, fileName: string, reportMetrics: ReportMetric[], htmlReport: HtmlReport, divCodeMetric: DivCodeMetric): void {
-        // console.log(chalk.blueBright('GEN DIV CODDDDD'), metricName, fileName);
-        // console.log(chalk.blueBright('GEN DIV CODDDDD htmlReport'), htmlReport);
-        // console.log(chalk.magentaBright('GEN DIV CODDDDD REPORT METRICSSS'), reportMetrics.map(r => r.reportSnippets));
         const divCode = new DivCode(fileName, metricName);
         const reportSnippetForThisMetric: ReportSnippet = this.getReportSnippetForGivenMetric(metricName, fileName, reportMetrics);
-        // console.log(chalk.blueBright('GEN DIV CODDDDD REPORT SNIPPPPPP'), reportSnippetForThisMetric);
         this.setMetricValues(divCode, fileName, reportMetrics);
         divCode.code = ReportCodeService.getCode(reportSnippetForThisMetric.lines);
         divCodeMetric.divCodes.push(divCode);
