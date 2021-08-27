@@ -22,5 +22,4 @@ function selectOne(fileName, metricName, isSelected, metricNames) {
     console.log('AAAAAA', fileName, metricName, isSelected);
     console.log('AAAAAAssss', metricNames);
     toggleSelection(`div-code-${fileName}-`, metricName, isSelected, metricNames);
-    toggleGloballyVisibility(metricName, isSelected, metricNames);
 }
