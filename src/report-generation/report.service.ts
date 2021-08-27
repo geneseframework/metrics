@@ -83,7 +83,6 @@ export class ReportService {
     }
 
     private static setMetricValues(divCode: DivCode, fileName: string, reportMetrics: ReportMetric[], htmlReport: HtmlReport): void {
-        const metricNames: string[] = unique(reportMetrics.map(r => r.metricName));
         for (const metricSelect of htmlReport.metricSelects) {
             this.setMetricValue(divCode, fileName, reportMetrics, metricSelect);
         }
