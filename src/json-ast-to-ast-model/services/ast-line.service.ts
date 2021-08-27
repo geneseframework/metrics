@@ -25,7 +25,7 @@ export class AstLineService {
             line.end = line.pos + textLine.length;
             line.astNodes = this.getAstNodes(astCode.astAbstract, line.pos, line.end);
             issue++;
-            position += textLine.length + 1;
+            position = this.getPositionAfterTextLineAndLineBreak(position, textLine);
             astLines.push(line);
         }
         return astLines;
@@ -47,6 +47,10 @@ export class AstLineService {
             console.log(chalk.yellowBright('GET LINE POSSSSS '), position, posInterval);
         }
         return posInterval ? posInterval[1] + 1 : position + lineIssue - 1;
+    }
+
+    private static getPositionAfterTextLineAndLineBreak(position: number, textLine: string): number {
+        return position + textLine.length + 1;
     }
 
 }
