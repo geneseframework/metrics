@@ -84,9 +84,9 @@
                 {{/if}}
                 {{#each metricSelects}}
                     {{#if this.isSelected}}
-                        <th style="max-width: 10%;"><span class="selected">{{this.metricName}}</span></th>
+                        <th style="max-width: 10%;"><span id="all-{{this.metricName}}" class="selected" onclick="selectAll('{{this.metricName}}')">{{this.metricName}}</span></th>
                     {{else}}
-                        <th style="max-width: 10%;"><span class="not-selected">{{this.metricName}}</span></th>
+                        <th style="max-width: 10%;"><span id="all-{{this.metricName}}" class="not-selected">{{this.metricName}}</span></th>
                     {{/if}}
                 {{/each}}
             </tr>
@@ -121,6 +121,7 @@
 
 <script src="./templates/js/Chart.js"></script>
 <script src="./templates/js/prism.js"></script>
+<script src="./templates/js/report-scripts.js"></script>
 
 </body>
 
