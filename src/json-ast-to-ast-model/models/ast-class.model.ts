@@ -8,8 +8,8 @@ export class AstClass extends AstAbstract {
     astArrowFunctions: AstArrowFunction[] = [];
     astFunctions: AstFunction[] = [];
 
-    constructor(jsonAstNode: JsonAstNodeInterface) {
-        super(jsonAstNode);
+    constructor(jsonAstNode: JsonAstNodeInterface, astFileText: string) {
+        super(jsonAstNode, astFileText);
     }
 
 }

@@ -4,7 +4,7 @@ import { JsonAstNodeInterface } from '../../core/interfaces/json-ast/json-ast-no
 export class AstArrowFunction extends AstAbstract {
 
 
-    constructor(jsonAstNode: JsonAstNodeInterface) {
-        super(jsonAstNode);
+    constructor(jsonAstNode: JsonAstNodeInterface, astFileText: string) {
+        super(jsonAstNode, astFileText);
     }
 }

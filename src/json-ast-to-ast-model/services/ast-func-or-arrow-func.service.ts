@@ -7,12 +7,12 @@ import { AstArrowFunctionService } from './ast-arrow-function.service';
 export class AstFuncOrArrowFuncService {
 
 
-    static create(jsonArrowFunctionsVarDeclaration: JsonAstNodeInterface, astClassText: string, astClassPos: number): AstFunction {
-        const astArrowFunction = new AstArrowFunction(jsonArrowFunctionsVarDeclaration);
+    static create(jsonArrowFunctionsVarDeclaration: JsonAstNodeInterface, astFileText: string, astClassPos: number): AstFunction {
+        const astArrowFunction = new AstArrowFunction(jsonArrowFunctionsVarDeclaration, astFileText);
         astArrowFunction.name = jsonArrowFunctionsVarDeclaration.name;
         astArrowFunction.astFunctions = AstFunctionService.generate(astArrowFunction);
         astArrowFunction.astArrowFunctions = AstArrowFunctionService.generate(astArrowFunction);
-        astArrowFunction.text = astClassText.slice(jsonArrowFunctionsVarDeclaration.pos - astClassPos, jsonArrowFunctionsVarDeclaration.end - astClassPos);
+        astArrowFunction.text = astFileText.slice(jsonArrowFunctionsVarDeclaration.pos - astClassPos, jsonArrowFunctionsVarDeclaration.end - astClassPos);
         return astArrowFunction;
     }
 

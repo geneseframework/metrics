@@ -13,13 +13,15 @@ export abstract class AstAbstract {
     astArrowFunctions: AstArrowFunction[] = [];
     astClasses: AstClass[] = [];
     astCode: AstCode = undefined;
+    astFileText: string = undefined;
     astFunctions: AstFunction[] = [];
     astNode: AstNode = undefined;
     jsonAstNode: JsonAstNodeInterface = undefined;
     name = undefined;
     text = '';
 
-    protected constructor(jsonAstNode: JsonAstNodeInterface) {
+    protected constructor(jsonAstNode: JsonAstNodeInterface, astFileText: string) {
+        this.astFileText = astFileText;
         this.jsonAstNode = jsonAstNode;
         this.setAstNode();
     }
@@ -57,6 +59,6 @@ export abstract class AstAbstract {
     }
 
     private setAstNode(): void {
-        this.astNode = AstNodeService.generate(this.jsonAstNode);
+        this.astNode = AstNodeService.generate(this.jsonAstNode, this.astFileText);
     }
 }

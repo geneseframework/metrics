@@ -1,14 +1,17 @@
 import { JsonAstNodeInterface } from '../../core/interfaces/json-ast/json-ast-node.interface';
 import { AstNodeService } from '../services/ast-node.service';
 import { Interval } from '../types/interval.type';
+import * as chalk from 'chalk';
 
 export class AstNode {
 
+    astFileText: string = undefined;
     children: AstNode[] = [];
     jsonAstNode: JsonAstNodeInterface = undefined;
 
-    constructor(jsonAstNode: JsonAstNodeInterface) {
+    constructor(jsonAstNode: JsonAstNodeInterface, astFileText: string) {
         this.jsonAstNode = jsonAstNode;
+        this.astFileText = astFileText;
         this.setChildren();
     }
 
@@ -17,7 +20,11 @@ export class AstNode {
     }
 
     get interval(): Interval {
-        return [this.jsonAstNode.pos, this.jsonAstNode.end];
+        if (this.hasALineBreakBetweenPosAndStart()) {
+            return [this.getPosAfterFirstLineBreak(), this.jsonAstNode.end];
+        } else {
+            return [this.jsonAstNode.pos, this.jsonAstNode.end];
+        }
     }
 
     get kind(): string {
@@ -50,10 +57,20 @@ export class AstNode {
         return this.jsonAstNode.type;
     }
 
+    private getPosAfterFirstLineBreak(): number {
+        return undefined;
+    }
+
+    private hasALineBreakBetweenPosAndStart(): boolean {
+        const textBeforeStart: string = this.astFileText.slice(this.pos, this.start);
+        console.log(chalk.redBright('TEXT BEFORE STARTTTT'), textBeforeStart);
+        return /\//.test(textBeforeStart);
+    }
+
     private setChildren(): void {
         const children: JsonAstNodeInterface[] = this.jsonAstNode.children ?? [];
         for (const child of children) {
-            this.children.push(AstNodeService.generate(child));
+            this.children.push(AstNodeService.generate(child, this.astFileText));
         }
     }
 
