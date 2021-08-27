@@ -53,18 +53,25 @@ export class AstNode {
         return this.jsonAstNode.start;
     }
 
+    get text(): string {
+        return this.astFileText.slice(this.pos, this.end);
+    }
+
+    get textBetweenPosAndStart(): string {
+        return this.astFileText.slice(this.pos, this.start);
+    }
+
     get type(): string {
         return this.jsonAstNode.type;
     }
 
     private getPosAfterFirstLineBreak(): number {
-        return undefined;
+        console.log(chalk.greenBright('GET POS AFTERRRR'), {zzz: this.textBetweenPosAndStart}, this.textBetweenPosAndStart.indexOf('\n'));
+        return this.pos + this.textBetweenPosAndStart.indexOf('\n') + 1;
     }
 
     private hasALineBreakBetweenPosAndStart(): boolean {
-        const textBeforeStart: string = this.astFileText.slice(this.pos, this.start);
-        console.log(chalk.redBright('TEXT BEFORE STARTTTT'), textBeforeStart);
-        return /\//.test(textBeforeStart);
+        return /\n/.test(this.textBetweenPosAndStart);
     }
 
     private setChildren(): void {
