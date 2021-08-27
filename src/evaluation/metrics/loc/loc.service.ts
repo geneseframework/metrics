@@ -8,8 +8,10 @@ import * as chalk from 'chalk';
 export class LocService extends AbstractMetricService {
 
     evaluate(astFile: AstFile, reportFile: ReportSnippet): void {
+        // console.log(chalk.magentaBright('AST FILE EEEE'), astFile.astCode.astClassOrFunctionCodes[0]);
         const astLines: AstLine[] = astFile.astCode.astLines;
         for (let i = 0; i < astLines.length; i++) {
+            // console.log(chalk.blueBright('AST LINE EEEE'), astLines[i].text, astLines[i].pos);
             const reportLine = new ReportLine(i, astLines[i].text);
             this.evaluateLine(astLines[i], reportLine);
             reportFile.lines.push(reportLine);

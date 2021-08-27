@@ -4,6 +4,7 @@ import { AstLine } from '../models/ast-line.model';
 import { AstNode } from '../models/ast-node.model';
 import { firstElement } from '../../core/utils/arrays.util';
 import { Interval } from '../types/interval.type';
+import * as chalk from 'chalk';
 
 export class AstLineService {
 
@@ -24,7 +25,13 @@ export class AstLineService {
             line.end = line.pos + textLine.length;
             line.astNodes = this.getAstNodes(astCode.astAbstract, line.pos, line.end);
             issue++;
-            position += textLine.length;
+            if (astCode.astAbstract.name === 'Cl') {
+                // console.log(chalk.redBright(' POSSSSS BEFORE'), position, textLine);
+            }
+            position = this.getPositionAfterTextLineAndLineBreak(position, textLine);
+            if (astCode.astAbstract.name === 'Cl') {
+                // console.log(chalk.redBright(' POSSSSS AFTER '), position);
+            }
             astLines.push(line);
         }
         return astLines;
@@ -42,7 +49,14 @@ export class AstLineService {
 
     private static getLinePos(position: number, astAbstract: AstAbstract, lineIssue: number): number {
         const posInterval: Interval = astAbstract.positionInterval(position);
+        if (astAbstract.name === 'Cl') {
+            // console.log(chalk.yellowBright('GET LINE POSSSSS '), position, posInterval);
+        }
         return posInterval ? posInterval[1] + 1 : position + lineIssue - 1;
+    }
+
+    private static getPositionAfterTextLineAndLineBreak(position: number, textLine: string): number {
+        return position + textLine.length + 1;
     }
 
 }

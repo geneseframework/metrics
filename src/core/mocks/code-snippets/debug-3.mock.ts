@@ -1,13 +1,12 @@
-let c = 3;
+let a = 3;
 
-// zzzzzzzzzz
+// zzz
 class Cl {
 
-    // aaaaaaaa
-
-    z(a: number): number {
+    // trter
+    z(a: number) {
         return a;
     }
 }
 
-c = c + 1;
+a = a + 1;

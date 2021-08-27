@@ -16,6 +16,7 @@ export class AstFileService {
         astFile.astFunctions = AstFunctionService.generate(astFile);
         astFile.astArrowFunctions = AstArrowFunctionService.generate(astFile);
         astFile.astCode = AstCodeService.generate(astFile);
+        // console.log(chalk.redBright('AST FILEEEE'), astFile.astCode.astClassOrFunctionCodes[0]);
         return astFile;
     }
 }

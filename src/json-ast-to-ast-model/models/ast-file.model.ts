@@ -6,7 +6,7 @@ export class AstFile extends AstAbstract {
     jsonAstFile: JsonAstFileInterface = undefined;
 
     constructor(jsonAstFile: JsonAstFileInterface) {
-        super(jsonAstFile.astNode);
+        super(jsonAstFile.astNode, jsonAstFile.text);
         this.jsonAstFile = jsonAstFile;
     }
 

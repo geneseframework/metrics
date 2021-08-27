@@ -6,15 +6,34 @@ import { Interval, isInInterval } from '../types/interval.type';
 import { AstAbstract } from '../models/ast-abstract.model';
 import { firstElement } from '../../core/utils/arrays.util';
 import { AstLineService } from './ast-line.service';
+import * as chalk from 'chalk';
+import { AstFile } from '../models/ast-file.model';
+import { SyntaxKind } from '../../core/enum/syntax-kind.enum';
 
 export class AstCodeService {
 
     static generate(astAbstract: AstAbstract): AstCode {
+        // console.log(chalk.blueBright('AST ABSTRAAAA KINDDDD'), astAbstract.kind);
+        if (astAbstract.kind === SyntaxKind.MethodDeclaration) {
+            // console.log(chalk.blueBright('AST ABSTRAAAA '), astAbstract);
+        }
         const intervalsOutsideClassesAndFunctions: Interval[] = this.getComplementaryIntervals(astAbstract);
         const text: string = this.getText(astAbstract, intervalsOutsideClassesAndFunctions);
+        if (astAbstract.kind === SyntaxKind.MethodDeclaration) {
+            // console.log(chalk.greenBright('INTERVVVVV OUTSIDE'), intervalsOutsideClassesAndFunctions);
+            // console.log(chalk.greenBright('TXTTTTTT '), text);
+        }
         const astCode = new AstCode(astAbstract, text);
         this.generateAstClassOrFunctionCodes(astAbstract, astCode);
         astCode.linesOutsideClassesAndFunctions = AstLineService.generate(astCode);
+        if (astAbstract.name === 'Cl') {
+            // console.log(chalk.cyanBright('LINES OUTSIDEEEE'), astCode);
+            // console.log(chalk.cyanBright('AST CODEEEEE CLASS'), astCode.astLines);
+        }
+        if (astAbstract instanceof AstFile) {
+            // console.log(chalk.cyanBright('LINES OUTSIDEEEE'), astCode);
+            // console.log(chalk.cyanBright('AST CODEEEEE FILE'), astCode.astLines);
+        }
         return astCode;
     }
 
@@ -25,6 +44,12 @@ export class AstCodeService {
         const nestedIntervals = astAbstract.astAbstracts.map(a => a.interval).sort((a, b) => a[0] - b[0]);
         let position = astAbstract.jsonAstNode.pos;
         let intervals: Interval[] = [];
+        if (astAbstract instanceof AstFile) {
+            // console.log(chalk.magentaBright('NESTEDDDDD FILE'), nestedIntervals);
+        }
+        if (astAbstract.name === 'Cl') {
+            // console.log(chalk.magentaBright('NESTEDDDDD CLASS'), nestedIntervals);
+        }
         while (position < astAbstract.jsonAstNode.end) {
             const firstInterval: Interval = firstElement(nestedIntervals);
             if (isInInterval(position, firstInterval)) {
@@ -48,6 +73,10 @@ export class AstCodeService {
             const firstPos: number = interval[0] - astAbstract.jsonAstNode.pos;
             const lastPos: number = interval[1] - astAbstract.jsonAstNode.pos + 1;
             txt = `${txt}${astAbstract.text.slice(firstPos, lastPos)}`;
+            // txt = `${txt}${astAbstract.text.slice(firstPos, lastPos)}\n`;
+            if (astAbstract instanceof AstFile) {
+                // console.log(chalk.magentaBright('GET TXTTT INTV '), {zzz: txt});
+            }
         }
         return txt;
     }
@@ -57,41 +86,5 @@ export class AstCodeService {
             astCode.astClassOrFunctionCodes.push(this.generate(astAbs));
         }
     }
-
-
-    /**
-     * Returns the number of the CodeLine at a given pos in the code
-     * @param code      // The Code where to search
-     * @param position  // The pos where we search the number of its line
-     * TODO : fix the case line = undefined
-     */
-    // static getLineIssue(code: AstCode, position: number): number {
-    //     if (position < 0 || position > code?.end) {
-    //         return 0;
-    //     }
-    //     const line: AstLine = code.linesOutsideClassesAndFunctions.filter(l => l.start <= position && l.end > position)?.[0];
-    //     return line ? line.issue : 0;
-    // }
-    //
-    //
-    //
-    // isEndingWithBlockComments(line: AstLine): boolean {
-    //     const text = line.textWithoutSlashComments;
-    //     if (line.previousLine?.isEndingWithBlockComments) {
-    //         const splitEndBlockComments = text.split(/\*\//);
-    //         if (splitEndBlockComments.length === 1) {
-    //             return true;
-    //         }
-    //         const lastElement = splitEndBlockComments[splitEndBlockComments.length - 1];
-    //         return /\/\*/.test(lastElement) ?? false;
-    //     }
-    //     const splittedText = text?.split(/\/\*/);
-    //     if (splittedText.length === 1) {
-    //         return false;
-    //     }
-    //     const lastCommentedBlock = splittedText[splittedText.length - 1];
-    //     return !/\*\//.test(lastCommentedBlock) ?? false;
-    // }
-
 
 }
