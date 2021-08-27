@@ -1,8 +1,6 @@
-let c = 3;
-
+let a;
 class Cl {
+
     z() {
     }
 }
-
-c = c + 1;
