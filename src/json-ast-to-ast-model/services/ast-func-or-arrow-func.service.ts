@@ -3,13 +3,11 @@ import { AstFunction } from '../models/ast-function.model';
 import { AstArrowFunction } from '../models/ast-arrow-function.model';
 import { AstFunctionService } from './ast-function.service';
 import { AstArrowFunctionService } from './ast-arrow-function.service';
-import * as chalk from 'chalk';
 
 export class AstFuncOrArrowFuncService {
 
 
     static create(jsonAstNodeInterface: JsonAstNodeInterface, astFileText: string, astClassPos: number, isArrowFunc = false): AstFunction {
-        // console.log(chalk.green('AST FFFF TXT'), astFileText);
         const astFunc = isArrowFunc ? new AstFunction(jsonAstNodeInterface, astFileText) : new AstArrowFunction(jsonAstNodeInterface, astFileText);
         astFunc.name = jsonAstNodeInterface.name;
         astFunc.astFunctions = AstFunctionService.generate(astFunc);

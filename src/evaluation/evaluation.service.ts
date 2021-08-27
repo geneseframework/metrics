@@ -18,9 +18,10 @@ export class EvaluationService {
         // console.log(chalk.blueBright('AST MODELLLLL'), astModel.astMetrics[0].astFiles[0].astCode.astClassOrFunctionCodes[0]);
         reportModel.measureName = astModel.measure;
         for (const astMetric of astModel.astMetrics) {
+            // console.log(chalk.blueBright('METRICCCC'), astMetric.metric);
             this.evaluateAstMetric(reportModel, astMetric);
         }
-        // console.log(chalk.greenBright('REPORT MODELLLLL'), reportModel.reportMetrics[0].reportSnippets[0]);
+        // console.log(chalk.greenBright('REPORT MODELLLLL'), reportModel.reportMetrics[0]);
         return reportModel;
     }
 

@@ -12,25 +12,45 @@ import { DivCodeMetric } from './models/div-code-metric.model';
 import { ReportSnippet } from './models/report-snippet.model';
 import { DivCode } from './models/div-code.model';
 import { ReportCodeService } from './services/report-code.service';
-import { MetricValue } from './models/metric-value.model';
+import { MetricValueSelect } from './models/metric-value-select.model';
+import { MetricSelect } from './models/metric-select.model';
 
 export class ReportService {
 
     static async start(jsonReport: JsonReportInterface): Promise<any> {
-        // console.log(chalk.greenBright('JSON REPORTTTTT '), jsonReport.reportMetrics[0]);
+        // console.log(chalk.greenBright('JSON REPORTTTTT '), jsonReport.reportMetrics);
         this.createStyleFiles();
         const htmlReport = new HtmlReport();
         htmlReport.measure = jsonReport.measureName;
-        htmlReport.metricNames = jsonReport.reportMetrics.map(r => r.metricName);
+        const metricNamesArray: string = this.getMetricNamesArray(jsonReport.reportMetrics);
+        this.setMetricSelects(jsonReport.reportMetrics, htmlReport, metricNamesArray);
         this.generateRowSnippets(!!jsonReport.measureName, jsonReport.reportMetrics, htmlReport);
-        this.generateDivCodeMetrics(jsonReport.reportMetrics, htmlReport);
+        this.generateDivCodeMetrics(jsonReport.reportMetrics, htmlReport, metricNamesArray);
         const template: HandlebarsTemplateDelegate = this.setTemplate();
         this.writeReport(htmlReport, template);
         return htmlReport;
     }
 
+    private static getMetricNamesArray(reportMetrics: ReportMetric[]): string {
+        let metricNamesArray = '';
+        for (const reportMetric of reportMetrics) {
+            metricNamesArray = `${metricNamesArray}, '${reportMetric.metricName}'`;
+        }
+        return `[${metricNamesArray.slice(2)}]`;
+
+    }
+
+    private static setMetricSelects(reportMetrics: ReportMetric[], htmlReport: HtmlReport, metricNamesArray: string): void {
+        for (let i = 0; i < reportMetrics.length; i++) {
+            const metricSelect = new MetricSelect(reportMetrics[i].metricName, metricNamesArray);
+            metricSelect.isSelected = i === 0;
+            htmlReport.metricSelects.push(metricSelect);
+            metricNamesArray = `${metricNamesArray}, '${reportMetrics[i].metricName}'`;
+        }
+    }
+
     private static generateRowSnippets(hasMeasure: boolean, reportMetrics: ReportMetric[], htmlReport: HtmlReport): void {
-        const fileNames: string[] = flat(reportMetrics.map(r => r.reportSnippets.map(s => s.fileName)));
+        const fileNames: string[] = unique(flat(reportMetrics.map(r => r.reportSnippets.map(s => s.fileName))));
         for (const fileName of fileNames) {
             const reportSnippets: ReportSnippet[] = flat(reportMetrics.map(r => r.reportSnippets));
             const reportSnippet: ReportSnippet = reportSnippets.find(r => r.fileName === fileName);
@@ -45,29 +65,25 @@ export class ReportService {
         htmlReport.rowSnippets.push(rowSnippet);
     }
 
-    private static generateDivCodeMetrics(reportMetrics: ReportMetric[], htmlReport: HtmlReport): void {
-        for (const metricName of htmlReport.metricNames) {
-            this.generateDivCodeMetric(metricName, reportMetrics, htmlReport);
+    private static generateDivCodeMetrics(reportMetrics: ReportMetric[], htmlReport: HtmlReport, metricNamesArray: string): void {
+        for (const metricSelect of htmlReport.metricSelects) {
+            this.generateDivCodeMetric(metricSelect, reportMetrics, htmlReport, metricNamesArray);
         }
     }
 
-    private static generateDivCodeMetric(metricName: string, reportMetrics: ReportMetric[], htmlReport: HtmlReport): void {
-        const divCodeMetric = new DivCodeMetric(metricName);
-        const fileNames: string[] = flat(reportMetrics.map(r => r.reportSnippets.map(r => r.fileName)));
+    private static generateDivCodeMetric(metricSelect: MetricSelect, reportMetrics: ReportMetric[], htmlReport: HtmlReport, metricNamesArray: string): void {
+        const divCodeMetric = new DivCodeMetric(metricSelect);
+        const fileNames: string[] = unique(flat(reportMetrics.map(r => r.reportSnippets.map(r => r.fileName))));
         for (const fileName of fileNames) {
-            this.generateDivCode(metricName, fileName, reportMetrics, htmlReport, divCodeMetric);
+            this.generateDivCode(metricSelect.metricName, fileName, reportMetrics, htmlReport, divCodeMetric, metricNamesArray);
         }
         htmlReport.divCodeMetrics.push(divCodeMetric);
     }
 
-    private static generateDivCode(metricName: string, fileName: string, reportMetrics: ReportMetric[], htmlReport: HtmlReport, divCodeMetric: DivCodeMetric): void {
-        // console.log(chalk.blueBright('GEN DIV CODDDDD'), metricName, fileName);
-        // console.log(chalk.blueBright('GEN DIV CODDDDD htmlReport'), htmlReport);
-        // console.log(chalk.magentaBright('GEN DIV CODDDDD REPORT METRICSSS'), reportMetrics.map(r => r.reportSnippets));
+    private static generateDivCode(metricName: string, fileName: string, reportMetrics: ReportMetric[], htmlReport: HtmlReport, divCodeMetric: DivCodeMetric, metricNamesArray: string): void {
         const divCode = new DivCode(fileName, metricName);
         const reportSnippetForThisMetric: ReportSnippet = this.getReportSnippetForGivenMetric(metricName, fileName, reportMetrics);
-        // console.log(chalk.blueBright('GEN DIV CODDDDD REPORT SNIPPPPPP'), reportSnippetForThisMetric);
-        this.setMetricValues(divCode, fileName, reportMetrics);
+        this.setMetricValues(divCode, fileName, reportMetrics, htmlReport, metricNamesArray);
         divCode.code = ReportCodeService.getCode(reportSnippetForThisMetric.lines);
         divCodeMetric.divCodes.push(divCode);
     }
@@ -76,17 +92,16 @@ export class ReportService {
         return flat(reportMetrics.map(r => r.reportSnippets)).find((s: ReportSnippet) => s.metricName === metricName && s.fileName === fileName);
     }
 
-    private static setMetricValues(divCode: DivCode, fileName: string, reportMetrics: ReportMetric[]): void {
-        const metricNames: string[] = unique(reportMetrics.map(r => r.metricName));
-        for (const metricName of metricNames) {
-            this.setMetricValue(divCode, fileName, reportMetrics, metricName);
+    private static setMetricValues(divCode: DivCode, fileName: string, reportMetrics: ReportMetric[], htmlReport: HtmlReport, metricNamesArray: string): void {
+        for (const metricSelect of htmlReport.metricSelects) {
+            this.setMetricValue(divCode, fileName, reportMetrics, metricSelect, metricNamesArray);
         }
     }
 
-    private static setMetricValue(divCode: DivCode, fileName: string, reportMetrics: ReportMetric[], metricName: string): void {
+    private static setMetricValue(divCode: DivCode, fileName: string, reportMetrics: ReportMetric[], metricSelect: MetricSelect, metricNamesArray: string): void {
         const reportSnippets: ReportSnippet[] = flat(reportMetrics.map(r => r.reportSnippets));
-        const reportSnippetForThisFileAndThisMetric: ReportSnippet = reportSnippets.find(s => s.fileName === fileName && s.metricName === metricName);
-        divCode.metricValues.push(new MetricValue(metricName, reportSnippetForThisFileAndThisMetric.score));
+        const reportSnippetForThisFileAndThisMetric: ReportSnippet = reportSnippets.find(s => s.fileName === fileName && s.metricName === metricSelect.metricName);
+        divCode.metricValues.push(new MetricValueSelect(metricSelect, reportSnippetForThisFileAndThisMetric.score, metricNamesArray));
     }
 
     private static setTemplate(): HandlebarsTemplateDelegate {
@@ -101,7 +116,7 @@ export class ReportService {
      * Creates the file of the report
      */
     private static writeReport(htmlReport: HtmlReport, template: HandlebarsTemplateDelegate) {
-        // console.log(chalk.cyanBright('HTML REPORTTTT'), htmlReport.divCodeMetrics[0]);
+        console.log(chalk.cyanBright('HTML REPORTTTT'), htmlReport);
         const content = template(htmlReport);
         // const template = this.template({
         //     colors: Options.colors,

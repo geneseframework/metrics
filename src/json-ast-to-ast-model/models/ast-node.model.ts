@@ -1,8 +1,6 @@
 import { JsonAstNodeInterface } from '../../core/interfaces/json-ast/json-ast-node.interface';
 import { AstNodeService } from '../services/ast-node.service';
 import { Interval } from '../types/interval.type';
-import * as chalk from 'chalk';
-import { SyntaxKind } from '../../core/enum/syntax-kind.enum';
 
 export class AstNode {
 
@@ -31,15 +29,7 @@ export class AstNode {
     }
 
     get interval(): Interval {
-        if (this.hasALineBreakBetweenPosAndStart()) {
-            if (this.jsonAstNode.kind === SyntaxKind.MethodDeclaration) {
-                // console.log(chalk.blueBright('GET AST NODE INTERVALLL'), this.getPosAfterFirstLineBreak(), this.jsonAstNode.end);
-            }
-            return [this.getPosAfterFirstLineBreak(), this.jsonAstNode.end];
-        } else {
-            return [this.jsonAstNode.pos, this.jsonAstNode.end];
-        }
-        // return this.hasALineBreakBetweenPosAndStart() ? [this.getPosAfterFirstLineBreak(), this.jsonAstNode.end] : [this.jsonAstNode.pos, this.jsonAstNode.end];
+        return this.hasALineBreakBetweenPosAndStart() ? [this.getPosAfterFirstLineBreak(), this.jsonAstNode.end] : [this.jsonAstNode.pos, this.jsonAstNode.end];
     }
 
     get kind(): string {
@@ -71,10 +61,6 @@ export class AstNode {
     }
 
     private getPosAfterFirstLineBreak(): number {
-        if (this.jsonAstNode.kind === SyntaxKind.MethodDeclaration) {
-            // console.log(chalk.redBright('AST FILE TXTTT'), this.astFileText);
-            // console.log(chalk.greenBright('GET POS AFTERRRR'), this.pos, this.start, {zzz: this.textBetweenPosAndStart}, this.textBetweenPosAndStart.indexOf('\n'));
-        }
         return this.pos + this.textBetweenPosAndStart.indexOf('\n') + 1;
     }
 

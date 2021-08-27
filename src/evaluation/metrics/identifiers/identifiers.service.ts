@@ -5,10 +5,10 @@ import { ReportSnippet } from '../../../report-generation/models/report-snippet.
 import { ReportLine } from '../../../report-generation/models/report-line.model';
 import * as chalk from 'chalk';
 
-export class LocService extends AbstractMetricService {
+export class IdentifiersService extends AbstractMetricService {
 
     evaluate(astFile: AstFile, reportFile: ReportSnippet): void {
-        // console.log(chalk.magentaBright('AST FILE EEEE'), astFile.astCode.astClassOrFunctionCodes[0]);
+        // console.log(chalk.magentaBright('AST FILE IDENTIFIERSSSS'), astFile.astCode.astClassOrFunctionCodes[0]);
         const astLines: AstLine[] = astFile.astCode.astLines;
         for (let i = 0; i < astLines.length; i++) {
             const reportLine = new ReportLine(i, astLines[i].text);
@@ -20,7 +20,7 @@ export class LocService extends AbstractMetricService {
 
     private evaluateLine(astLine: AstLine, reportLine: ReportLine): void {
         // console.log(chalk.cyanBright('EVAL LINEEEEE'), reportLine.issue, reportLine.text,  astLine.astNodes.map(a => a.kind));
-        reportLine.score = astLine.astNodes.length > 0 ? 1 : 0;
-        reportLine.comments = astLine.astNodes.length > 0 ? '+1' : '';
+        reportLine.score = astLine.astNodes.length > 0 ? 2 : 0;
+        reportLine.comments = astLine.astNodes.length > 0 ? '+2' : '';
     }
 }

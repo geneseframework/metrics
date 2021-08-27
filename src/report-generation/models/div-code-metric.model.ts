@@ -1,12 +1,15 @@
 import { DivCode } from './div-code.model';
+import { MetricSelect } from './metric-select.model';
 
 export class DivCodeMetric {
 
+    display: 'none' | 'block' = undefined;
     divCodes: DivCode[] = [];
-    metricName: string = undefined;
+    metricSelect: MetricSelect = undefined;
 
-    constructor(metricName: string) {
-        this.metricName = metricName;
+    constructor(metricSelect: MetricSelect) {
+        this.metricSelect = metricSelect;
+        this.display = metricSelect.isSelected ? 'block' : 'none';
     }
 
 }
