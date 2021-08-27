@@ -163,6 +163,15 @@ th {
     background-color: white;
 }
 
+.array-report .selected {
+    color: #0074D9;
+    cursor: pointer;
+}
+
+.array-report .not-selected {
+    cursor: pointer;
+}
+
 .array-report .score {
     text-align: center;
     width: 5%;

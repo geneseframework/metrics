@@ -8,7 +8,7 @@ import * as chalk from 'chalk';
 export class IdentifiersService extends AbstractMetricService {
 
     evaluate(astFile: AstFile, reportFile: ReportSnippet): void {
-        console.log(chalk.magentaBright('AST FILE IDENTIFIERSSSS'), astFile.astCode.astClassOrFunctionCodes[0]);
+        // console.log(chalk.magentaBright('AST FILE IDENTIFIERSSSS'), astFile.astCode.astClassOrFunctionCodes[0]);
         const astLines: AstLine[] = astFile.astCode.astLines;
         for (let i = 0; i < astLines.length; i++) {
             const reportLine = new ReportLine(i, astLines[i].text);

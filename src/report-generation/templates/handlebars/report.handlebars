@@ -42,27 +42,27 @@
 <!--        -------------------------------------------------------------------------------------->
 
 <div class="mainContainer">
-    <div class="stats-and-charts">
-        <div class="stats-cognitive">
-            <div class="stats-and-doughnut stats-and-doughnut-cognitive">
-                <div class="doughnut">
-                    <canvas id="doughnut-cognitive-cpx" height="220"></canvas>
-                </div>
-                <div class="stats">
-                    <div class="clearfix">
-                        <div class='fl pad1y space-right2'>
-                            <span class="strong">Metric name</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+<!--    <div class="stats-and-charts">-->
+<!--        <div class="stats-cognitive">-->
+<!--            <div class="stats-and-doughnut stats-and-doughnut-cognitive">-->
+<!--                <div class="doughnut">-->
+<!--                    <canvas id="doughnut-cognitive-cpx" height="220"></canvas>-->
+<!--                </div>-->
+<!--                <div class="stats">-->
+<!--                    <div class="clearfix">-->
+<!--                        <div class='fl pad1y space-right2'>-->
+<!--                            <span class="strong">Metric name</span>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
 
-            <div class="bar bar-cognitive">
-                <canvas id="bar-cognitive-cpx" class="cognitive-charts"></canvas>
-            </div>
-        </div>
+<!--            <div class="bar bar-cognitive">-->
+<!--                <canvas id="bar-cognitive-cpx" class="cognitive-charts"></canvas>-->
+<!--            </div>-->
+<!--        </div>-->
 
-    </div>
+<!--    </div>-->
 
     <!--        -------------------------------------------------------------------------------------->
     <!--        -----------------------------------   Report arrays   -------------------------------->
@@ -82,8 +82,12 @@
                 {{#if measure}}
                     <th style="width: 10%;">{{measure}}</th>
                 {{/if}}
-                {{#each metricNames}}
-                    <th style="max-width: 10%;">{{this}}</th>
+                {{#each metricSelects}}
+                    {{#if this.isSelected}}
+                        <th style="max-width: 10%;"><span class="selected">{{this.metricName}}</span></th>
+                    {{else}}
+                        <th style="max-width: 10%;"><span class="not-selected">{{this.metricName}}</span></th>
+                    {{/if}}
                 {{/each}}
             </tr>
             </thead>

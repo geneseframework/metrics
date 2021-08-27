@@ -13,6 +13,7 @@ import { ReportSnippet } from './models/report-snippet.model';
 import { DivCode } from './models/div-code.model';
 import { ReportCodeService } from './services/report-code.service';
 import { MetricValue } from './models/metric-value.model';
+import { MetricSelect } from './models/metric-select.model';
 
 export class ReportService {
 
@@ -21,12 +22,20 @@ export class ReportService {
         this.createStyleFiles();
         const htmlReport = new HtmlReport();
         htmlReport.measure = jsonReport.measureName;
-        htmlReport.metricNames = jsonReport.reportMetrics.map(r => r.metricName);
+        this.setMetricSelects(jsonReport.reportMetrics, htmlReport);
         this.generateRowSnippets(!!jsonReport.measureName, jsonReport.reportMetrics, htmlReport);
         this.generateDivCodeMetrics(jsonReport.reportMetrics, htmlReport);
         const template: HandlebarsTemplateDelegate = this.setTemplate();
         this.writeReport(htmlReport, template);
         return htmlReport;
+    }
+
+    private static setMetricSelects(reportMetrics: ReportMetric[], htmlReport: HtmlReport): void {
+        for (let i = 0; i < reportMetrics.length; i++) {
+            const metricSelect = new MetricSelect(reportMetrics[i].metricName);
+            metricSelect.isSelected = i === 0;
+            htmlReport.metricSelects.push(metricSelect);
+        }
     }
 
     private static generateRowSnippets(hasMeasure: boolean, reportMetrics: ReportMetric[], htmlReport: HtmlReport): void {
@@ -46,7 +55,8 @@ export class ReportService {
     }
 
     private static generateDivCodeMetrics(reportMetrics: ReportMetric[], htmlReport: HtmlReport): void {
-        for (const metricName of htmlReport.metricNames) {
+        const metricNames: string[] = htmlReport.metricSelects.map(m => m.metricName);
+        for (const metricName of metricNames) {
             this.generateDivCodeMetric(metricName, reportMetrics, htmlReport);
         }
     }
@@ -97,7 +107,7 @@ export class ReportService {
      * Creates the file of the report
      */
     private static writeReport(htmlReport: HtmlReport, template: HandlebarsTemplateDelegate) {
-        // console.log(chalk.cyanBright('HTML REPORTTTT'), htmlReport.divCodeMetrics[0]);
+        console.log(chalk.cyanBright('HTML REPORTTTT'), htmlReport);
         const content = template(htmlReport);
         // const template = this.template({
         //     colors: Options.colors,
