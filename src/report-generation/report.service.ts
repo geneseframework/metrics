@@ -12,7 +12,7 @@ import { DivCodeMetric } from './models/div-code-metric.model';
 import { ReportSnippet } from './models/report-snippet.model';
 import { DivCode } from './models/div-code.model';
 import { ReportCodeService } from './services/report-code.service';
-import { MetricValueSelect } from './models/metric-value.model';
+import { MetricValueSelect } from './models/metric-value-select.model';
 import { MetricSelect } from './models/metric-select.model';
 
 export class ReportService {
@@ -25,7 +25,7 @@ export class ReportService {
         const metricNamesArray: string = this.getMetricNamesArray(jsonReport.reportMetrics);
         this.setMetricSelects(jsonReport.reportMetrics, htmlReport, metricNamesArray);
         this.generateRowSnippets(!!jsonReport.measureName, jsonReport.reportMetrics, htmlReport);
-        this.generateDivCodeMetrics(jsonReport.reportMetrics, htmlReport);
+        this.generateDivCodeMetrics(jsonReport.reportMetrics, htmlReport, metricNamesArray);
         const template: HandlebarsTemplateDelegate = this.setTemplate();
         this.writeReport(htmlReport, template);
         return htmlReport;
@@ -65,26 +65,25 @@ export class ReportService {
         htmlReport.rowSnippets.push(rowSnippet);
     }
 
-    private static generateDivCodeMetrics(reportMetrics: ReportMetric[], htmlReport: HtmlReport): void {
-        // const metricNames: string[] = htmlReport.metricSelects.map(m => m.metricName);
+    private static generateDivCodeMetrics(reportMetrics: ReportMetric[], htmlReport: HtmlReport, metricNamesArray: string): void {
         for (const metricSelect of htmlReport.metricSelects) {
-            this.generateDivCodeMetric(metricSelect, reportMetrics, htmlReport);
+            this.generateDivCodeMetric(metricSelect, reportMetrics, htmlReport, metricNamesArray);
         }
     }
 
-    private static generateDivCodeMetric(metricSelect: MetricSelect, reportMetrics: ReportMetric[], htmlReport: HtmlReport): void {
+    private static generateDivCodeMetric(metricSelect: MetricSelect, reportMetrics: ReportMetric[], htmlReport: HtmlReport, metricNamesArray: string): void {
         const divCodeMetric = new DivCodeMetric(metricSelect);
         const fileNames: string[] = unique(flat(reportMetrics.map(r => r.reportSnippets.map(r => r.fileName))));
         for (const fileName of fileNames) {
-            this.generateDivCode(metricSelect.metricName, fileName, reportMetrics, htmlReport, divCodeMetric);
+            this.generateDivCode(metricSelect.metricName, fileName, reportMetrics, htmlReport, divCodeMetric, metricNamesArray);
         }
         htmlReport.divCodeMetrics.push(divCodeMetric);
     }
 
-    private static generateDivCode(metricName: string, fileName: string, reportMetrics: ReportMetric[], htmlReport: HtmlReport, divCodeMetric: DivCodeMetric): void {
+    private static generateDivCode(metricName: string, fileName: string, reportMetrics: ReportMetric[], htmlReport: HtmlReport, divCodeMetric: DivCodeMetric, metricNamesArray: string): void {
         const divCode = new DivCode(fileName, metricName);
         const reportSnippetForThisMetric: ReportSnippet = this.getReportSnippetForGivenMetric(metricName, fileName, reportMetrics);
-        this.setMetricValues(divCode, fileName, reportMetrics, htmlReport);
+        this.setMetricValues(divCode, fileName, reportMetrics, htmlReport, metricNamesArray);
         divCode.code = ReportCodeService.getCode(reportSnippetForThisMetric.lines);
         divCodeMetric.divCodes.push(divCode);
     }
@@ -93,16 +92,16 @@ export class ReportService {
         return flat(reportMetrics.map(r => r.reportSnippets)).find((s: ReportSnippet) => s.metricName === metricName && s.fileName === fileName);
     }
 
-    private static setMetricValues(divCode: DivCode, fileName: string, reportMetrics: ReportMetric[], htmlReport: HtmlReport): void {
+    private static setMetricValues(divCode: DivCode, fileName: string, reportMetrics: ReportMetric[], htmlReport: HtmlReport, metricNamesArray: string): void {
         for (const metricSelect of htmlReport.metricSelects) {
-            this.setMetricValue(divCode, fileName, reportMetrics, metricSelect);
+            this.setMetricValue(divCode, fileName, reportMetrics, metricSelect, metricNamesArray);
         }
     }
 
-    private static setMetricValue(divCode: DivCode, fileName: string, reportMetrics: ReportMetric[], metricSelect: MetricSelect): void {
+    private static setMetricValue(divCode: DivCode, fileName: string, reportMetrics: ReportMetric[], metricSelect: MetricSelect, metricNamesArray: string): void {
         const reportSnippets: ReportSnippet[] = flat(reportMetrics.map(r => r.reportSnippets));
         const reportSnippetForThisFileAndThisMetric: ReportSnippet = reportSnippets.find(s => s.fileName === fileName && s.metricName === metricSelect.metricName);
-        divCode.metricValues.push(new MetricValueSelect(metricSelect, reportSnippetForThisFileAndThisMetric.score));
+        divCode.metricValues.push(new MetricValueSelect(metricSelect, reportSnippetForThisFileAndThisMetric.score, metricNamesArray));
     }
 
     private static setTemplate(): HandlebarsTemplateDelegate {

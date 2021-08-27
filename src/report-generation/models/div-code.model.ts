@@ -1,4 +1,4 @@
-import { MetricValueSelect } from './metric-value.model';
+import { MetricValueSelect } from './metric-value-select.model';
 
 export class DivCode {
 
