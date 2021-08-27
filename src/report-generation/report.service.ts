@@ -18,11 +18,12 @@ import { MetricSelect } from './models/metric-select.model';
 export class ReportService {
 
     static async start(jsonReport: JsonReportInterface): Promise<any> {
-        console.log(chalk.greenBright('JSON REPORTTTTT '), jsonReport.reportMetrics);
+        // console.log(chalk.greenBright('JSON REPORTTTTT '), jsonReport.reportMetrics);
         this.createStyleFiles();
         const htmlReport = new HtmlReport();
         htmlReport.measure = jsonReport.measureName;
-        this.setMetricSelects(jsonReport.reportMetrics, htmlReport);
+        const metricNamesArray: string = this.getMetricNamesArray(jsonReport.reportMetrics);
+        this.setMetricSelects(jsonReport.reportMetrics, htmlReport, metricNamesArray);
         this.generateRowSnippets(!!jsonReport.measureName, jsonReport.reportMetrics, htmlReport);
         this.generateDivCodeMetrics(jsonReport.reportMetrics, htmlReport);
         const template: HandlebarsTemplateDelegate = this.setTemplate();
@@ -30,11 +31,21 @@ export class ReportService {
         return htmlReport;
     }
 
-    private static setMetricSelects(reportMetrics: ReportMetric[], htmlReport: HtmlReport): void {
+    private static getMetricNamesArray(reportMetrics: ReportMetric[]): string {
+        let metricNamesArray = '';
+        for (const reportMetric of reportMetrics) {
+            metricNamesArray = `${metricNamesArray}, '${reportMetric.metricName}'`;
+        }
+        return `[${metricNamesArray.slice(2)}]`;
+
+    }
+
+    private static setMetricSelects(reportMetrics: ReportMetric[], htmlReport: HtmlReport, metricNamesArray: string): void {
         for (let i = 0; i < reportMetrics.length; i++) {
-            const metricSelect = new MetricSelect(reportMetrics[i].metricName);
+            const metricSelect = new MetricSelect(reportMetrics[i].metricName, metricNamesArray);
             metricSelect.isSelected = i === 0;
             htmlReport.metricSelects.push(metricSelect);
+            metricNamesArray = `${metricNamesArray}, '${reportMetrics[i].metricName}'`;
         }
     }
 
