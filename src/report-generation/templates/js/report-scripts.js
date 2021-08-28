@@ -1,7 +1,4 @@
 function selectAll(metricSelected, metricNames, fileNames) {
-    console.log('ZZZZZZ metric', metricSelected);
-    console.log('ZZZZZZ metricssss', metricNames);
-    console.log('ZZZZZZ filessss', fileNames);
     toggleSelection('array-', metricSelected, metricNames);
     toggleGloballyVisibility(fileNames, metricSelected, metricNames);
 }
@@ -25,8 +22,6 @@ function selectOne(fileName, metricSelected, metricNames) {
 }
 
 function toggleVisibilityForOneFile(fileName, metricSelected, metricNames) {
-    console.log('METR SLCTDDDDD', fileName, metricSelected)
-    console.log('METR SLCTDDDDD', metricNames)
     for (const metricName of metricNames) {
         document.getElementById(`tr-${fileName}-${metricName}`).style.display = 'none';
     }

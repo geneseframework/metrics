@@ -5,6 +5,10 @@
         "measure": "Time",
         "metrics": [
             {
+                "id": "genese-cpx",
+                "name": "genese-cpx"
+            },
+            {
                 "id": "identifiers",
                 "name": "#identifiers"
             },

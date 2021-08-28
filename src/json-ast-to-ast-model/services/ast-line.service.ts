@@ -1,7 +1,7 @@
-import { AstCode } from '../models/ast-code.model';
-import { AstAbstract } from '../models/ast-abstract.model';
-import { AstLine } from '../models/ast-line.model';
-import { AstNode } from '../models/ast-node.model';
+import { AstCode } from '../../core/models/ast-model/ast-code.model';
+import { AstAbstract } from '../../core/models/ast-model/ast-abstract.model';
+import { AstLine } from '../../core/models/ast-model/ast-line.model';
+import { AstNode } from '../../core/models/ast-model/ast-node.model';
 import { firstElement } from '../../core/utils/arrays.util';
 import { Interval } from '../types/interval.type';
 

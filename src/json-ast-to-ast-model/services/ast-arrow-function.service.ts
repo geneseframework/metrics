@@ -1,9 +1,9 @@
-import { AstFile } from '../models/ast-file.model';
-import { AstArrowFunction } from '../models/ast-arrow-function.model';
+import { AstFile } from '../../core/models/ast-model/ast-file.model';
+import { AstArrowFunction } from '../../core/models/ast-model/ast-arrow-function.model';
 import { JsonAstNodeInterface } from '../../core/interfaces/json-ast/json-ast-node.interface';
 import { SyntaxKind } from '../../core/enum/syntax-kind.enum';
-import { AstFunction } from '../models/ast-function.model';
-import { AstClass } from '../models/ast-class.model';
+import { AstFunction } from '../../core/models/ast-model/ast-function.model';
+import { AstClass } from '../../core/models/ast-model/ast-class.model';
 import { AstFileOrClass, isAstFile } from '../../core/types/ast/ast-file-or-class.type';
 import { AstFuncOrArrowFuncService } from './ast-func-or-arrow-func.service';
 

@@ -1,5 +1,5 @@
 import { JsonAstInterface } from '../../core/interfaces/json-ast/json-ast.interface';
-import { AstModel } from '../models/ast.model';
+import { AstModel } from '../../core/models/ast-model/ast.model';
 import { AstMetricService } from './ast-metric.service';
 import { Metric } from '../../core/models/metric.model';
 import * as chalk from 'chalk';

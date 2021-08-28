@@ -10,24 +10,20 @@ import { HtmlGenerationService } from './html-generation/html-generation.service
 import { ReportService } from './report-generation/report.service';
 import { JsonAstInterface } from './core/interfaces/json-ast/json-ast.interface';
 import { JsonReportInterface } from './core/interfaces/json-report/json-report.interface';
-import { AstModel } from './json-ast-to-ast-model/models/ast.model';
+import { AstModel } from './core/models/ast-model/ast.model';
 import { AstModelService } from './json-ast-to-ast-model/services/ast-model.service';
 import { EvaluationService } from './evaluation/evaluation.service';
 import { ReportModel } from './report-generation/models/report.model';
 
 const ARGS: string[] = process.argv.slice(2);
 const LANGUAGE = ARGS[1] ?? 'ts';
-const ENABLE_CONSOLE_REPORT = ARGS[3] === 'true';
 let FRAMEWORK = ARGS[5] ?? undefined;
 
 export async function startDebug(): Promise<number> {
     const pathToAnalyse = `${process.cwd()}/src/core/mocks/code-snippets`;
-    // const pathToAnalyse = `${process.cwd()}/src/core/mocks/subfolder/sub-subfolder`;
     FRAMEWORK = 'react';
     Options.setOptions(process.cwd(), pathToAnalyse, __dirname);
-    if (!ENABLE_CONSOLE_REPORT) {
-        createOutDir();
-    }
+    createOutDir();
     console.log(chalk.yellowBright('Json AST generation...'));
     Options.setOptions(process.cwd(), pathToAnalyse, __dirname, FRAMEWORK as Framework);
     const jsonAst: JsonAstInterface = Options.generateJsonAst ? JsonAstCreationService.start(Options.pathFolderToAnalyze, LANGUAGE as Language) : require(Options.jsonAstPath);
@@ -36,16 +32,16 @@ export async function startDebug(): Promise<number> {
     const astModel: AstModel = AstModelService.generate(jsonAst);
     console.log(chalk.yellowBright('Evaluation for each metric...'));
     const jsonReport: JsonReportInterface = Options.generateJsonReport ? EvaluationService.evaluate(astModel) : require(Options.jsonReportPath);
-    console.log(chalk.yellowBright('Json Report generation...'));
+    console.log(chalk.yellowBright('Report generation...'));
     const reportModel: ReportModel = Options.generateJsonReport ? await ReportService.start(jsonReport) : require(Options.jsonReportPath);
-    console.log(chalk.yellowBright('HTML report generation...'));
-    // const reportResult = HtmlGenerationService.start(reportModel, Options.pathCommand, ENABLE_MARKDOWN_REPORT, ENABLE_CONSOLE_REPORT);
-    // const reportResult = HtmlGenerationService.start(Options.pathCommand, ENABLE_MARKDOWN_REPORT, ENABLE_CONSOLE_REPORT);
+    // console.log(chalk.yellowBright('HTML report generation...'));
+    // const reportResult = HtmlGenerationService.start(reportModel, Options.pathCommand);
+    // const reportResult = HtmlGenerationService.start(Options.pathCommand);
     // return logResults(reportResult);
     return undefined;
 }
 
-function logReport(reportResult: any[]): number {
+function logReport(reportResult: any[]): void {
     if (reportResult?.length > 0) {
         console.log();
         if (typeof reportResult === 'object') {
@@ -58,30 +54,5 @@ function logReport(reportResult: any[]): number {
             console.log(chalk.blueBright('Cyclomatic Complexity : '), stats.totalCyclomaticComplexity);
             console.log(reportResult);
         }
-        if (ENABLE_CONSOLE_REPORT) {
-            return 1;
-        }
     }
-    return 0;
-}
-
-
-function logResults(reportResult: any[]): number {
-    if (reportResult?.length > 0) {
-        console.log();
-        if (typeof reportResult === 'object') {
-            console.table(reportResult, ['filename', 'methodName', 'cpxIndex']);
-        } else {
-            const stats: any = HtmlGenerationService.astFolder['_stats'];
-            console.log(chalk.blueBright('Files : '), stats.numberOfFiles);
-            console.log(chalk.blueBright('Methods : '), stats.numberOfMethods);
-            console.log(chalk.blueBright('Comprehension Complexity : '), stats.totalCognitiveComplexity);
-            console.log(chalk.blueBright('Cyclomatic Complexity : '), stats.totalCyclomaticComplexity);
-            console.log(reportResult);
-        }
-        if (ENABLE_CONSOLE_REPORT) {
-            return 1;
-        }
-    }
-    return 0;
 }

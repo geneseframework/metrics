@@ -1,7 +1,7 @@
 import { JsonAstFolderInterface } from '../../core/interfaces/json-ast/json-ast-folder.interface';
 import { AstFileService } from './ast-file.service';
 import { MetricInterface } from '../../core/interfaces/json-report/metric.interface';
-import { AstMetric } from '../models/ast-metric.model';
+import { AstMetric } from '../../core/models/ast-model/ast-metric.model';
 
 export class AstMetricService {
 

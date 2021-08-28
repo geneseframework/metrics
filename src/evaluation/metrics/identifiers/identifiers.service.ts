@@ -1,6 +1,6 @@
 import { AbstractMetricService } from '../services/abstract-metric.service';
-import { AstFile } from '../../../json-ast-to-ast-model/models/ast-file.model';
-import { AstLine } from '../../../json-ast-to-ast-model/models/ast-line.model';
+import { AstFile } from '../../../core/models/ast-model/ast-file.model';
+import { AstLine } from '../../../core/models/ast-model/ast-line.model';
 import { ReportSnippet } from '../../../report-generation/models/report-snippet.model';
 import { ReportLine } from '../../../report-generation/models/report-line.model';
 import * as chalk from 'chalk';
