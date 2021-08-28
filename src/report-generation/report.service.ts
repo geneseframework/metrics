@@ -13,6 +13,7 @@ import { ReportCodeService } from './services/report-code.service';
 import { MetricSelect } from './models/metric-select.model';
 import { DivFile } from './models/div-file.model';
 import { DivCodeValues } from './models/div-code-values.model';
+import * as chalk from 'chalk';
 
 export class ReportService {
 
@@ -25,7 +26,7 @@ export class ReportService {
     static selectedMetric = '';
 
     static start(jsonReport: JsonReportInterface): HtmlReport {
-        // console.log(chalk.greenBright('JSON REPORTTTTT '), jsonReport.reportMetrics);
+        console.log(chalk.greenBright('JSON REPORTTTTT '), jsonReport.reportMetrics[0].reportSnippets);
         this.htmlReport.measure = jsonReport.measureName;
         this.fileNames = unique(flat(jsonReport.reportMetrics.map(r => r.reportSnippets.map(s => s.fileName))));
         this.metricNames = unique(flat(jsonReport.reportMetrics.map(r => r.reportSnippets.map(s => s.metricName))));
@@ -36,8 +37,7 @@ export class ReportService {
         this.setMetricSelects();
         this.generateRowSnippets(!!jsonReport.measureName, jsonReport.reportMetrics);
         this.generateDivFiles();
-        const template: HandlebarsTemplateDelegate = this.setTemplate();
-        this.writeReport(template);
+        this.writeReport();
         return this.htmlReport;
     }
 
@@ -123,8 +123,9 @@ export class ReportService {
     /**
      * Creates the file of the report
      */
-    private static writeReport(template: HandlebarsTemplateDelegate) {
+    private static writeReport() {
         // console.log(chalk.cyanBright('HTML REPORTTTT'), this.htmlReport);
+        const template: HandlebarsTemplateDelegate = this.setTemplate();
         const content = template(this.htmlReport);
         const pathReport = `${Options.pathCommand}/report/report.html`;
         fs.writeFileSync(pathReport, content, { encoding: 'utf-8' });

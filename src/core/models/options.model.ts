@@ -42,6 +42,7 @@ export class Options {
     static measure = '';
     static metrics: MetricInterface[] = [COMPREHENSION_CPX, CYCLOMATIC_CPX];
     static pathCommand = '';                    // The path of the folder where the command-line was entered (can't be overridden)
+    static pathDataset = '';
     static pathFolderToAnalyze = './';          // The path of the folder to analyse (can be overridden)
     static pathGeneseNodeJs = '';               // The path of the node_module Genese in the nodejs user environment (can't be overridden)
     static pathOutDir = '';                     // The path where the reports are created (can be overridden)
@@ -87,13 +88,13 @@ export class Options {
      * Sets the options of genese-complexity module with geneseconfig.json options (higher priority than geneseconfig.json options)
      * @param geneseConfigPath  // The path of the geneseconfig.json file
      */
-    // TODO : add metrics option
     static setOptionsFromConfig(geneseConfigPath: string): void {
         const config = require(geneseConfigPath);
         Options.ignore = this.filterIgnorePathsForDotSlash(config.complexity.ignore) ?? Options.ignore;
         Options.ignore.forEach((path, i) => {
             Options.ignoreRegex += i !== Options.ignore.length - 1 ? `${this.pathTransformator(path)}|` : `${this.pathTransformator(path)}`;
         });
+        Options.pathDataset = config.complexity?.pathDataset ?? `${Options.pathFolderToAnalyze}/dataset.xlsx`;
         Options.pathFolderToAnalyze = config.complexity?.pathFolderToAnalyze ?? Options.pathFolderToAnalyze;
         Options.pathOutDir = config.complexity?.pathReports ?? Options.pathOutDir;
         Options.ignore.push(Options.pathOutDir);

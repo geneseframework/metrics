@@ -1,4 +1,4 @@
-import { Measure } from '../../../report-generation/models/measure.model';
+import { Measure } from '../../report-generation/models/measure.model';
 
 export const MEASURES: Measure[] = [
     {
