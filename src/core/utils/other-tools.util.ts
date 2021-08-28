@@ -9,13 +9,6 @@ export function capitalize(text: string): string {
     return `${text.charAt(0).toUpperCase()}${text.slice(1)}`;
 }
 
-// TODO: Remove in release version
-export let duration = {};
-export function incrementIdentifierDuration(dt: number, v: string) {
-    duration[v] = duration[v] ? duration[v] + dt : dt;
-}
-
-
 /**
  * Returns the result of a fraction in percentage with 2 decimals
  * @param numerator         // The numerator of the fraction

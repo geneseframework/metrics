@@ -1,6 +1,8 @@
 /**
  * The Complexity Factors
  */
+import { round } from '../../../../../core/utils/numbers.util';
+
 export class Cpx {
 
     aggregation: number = 0;                    // Aggregation Complexity
@@ -22,7 +24,7 @@ export class Cpx {
         for (const key of Object.keys(this)) {
             total += this[key] ?? 0;
         }
-        return +total.toFixed(1);
+        return round(total, 1);
     }
 
     get comments(): string {
@@ -31,7 +33,7 @@ export class Cpx {
         }
         let text = `+ ${this.total} (`;
         for (const key of Object.keys(this)) {
-            text = this[key] > 0 ? `${text}+${this[key].toFixed(1)} ${key}, ` : `${text}`;
+            text = this[key] > 0 ? `${text}+${round(this[key], 1)} ${key}, ` : `${text}`;
         }
         return `${text.slice(0, -2)})`;
     }
