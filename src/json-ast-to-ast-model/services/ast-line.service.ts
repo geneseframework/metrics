@@ -17,15 +17,14 @@ export class AstLineService {
         const astLines: AstLine[] = [];
         let position: number = astCode.astAbstract.interval[0];
         for (const textLine of textLines) {
-            const line = new AstLine();
-            line.text = textLine;
-            line.issue = issue;
-            line.pos = this.getLinePos(position, astCode.astAbstract, issue);
-            line.end = line.pos + textLine.length;
-            line.astNodes = this.getAstNodes(astCode.astAbstract, line.pos, line.end);
+            const astLine = new AstLine(textLine, issue);
+            astLine.pos = this.getLinePos(position, astCode.astAbstract, issue);
+            astLine.end = astLine.pos + textLine.length;
+            astLine.astNodes = this.getAstNodes(astCode.astAbstract, astLine.pos, astLine.end);
             issue++;
             position = this.getPositionAfterTextLineAndLineBreak(position, textLine);
-            astLines.push(line);
+            astLine.setCpxParameters();
+            astLines.push(astLine);
         }
         return astLines;
     }

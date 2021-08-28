@@ -19,8 +19,7 @@ export class IdentifiersService extends AbstractMetricService {
     }
 
     private evaluateLine(astLine: AstLine, reportLine: ReportLine): void {
-        // console.log(chalk.cyanBright('EVAL LINEEEEE'), reportLine.issue, reportLine.text,  astLine.astNodes.map(a => a.kind));
-        reportLine.score = astLine.astNodes.length > 0 ? 2 : 0;
-        reportLine.comments = astLine.astNodes.length > 0 ? '+2' : '';
+        reportLine.score = astLine.nbIdentifiers;
+        reportLine.comments = reportLine.score > 0 ? `+${reportLine.score}` : '';
     }
 }
