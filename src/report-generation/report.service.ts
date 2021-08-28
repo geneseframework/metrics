@@ -125,7 +125,7 @@ export class ReportService {
      * Creates the file of the report
      */
     private static writeReport(template: HandlebarsTemplateDelegate) {
-        console.log(chalk.cyanBright('HTML REPORTTTT'), this.htmlReport);
+        // console.log(chalk.cyanBright('HTML REPORTTTT'), this.htmlReport);
         const content = template(this.htmlReport);
         const pathReport = `${Options.pathCommand}/report/report.html`;
         fs.writeFileSync(pathReport, content, { encoding: 'utf-8' });

@@ -13,18 +13,20 @@ function toggleSelection(rootId, metricSelected, metricNames) {
     document.getElementById(`${rootId}${metricSelected}`).className = 'selected';
 }
 
+function toggleGloballyVisibility(fileNames, metricSelected, metricNames) {
+    for (const fileName of fileNames) {
+        selectOne(fileName, metricSelected, metricNames);
+    }
+}
+
 function selectOne(fileName, metricSelected, metricNames) {
     toggleSelection(`div-file-${fileName}-`, metricSelected, metricNames);
     toggleVisibilityForOneFile(fileName, metricSelected, metricNames);
 }
 
-function toggleGloballyVisibility(fileNames, metricSelected, metricNames) {
-    for (const fileName of fileNames) {
-        toggleVisibilityForOneFile(fileName, metricSelected, metricNames)
-    }
-}
-
 function toggleVisibilityForOneFile(fileName, metricSelected, metricNames) {
+    console.log('METR SLCTDDDDD', fileName, metricSelected)
+    console.log('METR SLCTDDDDD', metricNames)
     for (const metricName of metricNames) {
         document.getElementById(`tr-${fileName}-${metricName}`).style.display = 'none';
     }
