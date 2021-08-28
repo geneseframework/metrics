@@ -32,7 +32,8 @@ export class ReportService {
         this.metricNames = unique(flat(jsonReport.reportMetrics.map(r => r.reportSnippets.map(s => s.metricName))));
         this.selectedMetric = this.metricNames[0];
         this.reportMetrics = jsonReport.reportMetrics;
-        this.metricNamesArray = this.getMetricNamesArray();
+        this.metricNamesArray = this.setNamesArray(this.metricNames);
+        this.fileNamesArray = this.setNamesArray(this.fileNames);
         this.setMetricSelects();
         this.generateRowSnippets(!!jsonReport.measureName, jsonReport.reportMetrics);
         this.generateDivFiles();
@@ -41,21 +42,20 @@ export class ReportService {
         return this.htmlReport;
     }
 
-    private static getMetricNamesArray(): string {
-        let metricNamesArray = '';
-        for (const reportMetric of this.reportMetrics) {
-            metricNamesArray = `${metricNamesArray}, '${reportMetric.metricName}'`;
+    private static setNamesArray(names: string[]): string {
+        let namesArray = '';
+        for (const name of names) {
+            namesArray = `${namesArray}, '${name}'`;
         }
-        return `[${metricNamesArray.slice(2)}]`;
+        return `[${namesArray.slice(2)}]`;
 
     }
 
     private static setMetricSelects(): void {
         for (let i = 0; i < this.reportMetrics.length; i++) {
-            const metricSelect = new MetricSelect(this.reportMetrics[i].metricName, this.metricNamesArray);
+            const metricSelect = new MetricSelect(this.reportMetrics[i].metricName, this.metricNamesArray, this.fileNamesArray);
             metricSelect.isSelected = i === 0;
             this.htmlReport.metricSelects.push(metricSelect);
-            this.metricNamesArray = `${this.metricNamesArray}, '${this.reportMetrics[i].metricName}'`;
         }
     }
 
@@ -82,7 +82,7 @@ export class ReportService {
 
     private static generateDivFile(fileName: string): void {
         const divFile = new DivFile(fileName, this.selectedMetric);
-        this.setMetricValues(divFile, fileName, this.metricNamesArray);
+        this.setMetricValues(divFile, fileName);
         for (const metricName of this.metricNames) {
             this.generateDivCode(metricName, fileName, divFile);
         }
@@ -101,17 +101,16 @@ export class ReportService {
         return flat(this.reportMetrics.map(r => r.reportSnippets)).find((s: ReportSnippet) => s.metricName === metricName && s.fileName === fileName);
     }
 
-    private static setMetricValues(divFile: DivFile, fileName: string, metricNamesArray: string): void {
+    private static setMetricValues(divFile: DivFile, fileName: string): void {
         for (const metricSelect of this.htmlReport.metricSelects) {
-            this.setMetricValue(divFile, fileName, metricSelect, metricNamesArray);
+            this.setMetricValue(divFile, fileName, metricSelect);
         }
     }
 
-    private static setMetricValue(divFile: DivFile, fileName: string, metricSelect: MetricSelect, metricNamesArray: string): void {
-        console.log(chalk.blueBright('METR SELCTTTTT'), metricSelect);
+    private static setMetricValue(divFile: DivFile, fileName: string, metricSelect: MetricSelect): void {
         const reportSnippets: ReportSnippet[] = flat(this.reportMetrics.map(r => r.reportSnippets));
         const reportSnippetForThisFileAndThisMetric: ReportSnippet = reportSnippets.find(s => s.fileName === fileName && s.metricName === metricSelect.metricName);
-        divFile.divCodeValues.push(new DivCodeValues(fileName, metricSelect, reportSnippetForThisFileAndThisMetric.score, metricNamesArray));
+        divFile.divCodeValues.push(new DivCodeValues(fileName, metricSelect, reportSnippetForThisFileAndThisMetric.score, this.metricNamesArray));
     }
 
     private static setTemplate(): HandlebarsTemplateDelegate {
@@ -126,7 +125,7 @@ export class ReportService {
      * Creates the file of the report
      */
     private static writeReport(template: HandlebarsTemplateDelegate) {
-        console.log(chalk.cyanBright('HTML REPORTTTT'), this.htmlReport.divFiles);
+        console.log(chalk.cyanBright('HTML REPORTTTT'), this.htmlReport);
         const content = template(this.htmlReport);
         const pathReport = `${Options.pathCommand}/report/report.html`;
         fs.writeFileSync(pathReport, content, { encoding: 'utf-8' });
