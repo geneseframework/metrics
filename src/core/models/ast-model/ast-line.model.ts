@@ -2,7 +2,7 @@
  * A line of a Code object
  */
 import { AstNode } from './ast-node.model';
-import { SyntaxKind } from '../../enum/syntax-kind.enum';
+import { isIdentifier, isKeyword, isLiteral } from '../../utils/syntax-kind.util';
 
 export class AstLine {
 
@@ -23,12 +23,23 @@ export class AstLine {
         return this.identifiers.length;
     }
 
+    get nbKeywords(): number {
+        return this.astNodes.filter(a => isKeyword(a.kind)).length;
+    }
+
+    get nbLiterals(): number {
+        return this.astNodes.filter(a => isLiteral(a.kind)).length;
+    }
+
+    get nbWords(): number {
+        return this.nbIdentifiers + this.nbKeywords + this.nbLiterals;
+    }
+
     setCpxParameters(): void {
         this.setIdentifiersCpx();
     }
 
     private setIdentifiersCpx(): void {
-        this.identifiers = this.astNodes.filter(a => a.kind === SyntaxKind.Identifier);
-        // console.log(chalk.blueBright('NB IDDDDDD'), this.text, this.nbIdentifiers);
+        this.identifiers = this.astNodes.filter(a => isIdentifier(a.kind));
     }
 }

@@ -34,10 +34,7 @@ export async function startDebug(): Promise<number> {
     const jsonReport: JsonReportInterface = Options.generateJsonReport ? EvaluationService.evaluate(astModel) : require(Options.jsonReportPath);
     console.log(chalk.yellowBright('Report generation...'));
     const reportModel: ReportModel = Options.generateJsonReport ? await ReportService.start(jsonReport) : require(Options.jsonReportPath);
-    // console.log(chalk.yellowBright('HTML report generation...'));
-    // const reportResult = HtmlGenerationService.start(reportModel, Options.pathCommand);
-    // const reportResult = HtmlGenerationService.start(Options.pathCommand);
-    // return logResults(reportResult);
+    // return logResults(reportModel);
     return undefined;
 }
 

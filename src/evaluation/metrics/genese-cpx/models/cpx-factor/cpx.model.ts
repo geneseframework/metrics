@@ -1,5 +1,3 @@
-import { capitalize } from '../../../../../core/utils/strings.util';
-
 /**
  * The Complexity Factors
  */
@@ -16,21 +14,26 @@ export class Cpx {
     use: number = 0;                            // Use Complexity
 
 
-
-    // ---------------------------------------------------------------------------------
-    //                                Getters and setters
-    // ---------------------------------------------------------------------------------
-
-
     /**
      * Returns the total of Complexity Factors (the Complexity Index)
      */
     get total(): number {
         let total = 0;
         for (const key of Object.keys(this)) {
-            total += this[`total${capitalize(key)}`] ?? 0;
+            total += this[key] ?? 0;
         }
         return +total.toFixed(1);
+    }
+
+    get comments(): string {
+        if (this.total === 0) {
+            return '';
+        }
+        let text = `+ ${this.total} (`;
+        for (const key of Object.keys(this)) {
+            text = this[key] > 0 ? `${text}+${this[key].toFixed(1)} ${key}, ` : `${text}`;
+        }
+        return `${text.slice(0, -2)})`;
     }
 
 }
