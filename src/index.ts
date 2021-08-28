@@ -43,7 +43,7 @@ start()
     })
 
 async function start(): Promise<number> {
-    const pathToAnalyse = `${process.cwd()}/src/core/mocks/subfolder`;
+    const pathToAnalyse = `${process.cwd()}/src/core/mocks/siegmund-2012`;
     // const pathToAnalyse = `${process.cwd()}/src/core/mocks/code-snippets`;
     FRAMEWORK = 'react';
     Options.setOptions(process.cwd(), pathToAnalyse, __dirname);
