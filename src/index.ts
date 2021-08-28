@@ -32,7 +32,7 @@ function start(): void {
     console.log(chalk.yellowBright('Evaluation for each metric...'));
     const jsonReport: JsonReportInterface = Options.generateJsonReport ? EvaluationService.evaluate(astModel) : require(Options.jsonReportPath);
     console.log(chalk.yellowBright('Report generation...'));
-    const reportModel: ReportModel = Options.generateJsonReport ? ReportService.start(jsonReport) : require(Options.jsonReportPath);
+    ReportService.start(jsonReport);
     // return logResults(reportModel);
 }
 
