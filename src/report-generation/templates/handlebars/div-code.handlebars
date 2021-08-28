@@ -1,29 +1,12 @@
-<div id="{{fileName}}">
-    <table class="array-report method-table">
-        <thead class="method-thead">
-        <tr>
-            <th class="method-name-column">{{fileName}}</th>
-            {{#each metricValues}}
-                <th class="right bgwhite">
-                    {{#if this.isSelected}}
-                       <span class="selected" id="div-code-{{fileName}}-{{this.metricName}}" onclick="selectOne('{{fileName}}', '{{this.metricName}}', true, {{this.metricNamesArray}})">{{this.metricName}}</span>
-                    {{else}}
-                        <span class="not-selected" id="div-code-{{fileName}}-{{this.metricName}}" onclick="selectOne('{{fileName}}', '{{this.metricName}}', true, {{this.metricNamesArray}})">{{this.metricName}}</span>
-                    {{/if}}
-                </th>
-                <th class="score">{{this.value}}</th>
-            {{/each}}
-        </tr>
-        </thead>
-        <tbody class="method-body">
-        <tr class="code-row">
-            <td>
-                <pre>
-                    <code class="language-js">
-{{divCode.code}}</code>
-                </pre>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-</div>
+{{#if isDisplayed}}
+<tr class="code-row" id="tr-{{fileName}}-{{metricName}}">
+{{else}}
+<tr class="code-row not-displayed" id="tr-{{fileName}}-{{metricName}}">
+{{/if}}
+    <td>
+        <pre>
+            <code class="language-js">
+{{code}}</code>
+        </pre>
+    </td>
+</tr>

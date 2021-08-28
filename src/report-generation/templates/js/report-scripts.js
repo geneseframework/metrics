@@ -1,25 +1,34 @@
-function selectAll(metricName, isSelected, metricNames) {
-    console.log('ZZZZZZ', metricName, isSelected);
-    console.log('ZZZZZZssss', metricNames);
-    toggleSelection('all-', metricName, isSelected, metricNames);
-    toggleGloballyVisibility(metricName, isSelected, metricNames);
+function selectAll(metricSelected, metricNames, fileNames) {
+    console.log('ZZZZZZ metric', metricSelected);
+    console.log('ZZZZZZ metricssss', metricNames);
+    console.log('ZZZZZZ filessss', fileNames);
+    toggleSelection('array-', metricSelected, metricNames);
+    toggleGloballyVisibility(fileNames, metricSelected, metricNames);
 }
 
-function toggleSelection(rootId, metricName, isSelected, metricNames) {
-    for (const name of metricNames) {
-        document.getElementById(`${rootId}${name}`).className = 'not-selected';
+function toggleSelection(rootId, metricSelected, metricNames) {
+    for (const metricName of metricNames) {
+        document.getElementById(`${rootId}${metricName}`).className = 'not-selected';
     }
-    document.getElementById(`${rootId}${metricName}`).className = 'selected';
+    document.getElementById(`${rootId}${metricSelected}`).className = 'selected';
 }
 
-function toggleGloballyVisibility(metricName, isSelected, metricNames) {
-    for (const name of metricNames) {
-        document.getElementById(`div-metric-${name}`).style.display = 'none';
+function toggleGloballyVisibility(fileNames, metricSelected, metricNames) {
+    for (const fileName of fileNames) {
+        selectOne(fileName, metricSelected, metricNames);
     }
-    document.getElementById(`div-metric-${metricName}`).style.display = 'block';
 }
-function selectOne(fileName, metricName, isSelected, metricNames) {
-    console.log('AAAAAA', fileName, metricName, isSelected);
-    console.log('AAAAAAssss', metricNames);
-    toggleSelection(`div-code-${fileName}-`, metricName, isSelected, metricNames);
+
+function selectOne(fileName, metricSelected, metricNames) {
+    toggleSelection(`div-file-${fileName}-`, metricSelected, metricNames);
+    toggleVisibilityForOneFile(fileName, metricSelected, metricNames);
+}
+
+function toggleVisibilityForOneFile(fileName, metricSelected, metricNames) {
+    console.log('METR SLCTDDDDD', fileName, metricSelected)
+    console.log('METR SLCTDDDDD', metricNames)
+    for (const metricName of metricNames) {
+        document.getElementById(`tr-${fileName}-${metricName}`).style.display = 'none';
+    }
+    document.getElementById(`tr-${fileName}-${metricSelected}`).style.display = 'table';
 }
