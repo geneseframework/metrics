@@ -20,7 +20,8 @@ const LANGUAGE = ARGS[1] ?? 'ts';
 let FRAMEWORK = ARGS[5] ?? undefined;
 
 export async function startDebug(): Promise<number> {
-    const pathToAnalyse = `${process.cwd()}/src/core/mocks/code-snippets`;
+    const pathToAnalyse = `${process.cwd()}/src/core/mocks/subfolder`;
+    // const pathToAnalyse = `${process.cwd()}/src/core/mocks/code-snippets`;
     FRAMEWORK = 'react';
     Options.setOptions(process.cwd(), pathToAnalyse, __dirname);
     createOutDir();
