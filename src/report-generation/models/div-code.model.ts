@@ -1,14 +1,14 @@
 export class DivCode {
 
     code: string = undefined;
-    display: 'none' | 'block' = undefined;
+    isDisplayed: boolean = undefined;
     fileName: string = undefined;
     metricName: string = undefined;
 
-    constructor(fileName: string, metricName: string) {
+    constructor(fileName: string, metricName: string, isSelected: boolean) {
         this.fileName = fileName;
         this.metricName = metricName;
-        // this.display = metricSelect.isSelected ? 'block' : 'none';
+        this.isDisplayed = isSelected;
     }
 
 }

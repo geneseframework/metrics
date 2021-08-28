@@ -172,6 +172,10 @@ th {
     cursor: pointer;
 }
 
+.array-report .not-displayed {
+    display: none;
+}
+
 .array-report .score {
     text-align: center;
     width: 5%;

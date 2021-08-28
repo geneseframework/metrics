@@ -13,7 +13,7 @@ import { ReportSnippet } from './models/report-snippet.model';
 import { DivCode } from './models/div-code.model';
 import { ReportCodeService } from './services/report-code.service';
 import { MetricSelect } from './models/metric-select.model';
-import { DivCodeValues } from './models/metric-value-select.model';
+import { DivCodeValues } from './models/div-code-values.model';
 
 export class ReportService {
 
@@ -84,13 +84,14 @@ export class ReportService {
         const divFile = new DivFile(fileName, this.selectedMetric);
         this.setMetricValues(divFile, fileName, this.metricNamesArray);
         for (const metricName of this.metricNames) {
-            this.generateDivCode(metricName, fileName, divFile, this.metricNamesArray);
+            this.generateDivCode(metricName, fileName, divFile);
         }
         this.htmlReport.divFiles.push(divFile);
     }
 
-    private static generateDivCode(metricName: string, fileName: string, divCodeMetric: DivFile, metricNamesArray: string): void {
-        const divCode = new DivCode(fileName, metricName);
+    private static generateDivCode(metricName: string, fileName: string, divCodeMetric: DivFile): void {
+        const isSelected: boolean = metricName === this.selectedMetric;
+        const divCode = new DivCode(fileName, metricName, isSelected);
         const reportSnippetForThisMetric: ReportSnippet = this.getReportSnippetForGivenMetric(metricName, fileName);
         divCode.code = ReportCodeService.getCode(reportSnippetForThisMetric.lines);
         divCodeMetric.divCodes.push(divCode);
@@ -107,9 +108,10 @@ export class ReportService {
     }
 
     private static setMetricValue(divFile: DivFile, fileName: string, metricSelect: MetricSelect, metricNamesArray: string): void {
+        console.log(chalk.blueBright('METR SELCTTTTT'), metricSelect);
         const reportSnippets: ReportSnippet[] = flat(this.reportMetrics.map(r => r.reportSnippets));
         const reportSnippetForThisFileAndThisMetric: ReportSnippet = reportSnippets.find(s => s.fileName === fileName && s.metricName === metricSelect.metricName);
-        divFile.metricValues.push(new DivCodeValues(fileName, metricSelect, reportSnippetForThisFileAndThisMetric.score, metricNamesArray));
+        divFile.divCodeValues.push(new DivCodeValues(fileName, metricSelect, reportSnippetForThisFileAndThisMetric.score, metricNamesArray));
     }
 
     private static setTemplate(): HandlebarsTemplateDelegate {

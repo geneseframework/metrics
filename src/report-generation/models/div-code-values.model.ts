@@ -9,6 +9,7 @@ export class DivCodeValues {
     value: number = undefined;
 
     constructor(fileName: string, metricSelect: MetricSelect, value: number, metricNamesArray: string) {
+    // constructor(fileName: string, metricSelect: MetricSelect, isSelected: boolean, value: number, metricNamesArray: string) {
         this.fileName = fileName;
         this.metricName = metricSelect.metricName;
         this.metricNamesArray = metricNamesArray;

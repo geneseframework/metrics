@@ -1,4 +1,8 @@
+{{#if isDisplayed}}
 <tr class="code-row" id="tr-{{fileName}}-{{metricName}}">
+{{else}}
+<tr class="code-row not-displayed" id="tr-{{fileName}}-{{metricName}}">
+{{/if}}
     <td>
         <pre>
             <code class="language-js">
