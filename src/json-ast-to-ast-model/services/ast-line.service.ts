@@ -1,7 +1,7 @@
-import { AstCode } from '../models/ast-code.model';
-import { AstAbstract } from '../models/ast-abstract.model';
-import { AstLine } from '../models/ast-line.model';
-import { AstNode } from '../models/ast-node.model';
+import { AstCode } from '../../core/models/ast-model/ast-code.model';
+import { AstAbstract } from '../../core/models/ast-model/ast-abstract.model';
+import { AstLine } from '../../core/models/ast-model/ast-line.model';
+import { AstNode } from '../../core/models/ast-model/ast-node.model';
 import { firstElement } from '../../core/utils/arrays.util';
 import { Interval } from '../types/interval.type';
 
@@ -17,15 +17,14 @@ export class AstLineService {
         const astLines: AstLine[] = [];
         let position: number = astCode.astAbstract.interval[0];
         for (const textLine of textLines) {
-            const line = new AstLine();
-            line.text = textLine;
-            line.issue = issue;
-            line.pos = this.getLinePos(position, astCode.astAbstract, issue);
-            line.end = line.pos + textLine.length;
-            line.astNodes = this.getAstNodes(astCode.astAbstract, line.pos, line.end);
+            const astLine = new AstLine(textLine, issue);
+            astLine.pos = this.getLinePos(position, astCode.astAbstract, issue);
+            astLine.end = astLine.pos + textLine.length;
+            astLine.astNodes = this.getAstNodes(astCode.astAbstract, astLine.pos, astLine.end);
             issue++;
             position = this.getPositionAfterTextLineAndLineBreak(position, textLine);
-            astLines.push(line);
+            astLine.setCpxParameters();
+            astLines.push(astLine);
         }
         return astLines;
     }
