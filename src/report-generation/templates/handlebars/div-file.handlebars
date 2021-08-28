@@ -1,0 +1,24 @@
+<div id="{{fileName}}">
+    <table class="array-report method-table">
+        <thead class="method-thead">
+        <tr>
+            <th class="method-name-column">{{fileName}}</th>
+            {{#each metricValues}}
+                <th class="right bgwhite">
+                    {{#if this.isSelected}}
+                        <span class="selected" id="div-code-{{fileName}}-{{this.metricName}}" onclick="selectOne('{{fileName}}', '{{this.metricName}}', true, {{this.metricNamesArray}})">{{this.metricName}}</span>
+                    {{else}}
+                        <span class="not-selected" id="div-code-{{fileName}}-{{this.metricName}}" onclick="selectOne('{{fileName}}', '{{this.metricName}}', true, {{this.metricNamesArray}})">{{this.metricName}}</span>
+                    {{/if}}
+                </th>
+                <th class="score">{{this.value}}</th>
+            {{/each}}
+        </tr>
+        </thead>
+        <tbody class="method-body">
+{{#each divCodes}}
+    {{>divCode divCode=.}}
+{{/each}}
+        </tbody>
+    </table>
+</div>

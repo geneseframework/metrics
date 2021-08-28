@@ -18,6 +18,14 @@ function toggleGloballyVisibility(metricName, isSelected, metricNames) {
     }
     document.getElementById(`div-metric-${metricName}`).style.display = 'block';
 }
+
+function toggleVisibilityForOneFile(fileName, metricName, isSelected, metricNames) {
+    for (const name of metricNames) {
+        document.getElementById(`div-metric-${name}`).style.display = 'none';
+    }
+    document.getElementById(`div-metric-${metricName}`).style.display = 'block';
+}
+
 function selectOne(fileName, metricName, isSelected, metricNames) {
     console.log('AAAAAA', fileName, metricName, isSelected);
     console.log('AAAAAAssss', metricNames);

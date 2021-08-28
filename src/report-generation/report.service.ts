@@ -18,9 +18,11 @@ import { MetricValueSelect } from './models/metric-value-select.model';
 export class ReportService {
 
     static fileNames: string[] = [];
+    static fileNamesArray: string = '';
     static htmlReport = new HtmlReport();
     static reportMetrics: ReportMetric[] = [];
     static metricNames: string[] = [];
+    static metricNamesArray: string = '';
     static selectedMetric = '';
 
     static async start(jsonReport: JsonReportInterface): Promise<any> {
@@ -30,10 +32,10 @@ export class ReportService {
         this.metricNames = unique(flat(jsonReport.reportMetrics.map(r => r.reportSnippets.map(s => s.metricName))));
         this.selectedMetric = this.metricNames[0];
         this.reportMetrics = jsonReport.reportMetrics;
-        const metricNamesArray: string = this.getMetricNamesArray();
-        this.setMetricSelects(metricNamesArray);
+        this.metricNamesArray = this.getMetricNamesArray();
+        this.setMetricSelects();
         this.generateRowSnippets(!!jsonReport.measureName, jsonReport.reportMetrics);
-        this.generateDivFiles(metricNamesArray);
+        this.generateDivFiles();
         const template: HandlebarsTemplateDelegate = this.setTemplate();
         this.writeReport(template);
         return this.htmlReport;
@@ -48,12 +50,12 @@ export class ReportService {
 
     }
 
-    private static setMetricSelects(metricNamesArray: string): void {
+    private static setMetricSelects(): void {
         for (let i = 0; i < this.reportMetrics.length; i++) {
-            const metricSelect = new MetricSelect(this.reportMetrics[i].metricName, metricNamesArray);
+            const metricSelect = new MetricSelect(this.reportMetrics[i].metricName, this.metricNamesArray);
             metricSelect.isSelected = i === 0;
             this.htmlReport.metricSelects.push(metricSelect);
-            metricNamesArray = `${metricNamesArray}, '${this.reportMetrics[i].metricName}'`;
+            this.metricNamesArray = `${this.metricNamesArray}, '${this.reportMetrics[i].metricName}'`;
         }
     }
 
@@ -72,17 +74,17 @@ export class ReportService {
         this.htmlReport.rowSnippets.push(rowSnippet);
     }
 
-    private static generateDivFiles(metricNamesArray: string): void {
+    private static generateDivFiles(): void {
         for (const fileName of this.fileNames) {
-            this.generateDivFile(fileName, metricNamesArray);
+            this.generateDivFile(fileName);
         }
     }
 
-    private static generateDivFile(fileName: string, metricNamesArray: string): void {
+    private static generateDivFile(fileName: string): void {
         const divFile = new DivFile(fileName, this.selectedMetric);
-        this.setMetricValues(divFile, fileName, metricNamesArray);
+        this.setMetricValues(divFile, fileName, this.metricNamesArray);
         for (const metricName of this.metricNames) {
-            this.generateDivCode(metricName, fileName, divFile, metricNamesArray);
+            this.generateDivCode(metricName, fileName, divFile, this.metricNamesArray);
         }
         this.htmlReport.divFiles.push(divFile);
     }
@@ -113,7 +115,7 @@ export class ReportService {
     private static setTemplate(): HandlebarsTemplateDelegate {
         this.registerPartial("rowSnippet", 'row-snippet');
         this.registerPartial("divCode", 'div-code');
-        this.registerPartial("divCodeMetric", 'div-code-metric');
+        this.registerPartial("divFile", 'div-file');
         const reportTemplate = eol.auto(fs.readFileSync(`${Options.pathCommand}/report/templates/handlebars/report.handlebars`, 'utf-8'));
         return Handlebars.compile(reportTemplate);
     }
