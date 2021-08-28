@@ -1,11 +1,11 @@
 import { DivCode } from './div-code.model';
-import { MetricValueSelect } from './metric-value-select.model';
+import { DivCodeValues } from './metric-value-select.model';
 
 export class DivFile {
 
     divCodes: DivCode[] = [];
     fileName: string = undefined;
-    metricValues: MetricValueSelect[] = [];
+    metricValues: DivCodeValues[] = [];
     selectedMetric: string = undefined;
 
     constructor(fileName: string, displayedMetric: string) {

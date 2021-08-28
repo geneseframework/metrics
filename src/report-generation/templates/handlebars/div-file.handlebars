@@ -6,9 +6,9 @@
             {{#each metricValues}}
                 <th class="right bgwhite">
                     {{#if this.isSelected}}
-                        <span class="selected" id="div-code-{{fileName}}-{{this.metricName}}" onclick="selectOne('{{fileName}}', '{{this.metricName}}', true, {{this.metricNamesArray}})">{{this.metricName}}</span>
+                        <span class="selected" id="div-file-{{fileName}}-{{this.metricName}}" onclick="selectOne('{{fileName}}', '{{this.metricName}}', {{this.metricNamesArray}})">{{this.metricName}}</span>
                     {{else}}
-                        <span class="not-selected" id="div-code-{{fileName}}-{{this.metricName}}" onclick="selectOne('{{fileName}}', '{{this.metricName}}', true, {{this.metricNamesArray}})">{{this.metricName}}</span>
+                        <span class="not-selected" id="div-file-{{fileName}}-{{this.metricName}}" onclick="selectOne('{{fileName}}', '{{this.metricName}}', {{this.metricNamesArray}})">{{this.metricName}}</span>
                     {{/if}}
                 </th>
                 <th class="score">{{this.value}}</th>

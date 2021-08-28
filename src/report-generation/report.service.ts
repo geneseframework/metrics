@@ -13,7 +13,7 @@ import { ReportSnippet } from './models/report-snippet.model';
 import { DivCode } from './models/div-code.model';
 import { ReportCodeService } from './services/report-code.service';
 import { MetricSelect } from './models/metric-select.model';
-import { MetricValueSelect } from './models/metric-value-select.model';
+import { DivCodeValues } from './models/metric-value-select.model';
 
 export class ReportService {
 
@@ -109,7 +109,7 @@ export class ReportService {
     private static setMetricValue(divFile: DivFile, fileName: string, metricSelect: MetricSelect, metricNamesArray: string): void {
         const reportSnippets: ReportSnippet[] = flat(this.reportMetrics.map(r => r.reportSnippets));
         const reportSnippetForThisFileAndThisMetric: ReportSnippet = reportSnippets.find(s => s.fileName === fileName && s.metricName === metricSelect.metricName);
-        divFile.metricValues.push(new MetricValueSelect(metricSelect, reportSnippetForThisFileAndThisMetric.score, metricNamesArray));
+        divFile.metricValues.push(new DivCodeValues(fileName, metricSelect, reportSnippetForThisFileAndThisMetric.score, metricNamesArray));
     }
 
     private static setTemplate(): HandlebarsTemplateDelegate {
