@@ -15,10 +15,8 @@ import { ReportModel } from './report-generation/models/report.model';
 import { ReportService } from './report-generation/report.service';
 import { HtmlGenerationService } from './html-generation/html-generation.service';
 
-const ora = require('ora');
 const path = require('path');
 
-const spinner = ora();
 
 const ARGS: string[] = process.argv.slice(2);
 const PATH_TO_ANALYSE = ARGS[0] ?? '.';
@@ -33,16 +31,8 @@ if (path.isAbsolute(PATH_TO_ANALYSE)) {
 }
 
 
-start()
-    .then(exitCode => {
-        process.exit(exitCode)
-    })
-    .catch(err => {
-        spinner.fail();
-        console.log(err);
-    })
 
-async function start(): Promise<number> {
+function start(): void {
     const pathToAnalyse = `${process.cwd()}/src/core/mocks/siegmund-2012`;
     // const pathToAnalyse = `${process.cwd()}/src/core/mocks/code-snippets`;
     FRAMEWORK = 'react';
@@ -57,9 +47,8 @@ async function start(): Promise<number> {
     console.log(chalk.yellowBright('Evaluation for each metric...'));
     const jsonReport: JsonReportInterface = Options.generateJsonReport ? EvaluationService.evaluate(astModel) : require(Options.jsonReportPath);
     console.log(chalk.yellowBright('Report generation...'));
-    const reportModel: ReportModel = Options.generateJsonReport ? await ReportService.start(jsonReport) : require(Options.jsonReportPath);
+    const reportModel: ReportModel = Options.generateJsonReport ? ReportService.start(jsonReport) : require(Options.jsonReportPath);
     // return logResults(reportModel);
-    return 0;
 }
 
 function logReport(reportResult: any[]): void {
@@ -77,3 +66,5 @@ function logReport(reportResult: any[]): void {
         }
     }
 }
+
+start();

@@ -1,6 +1,5 @@
 import { JsonReportInterface } from '../core/interfaces/json-report/json-report.interface';
 import * as fs from 'fs-extra';
-import * as chalk from 'chalk';
 import * as eol from 'eol';
 import { Options } from '../core/models/options.model';
 import * as Handlebars from 'handlebars';
@@ -8,11 +7,11 @@ import { ReportMetric } from './models/report-metric.model';
 import { HtmlReport } from './models/html-report.model';
 import { RowSnippet } from './models/row-snippet.model';
 import { flat, unique } from '../core/utils/arrays.util';
-import { DivFile } from './models/div-file.model';
 import { ReportSnippet } from './models/report-snippet.model';
 import { DivCode } from './models/div-code.model';
 import { ReportCodeService } from './services/report-code.service';
 import { MetricSelect } from './models/metric-select.model';
+import { DivFile } from './models/div-file.model';
 import { DivCodeValues } from './models/div-code-values.model';
 
 export class ReportService {
@@ -25,7 +24,7 @@ export class ReportService {
     static metricNamesArray: string = '';
     static selectedMetric = '';
 
-    static async start(jsonReport: JsonReportInterface): Promise<any> {
+    static start(jsonReport: JsonReportInterface): HtmlReport {
         // console.log(chalk.greenBright('JSON REPORTTTTT '), jsonReport.reportMetrics);
         this.htmlReport.measure = jsonReport.measureName;
         this.fileNames = unique(flat(jsonReport.reportMetrics.map(r => r.reportSnippets.map(s => s.fileName))));
