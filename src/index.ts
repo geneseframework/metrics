@@ -15,31 +15,16 @@ import { ReportModel } from './report-generation/models/report.model';
 import { ReportService } from './report-generation/report.service';
 import { HtmlGenerationService } from './html-generation/html-generation.service';
 
-const path = require('path');
-
-
-const ARGS: string[] = process.argv.slice(2);
-const PATH_TO_ANALYSE = ARGS[0] ?? '.';
-const LANGUAGE = ARGS[1] ?? 'ts';
-let FRAMEWORK = ARGS[5] ?? undefined;
-
-let pathToAnalyse: string;
-if (path.isAbsolute(PATH_TO_ANALYSE)) {
-    pathToAnalyse = PATH_TO_ANALYSE;
-} else {
-    pathToAnalyse = `${process.cwd()}/${PATH_TO_ANALYSE}`.split('/').filter(e => e !== '.').join('/');
-}
-
-
+const LANGUAGE = 'ts';
+// const LANGUAGE = ARGS[1] ?? 'ts';
 
 function start(): void {
     const pathToAnalyse = `${process.cwd()}/src/core/mocks/siegmund-2012`;
     // const pathToAnalyse = `${process.cwd()}/src/core/mocks/code-snippets`;
-    FRAMEWORK = 'react';
     Options.setOptions(process.cwd(), pathToAnalyse, __dirname);
     createOutDir();
     console.log(chalk.yellowBright('Json AST generation...'));
-    Options.setOptions(process.cwd(), pathToAnalyse, __dirname, FRAMEWORK as Framework);
+    Options.setOptions(process.cwd(), pathToAnalyse, __dirname);
     const jsonAst: JsonAstInterface = Options.generateJsonAst ? JsonAstCreationService.start(Options.pathFolderToAnalyze, LANGUAGE as Language) : require(Options.jsonAstPath);
     // console.log(chalk.magentaBright('JSON ASTTTT'), jsonAst);
     console.log(chalk.yellowBright('Ast model generation...'));
