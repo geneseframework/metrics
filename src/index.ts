@@ -12,10 +12,12 @@ import { JsonReportInterface } from './core/interfaces/json-report/json-report.i
 import { EvaluationService } from './evaluation/evaluation.service';
 import { ReportService } from './report-generation/report.service';
 import { HtmlGenerationService } from './html-generation/html-generation.service';
+import { Measure } from './report-generation/models/measure.model';
+import { DatasetService } from './evaluation/dataset.service';
 
 const LANGUAGE = 'ts';
 
-function start(): void {
+async function start(): Promise<void> {
     const pathToAnalyse = `${process.cwd()}/src/core/mocks/siegmund-2012`;
     // const pathToAnalyse = `${process.cwd()}/src/core/mocks/code-snippets`;
     Options.setOptions(process.cwd(), pathToAnalyse, __dirname);
@@ -25,8 +27,10 @@ function start(): void {
     // console.log(chalk.magentaBright('JSON ASTTTT'), jsonAst);
     console.log(chalk.yellowBright('Ast model generation...'));
     const astModel: AstModel = AstModelService.generate(jsonAst);
+    console.log(chalk.yellowBright('Collect measures from dataset...'));
+    const measures: Measure[] = await DatasetService.getMeasures();
     console.log(chalk.yellowBright('Evaluation for each metric...'));
-    const jsonReport: JsonReportInterface = Options.generateJsonReport ? EvaluationService.evaluate(astModel) : require(Options.jsonReportPath);
+    const jsonReport: JsonReportInterface = Options.generateJsonReport ? EvaluationService.evaluate(astModel, measures) : require(Options.jsonReportPath);
     console.log(chalk.yellowBright('Report generation...'));
     ReportService.start(jsonReport);
 }
@@ -47,4 +51,6 @@ function logReport(reportResult: any[]): void {
     }
 }
 
-start();
+start().then(() => {
+    console.log(chalk.greenBright('Report done.'));
+});

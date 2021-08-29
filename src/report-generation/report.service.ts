@@ -26,7 +26,7 @@ export class ReportService {
     static selectedMetric = '';
 
     static start(jsonReport: JsonReportInterface): HtmlReport {
-        console.log(chalk.greenBright('JSON REPORTTTTT '), jsonReport.reportMetrics[0].reportSnippets);
+        // console.log(chalk.greenBright('JSON REPORTTTTT '), jsonReport.reportMetrics[0].reportSnippets);
         this.htmlReport.measure = jsonReport.measureName;
         this.fileNames = unique(flat(jsonReport.reportMetrics.map(r => r.reportSnippets.map(s => s.fileName))));
         this.metricNames = unique(flat(jsonReport.reportMetrics.map(r => r.reportSnippets.map(s => s.metricName))));

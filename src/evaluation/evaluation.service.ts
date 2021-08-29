@@ -15,11 +15,12 @@ export class EvaluationService {
 
     static measures: Measure[] = [];
 
-    static evaluate(astModel: AstModel): JsonReportInterface {
+    static evaluate(astModel: AstModel, measures: Measure[]): JsonReportInterface {
         const reportModel = new ReportModel();
+        console.log(chalk.blueBright('MEASURESSSSS'), measures);
         // console.log(chalk.blueBright('AST MODELLLLL'), astModel.astMetrics[0].astFiles[0].astCode.astClassOrFunctionCodes[0]);
         reportModel.measureName = astModel.measure;
-        this.measures = this.getMeasures();
+        this.measures = measures;
         for (const astMetric of astModel.astMetrics) {
             // console.log(chalk.blueBright('METRICCCC'), astMetric.metric);
             this.evaluateAstMetric(reportModel, astMetric);
@@ -49,9 +50,5 @@ export class EvaluationService {
 
     private static setMeasure(reportSnippet: ReportSnippet): void {
         reportSnippet.measureValue = this.measures.find(m => m.fileName === reportSnippet.fileName)?.measureValue;
-    }
-
-    private static getMeasures(): Measure[] {
-        return MEASURES;
     }
 }
