@@ -1,0 +1,43 @@
+
+<div class="stats-and-doughnut stats-and-doughnut-cognitive">
+    <div class="doughnut">
+        <canvas id="doughnut-cognitive-cpx" height="220"></canvas>
+    </div>
+    <div class="stats">
+        <div class="clearfix">
+            <div class='fl pad1y space-right2'>
+                <span class="strong">Comprehension complexity</span>
+            </div>
+        </div>
+        <div class="clearfix">
+            <div class='fl pad1y space-right2'>
+                <span class="strong">{{stats.percentsByStatus.cognitive.correct}} %</span>
+                <span class="quiet"> Low</span>
+                <span
+                        class='fraction'>{{stats.numberOfMethodsByStatus.cognitive.correct}}/{{stats.numberOfMethods}}</span>
+            </div>
+        </div>
+        <div class="clearfix">
+            <div class='fl pad1y space-right2'>
+                <span class="strong">{{stats.percentsByStatus.cognitive.warning}} %</span>
+                <span class="quiet"> Medium</span>
+                <span
+                        class='fraction'>{{stats.numberOfMethodsByStatus.cognitive.warning}}/{{stats.numberOfMethods}}</span>
+                <span class="quiet">(threshold : {{thresholds.cognitive.warning}})</span>
+            </div>
+        </div>
+        <div class="clearfix">
+            <div class='fl pad1y space-right2'>
+                <span class="strong">{{stats.percentsByStatus.cognitive.error}} %</span>
+                <span class="quiet"> High</span>
+                <span
+                        class='fraction'>{{stats.numberOfMethodsByStatus.cognitive.error}}/{{stats.numberOfMethods}}</span>
+                <span class="quiet">(threshold : {{thresholds.cognitive.error}})</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="bar bar-cognitive">
+    <canvas id="bar-cognitive-cpx" class="cognitive-charts"></canvas>
+</div>

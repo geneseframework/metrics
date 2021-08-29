@@ -147,6 +147,7 @@ export class ReportService {
         this.registerPartial("rowSnippet", 'row-snippet');
         this.registerPartial("divCode", 'div-code');
         this.registerPartial("codeSnippetRow", 'div-code-snippet-table');
+        this.registerPartial("chart", 'chart');
         const reportTemplate = eol.auto(fs.readFileSync(`${Options.pathCommand}/report/templates/handlebars/report.handlebars`, 'utf-8'));
         return Handlebars.compile(reportTemplate);
     }

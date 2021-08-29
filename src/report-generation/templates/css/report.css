@@ -62,19 +62,18 @@
     margin: auto;
 }
 
-.stats-cognitive {
-    width: 65%;
+.div-chart-left {
+    width: 50%;
     margin-right: 1em;
 }
 
-.stats-cyclomatic {
-    width: 35%;
+.div-chart-right {
+    width: 50%;
 }
 
-.stats-cognitive,
-.stats-cyclomatic {
+.div-chart-left,
+.div-chart-right {
     background-color: #fff;
-    /* background-color: #A3CB38; */
     border-radius: 5px;
 }
 
