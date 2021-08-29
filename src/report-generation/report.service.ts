@@ -11,7 +11,7 @@ import { ReportSnippet } from './models/report-snippet.model';
 import { DivCode } from './models/div-code.model';
 import { ReportCodeService } from './services/report-code.service';
 import { MetricSelect } from './models/metric-select.model';
-import { codeSnippetRow } from './models/div-file.model';
+import { codeSnippetRow } from './models/code-snippet-row.model';
 import { DivCodeValues } from './models/div-code-values.model';
 import * as chalk from 'chalk';
 

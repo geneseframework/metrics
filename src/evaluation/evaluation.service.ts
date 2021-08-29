@@ -11,6 +11,7 @@ import { ReportMetric } from '../report-generation/models/report-metric.model';
 import { Measure } from '../report-generation/models/measure.model';
 import { MEASURES } from './const/measures.const';
 import { removeExtension } from '../core/utils/file-system.util';
+import { StatsService } from '../stats/stats.service';
 
 export class EvaluationService {
 
@@ -23,9 +24,9 @@ export class EvaluationService {
         reportModel.measureName = astModel.measure;
         this.measures = measures;
         for (const astMetric of astModel.astMetrics) {
-            // console.log(chalk.blueBright('METRICCCC'), astMetric.metric);
             this.evaluateAstMetric(reportModel, astMetric);
         }
+        StatsService.setStats(reportModel);
         // console.log(chalk.greenBright('REPORT MODELLLLL'), reportModel.reportMetrics[0]);
         return reportModel;
     }

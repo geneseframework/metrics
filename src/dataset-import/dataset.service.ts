@@ -1,6 +1,5 @@
 import { Measure } from '../report-generation/models/measure.model';
 import { Options } from '../core/models/options.model';
-import * as chalk from 'chalk';
 import { CellAddress, WorkBook, WorkSheet } from 'xlsx';
 import { round } from '../core/utils/numbers.util';
 
@@ -10,9 +9,7 @@ export class DatasetService {
 
     static async getMeasures(): Promise<Measure[]> {
         const dataSheet: WorkSheet = await this.getXlsx();
-        const measures: Measure[] = this.getDataFromWorkSheet(dataSheet);
-        // console.log(chalk.greenBright('DATASET MEASURESSSS'), measures);
-        return measures;
+        return this.getDataFromWorkSheet(dataSheet);
     }
 
     private static async getXlsx(): Promise<WorkSheet> {
