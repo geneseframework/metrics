@@ -44,7 +44,9 @@
     <div class="stats-and-charts">
 
         <div class="div-chart-left">
-            {{>chart charLeft=.}}
+            <div class="bar bar-cognitive">
+                <canvas id="chart-left" class="cognitive-charts"></canvas>
+            </div>
         </div>
 
         <div class="div-chart-right">
@@ -139,7 +141,8 @@
 <script src="./templates/js/Chart.js"></script>
 <script src="./templates/js/prism.js"></script>
 <script src="./templates/js/report-scripts.js"></script>
-<script src="./templates/js/chart-scripts.js"></script>
+
+{{>chart chartLeft=.}}
 
 </body>
 

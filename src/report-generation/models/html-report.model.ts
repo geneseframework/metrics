@@ -5,8 +5,8 @@ import { CorrelationRow } from './correlation-row.model';
 
 export class HtmlReport {
 
-    charLeft: any = undefined;
-    charRight: any = undefined;
+    chartLeft: any = undefined;
+    chartRight: any = undefined;
     codeSnippetsTable: CodeSnippetRow[] = [];
     correlations: CorrelationRow[] = [];
     rowSnippets: RowSnippet[] = [];
