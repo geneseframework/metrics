@@ -113,7 +113,7 @@ export function getFileExtension(filename: string): string {
  * Returns the filename without its extension
  * @param path      // The path of the file
  */
-export function getFilenameWithoutExtension(path: string): string {
+export function removeExtension(path: string): string {
     if (!path) {
         return '';
     }

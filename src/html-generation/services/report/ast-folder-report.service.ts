@@ -7,7 +7,7 @@ import {
     constructLink,
     createRelativeDir,
     deleteLastSlash,
-    getFilenameWithoutExtension, getFolderName,
+    removeExtension, getFolderName,
     getPathWithSlash,
     getRouteToRoot,
 } from '../../../core/utils/file-system.util';
@@ -162,13 +162,13 @@ export class AstFolderReportService {
      */
     private getFileLink(astFile: AstFile): string {
         if (this.astFolder.relativePath === astFile.astFolder?.relativePath) {
-            return `./${getFilenameWithoutExtension(astFile.name)}.html`;
+            return `./${removeExtension(astFile.name)}.html`;
         }
         const route = this.astFolderService.getRouteFromFolderToFile(
             this.astFolder,
             astFile
         );
-        return `${deleteLastSlash(route)}/${getFilenameWithoutExtension(
+        return `${deleteLastSlash(route)}/${removeExtension(
             astFile.name
         )}.html`;
     }

@@ -3,13 +3,13 @@ import { DivCodeValues } from './div-code-values.model';
 
 export class DivFile {
 
+    codeSnippetName: string = undefined;
     divCodes: DivCode[] = [];
     divCodeValues: DivCodeValues[] = [];
-    fileName: string = undefined;
     selectedMetric: string = undefined;
 
-    constructor(fileName: string, displayedMetric: string) {
-        this.fileName = fileName;
+    constructor(codeSnippetName: string, displayedMetric: string) {
+        this.codeSnippetName = codeSnippetName;
         this.selectedMetric = displayedMetric;
     }
 

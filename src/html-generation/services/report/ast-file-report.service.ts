@@ -4,7 +4,7 @@ import * as Handlebars from 'handlebars';
 import {
     constructLink,
     deleteLastSlash,
-    getFilenameWithoutExtension,
+    removeExtension,
     getPathWithDotSlash,
     getRouteToRoot,
 } from '../../../core/utils/file-system.util';
@@ -71,7 +71,7 @@ export class AstFileReportService {
             stats: this.astFile.stats,
             thresholds: Options.getThresholds()
         });
-        const filenameWithoutExtension = getFilenameWithoutExtension(
+        const filenameWithoutExtension = removeExtension(
             this.astFile.name
         );
         const RELATIVE_PATH = constructLink(
