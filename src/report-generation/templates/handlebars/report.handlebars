@@ -42,6 +42,36 @@
 <div class="mainContainer">
 
     <!--        -------------------------------------------------------------------------------------->
+    <!--        -----------------------------   Div Correlation table   ------------------------------>
+    <!--        -------------------------------------------------------------------------------------->
+
+    <div class="subfolders">
+        <div class="clearfix cognitive-subtitle">
+            <div class='fl pad1y space-right2'>
+                <span class="strong">Correlations</span>
+            </div>
+        </div>
+        <table class="array-report short-table">
+            <thead>
+            <tr>
+                <th style="width: 80%;">Correlation</th>
+                {{#each metricSelects}}
+                    {{#if this.isSelected}}
+                        <th style="max-width: 10%;"><span id="array-{{this.metricName}}" class="selected" onclick="selectAll('{{this.metricName}}', {{this.metricNamesArray}}, {{this.codeSnippetNamesArray}})">{{this.metricName}}</span></th>
+                    {{else}}
+                        <th style="max-width: 10%;"><span id="array-{{this.metricName}}" class="not-selected zzz" onclick="selectAll('{{this.metricName}}', {{this.metricNamesArray}}, {{this.codeSnippetNamesArray}})">{{this.metricName}}</span></th>
+                    {{/if}}
+                {{/each}}
+            </tr>
+            </thead>
+            {{#each correlations}}
+                {{>correlation correlation=.}}
+            {{/each}}
+        </table>
+    </div>
+
+
+    <!--        -------------------------------------------------------------------------------------->
     <!--        ----------------------------   Div Code snippets table   ----------------------------->
     <!--        -------------------------------------------------------------------------------------->
 
@@ -69,35 +99,6 @@
             </thead>
             {{#each rowSnippets}}
                 {{>rowSnippet rowSnippet=.}}
-            {{/each}}
-        </table>
-    </div>
-
-    <!--        -------------------------------------------------------------------------------------->
-    <!--        -----------------------------   Div Correlation table   ------------------------------>
-    <!--        -------------------------------------------------------------------------------------->
-
-    <div class="subfolders">
-        <div class="clearfix cognitive-subtitle">
-            <div class='fl pad1y space-right2'>
-                <span class="strong">Statistics</span>
-            </div>
-        </div>
-        <table class="array-report short-table">
-            <thead>
-            <tr>
-                <th style="width: 80%;">Correlation</th>
-                {{#each metricSelects}}
-                    {{#if this.isSelected}}
-                        <th style="max-width: 10%;"><span id="array-{{this.metricName}}" class="selected" onclick="selectAll('{{this.metricName}}', {{this.metricNamesArray}}, {{this.codeSnippetNamesArray}})">{{this.metricName}}</span></th>
-                    {{else}}
-                        <th style="max-width: 10%;"><span id="array-{{this.metricName}}" class="not-selected zzz" onclick="selectAll('{{this.metricName}}', {{this.metricNamesArray}}, {{this.codeSnippetNamesArray}})">{{this.metricName}}</span></th>
-                    {{/if}}
-                {{/each}}
-            </tr>
-            </thead>
-            {{#each correlations}}
-                {{>correlation correlation=.}}
             {{/each}}
         </table>
     </div>
