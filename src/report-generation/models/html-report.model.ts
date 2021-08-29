@@ -1,10 +1,12 @@
 import { RowSnippet } from './row-snippet.model';
 import { MetricSelect } from './metric-select.model';
-import { DivFile } from './div-file.model';
+import { CodeSnippetRow } from './code-snippet-row.model';
+import { CorrelationRow } from './correlation-row.model';
 
 export class HtmlReport {
 
-    divFiles: DivFile[] = [];
+    codeSnippetsTable: CodeSnippetRow[] = [];
+    correlations: CorrelationRow[] = [];
     rowSnippets: RowSnippet[] = [];
     measure: string = undefined;
     metricSelects: MetricSelect[] = [];

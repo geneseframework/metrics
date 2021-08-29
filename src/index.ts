@@ -13,7 +13,7 @@ import { EvaluationService } from './evaluation/evaluation.service';
 import { ReportService } from './report-generation/report.service';
 import { HtmlGenerationService } from './html-generation/html-generation.service';
 import { Measure } from './report-generation/models/measure.model';
-import { DatasetService } from './dataset/dataset.service';
+import { DatasetService } from './dataset-import/dataset.service';
 
 const LANGUAGE = 'ts';
 

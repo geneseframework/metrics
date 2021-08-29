@@ -6,9 +6,9 @@
             {{#each divCodeValues}}
                 <th class="right bgwhite">
                     {{#if this.isSelected}}
-                        <span class="selected" id="div-file-{{codeSnippetName}}-{{this.metricName}}" onclick="selectOne('{{codeSnippetName}}', '{{this.metricName}}', {{this.metricNamesArray}})">{{this.metricName}}</span>
+                        <span class="selected" id="div-snippet-{{codeSnippetName}}-{{this.metricName}}" onclick="selectOne('{{codeSnippetName}}', '{{this.metricName}}', {{this.metricNamesArray}})">{{this.metricName}}</span>
                     {{else}}
-                        <span class="not-selected" id="div-file-{{codeSnippetName}}-{{this.metricName}}" onclick="selectOne('{{codeSnippetName}}', '{{this.metricName}}', {{this.metricNamesArray}})">{{this.metricName}}</span>
+                        <span class="not-selected" id="div-snippet-{{codeSnippetName}}-{{this.metricName}}" onclick="selectOne('{{codeSnippetName}}', '{{this.metricName}}', {{this.metricNamesArray}})">{{this.metricName}}</span>
                     {{/if}}
                 </th>
                 <th class="score">{{this.value}}</th>

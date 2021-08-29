@@ -2,14 +2,14 @@ import { MetricSelect } from './metric-select.model';
 
 export class DivCodeValues {
 
-    fileName: string = undefined;
+    codeSnippetName: string = undefined;
     isSelected = false;
     metricName: string = undefined;
     metricNamesArray: string = undefined;
     value: number = undefined;
 
-    constructor(fileName: string, metricSelect: MetricSelect, value: number, metricNamesArray: string) {
-        this.fileName = fileName;
+    constructor(codeSnippetName: string, metricSelect: MetricSelect, value: number, metricNamesArray: string) {
+        this.codeSnippetName = codeSnippetName;
         this.metricName = metricSelect.metricName;
         this.metricNamesArray = metricNamesArray;
         this.isSelected = metricSelect.isSelected;

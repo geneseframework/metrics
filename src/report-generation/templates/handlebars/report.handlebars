@@ -26,7 +26,7 @@
         <div class="pad1y"></div>
         <div class="clearfix">
             <div class='fl pad1y space-right2'>
-                <span>Code snippets : </span>
+<!--                <span>Code snippets : </span>-->
                 <span class="strong">{{numberOfCodeSnippets}}</span>
             </div>
         </div>
@@ -42,9 +42,38 @@
 <div class="mainContainer">
 
     <!--        -------------------------------------------------------------------------------------->
-    <!--        -----------------------------------   Report arrays   -------------------------------->
+    <!--        -----------------------------   Div Correlation table   ------------------------------>
     <!--        -------------------------------------------------------------------------------------->
 
+    <div class="subfolders">
+        <div class="clearfix cognitive-subtitle">
+            <div class='fl pad1y space-right2'>
+                <span class="strong">Correlations</span>
+            </div>
+        </div>
+        <table class="array-report short-table">
+            <thead>
+            <tr>
+                <th style="width: 80%;">Correlation</th>
+                {{#each metricSelects}}
+                    {{#if this.isSelected}}
+                        <th style="max-width: 10%;"><span id="array-{{this.metricName}}" class="selected" onclick="selectAll('{{this.metricName}}', {{this.metricNamesArray}}, {{this.codeSnippetNamesArray}})">{{this.metricName}}</span></th>
+                    {{else}}
+                        <th style="max-width: 10%;"><span id="array-{{this.metricName}}" class="not-selected zzz" onclick="selectAll('{{this.metricName}}', {{this.metricNamesArray}}, {{this.codeSnippetNamesArray}})">{{this.metricName}}</span></th>
+                    {{/if}}
+                {{/each}}
+            </tr>
+            </thead>
+            {{#each correlations}}
+                {{>correlation correlation=.}}
+            {{/each}}
+        </table>
+    </div>
+
+
+    <!--        -------------------------------------------------------------------------------------->
+    <!--        ----------------------------   Div Code snippets table   ----------------------------->
+    <!--        -------------------------------------------------------------------------------------->
 
     <div class="subfolders">
         <div class="clearfix cognitive-subtitle">
@@ -61,9 +90,9 @@
                 {{/if}}
                 {{#each metricSelects}}
                     {{#if this.isSelected}}
-                        <th style="max-width: 10%;"><span id="array-{{this.metricName}}" class="selected" onclick="selectAll('{{this.metricName}}', {{this.metricNamesArray}}, {{this.codeSnippetArray}})">{{this.metricName}}</span></th>
+                        <th style="max-width: 10%;"><span id="array-{{this.metricName}}" class="selected" onclick="selectAll('{{this.metricName}}', {{this.metricNamesArray}}, {{this.codeSnippetNamesArray}})">{{this.metricName}}</span></th>
                     {{else}}
-                        <th style="max-width: 10%;"><span id="array-{{this.metricName}}" class="not-selected zzz" onclick="selectAll('{{this.metricName}}', {{this.metricNamesArray}}, {{this.codeSnippetArray}})">{{this.metricName}}</span></th>
+                        <th style="max-width: 10%;"><span id="array-{{this.metricName}}" class="not-selected zzz" onclick="selectAll('{{this.metricName}}', {{this.metricNamesArray}}, {{this.codeSnippetNamesArray}})">{{this.metricName}}</span></th>
                     {{/if}}
                 {{/each}}
             </tr>
@@ -76,23 +105,23 @@
 
 
     <!--        -------------------------------------------------------------------------------------->
-    <!--        -----------------------------------   Code snippets   -------------------------------->
+    <!--        ------------------------------------   Code details   -------------------------------->
     <!--        -------------------------------------------------------------------------------------->
 
 
     <div idclass="subfolders">
         <div id="methodsArray">
-            {{#each divFiles}}
-                {{>divFile divFile=.}}
+            {{#each codeSnippetsTable}}
+                {{>codeSnippetRow codeSnippetRow=.}}
             {{/each}}
         </div>
     </div>
 </div>
 
 
-<!--        -------------------------------------------------------------------------------------->
-<!--        -----------------------------------   Scripts-----   --------------------------------->
-<!--        -------------------------------------------------------------------------------------->
+    <!--        -------------------------------------------------------------------------------------------->
+    <!--        -----------------------------------------   Scripts   -------------------------------------->
+    <!--        -------------------------------------------------------------------------------------------->
 
 
 
