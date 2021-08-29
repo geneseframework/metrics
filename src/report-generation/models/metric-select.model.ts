@@ -1,14 +1,14 @@
 export class MetricSelect {
 
-    fileNamesArray: string = undefined;
+    codeSnippetNamesArray: string = undefined;
     isSelected: boolean = undefined;
     metricName: string = undefined;
     metricNamesArray: string = undefined;
 
-    constructor(metricName: string, metricNamesArray: string, fileNamesArray: string) {
+    constructor(metricName: string, metricNamesArray: string, codeSnippetNamesArray: string) {
         this.metricName = metricName;
         this.metricNamesArray = metricNamesArray;
-        this.fileNamesArray = fileNamesArray;
+        this.codeSnippetNamesArray = codeSnippetNamesArray;
     }
 
 }

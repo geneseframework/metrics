@@ -61,9 +61,9 @@
                 {{/if}}
                 {{#each metricSelects}}
                     {{#if this.isSelected}}
-                        <th style="max-width: 10%;"><span id="array-{{this.metricName}}" class="selected" onclick="selectAll('{{this.metricName}}', {{this.metricNamesArray}}, {{this.fileNamesArray}})">{{this.metricName}}</span></th>
+                        <th style="max-width: 10%;"><span id="array-{{this.metricName}}" class="selected" onclick="selectAll('{{this.metricName}}', {{this.metricNamesArray}}, {{this.codeSnippetArray}})">{{this.metricName}}</span></th>
                     {{else}}
-                        <th style="max-width: 10%;"><span id="array-{{this.metricName}}" class="not-selected zzz" onclick="selectAll('{{this.metricName}}', {{this.metricNamesArray}}, {{this.fileNamesArray}})">{{this.metricName}}</span></th>
+                        <th style="max-width: 10%;"><span id="array-{{this.metricName}}" class="not-selected zzz" onclick="selectAll('{{this.metricName}}', {{this.metricNamesArray}}, {{this.codeSnippetArray}})">{{this.metricName}}</span></th>
                     {{/if}}
                 {{/each}}
             </tr>

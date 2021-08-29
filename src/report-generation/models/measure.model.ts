@@ -1,10 +1,10 @@
 export class Measure {
 
-    fileName: string = undefined;
+    codeSnippetName: string = undefined;
     measureValue: number = undefined;
 
-    constructor(fileName: string, measureValue: number) {
-        this.fileName = fileName;
+    constructor(codeSnippetName: string, measureValue: number) {
+        this.codeSnippetName = codeSnippetName;
         this.measureValue = measureValue;
     }
 }

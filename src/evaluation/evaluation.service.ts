@@ -10,6 +10,7 @@ import { AstMetric } from '../core/models/ast-model/ast-metric.model';
 import { ReportMetric } from '../report-generation/models/report-metric.model';
 import { Measure } from '../report-generation/models/measure.model';
 import { MEASURES } from './const/measures.const';
+import { removeExtension } from '../core/utils/file-system.util';
 
 export class EvaluationService {
 
@@ -25,7 +26,7 @@ export class EvaluationService {
             // console.log(chalk.blueBright('METRICCCC'), astMetric.metric);
             this.evaluateAstMetric(reportModel, astMetric);
         }
-        // console.log(chalk.greenBright('REPORT MODELLLLL'), reportModel.reportMetrics[0]);
+        console.log(chalk.greenBright('REPORT MODELLLLL'), reportModel.reportMetrics[0]);
         return reportModel;
     }
 
@@ -49,6 +50,6 @@ export class EvaluationService {
     }
 
     private static setMeasure(reportSnippet: ReportSnippet): void {
-        reportSnippet.measureValue = this.measures.find(m => m.fileName === reportSnippet.fileName)?.measureValue;
+        reportSnippet.measureValue = this.measures.find(m => m.codeSnippetName === removeExtension(reportSnippet.fileName))?.measureValue;
     }
 }

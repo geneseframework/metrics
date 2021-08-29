@@ -1,6 +1,6 @@
 import { RowSnippet } from './row-snippet.model';
-import { DivFile } from './div-file.model';
 import { MetricSelect } from './metric-select.model';
+import { DivFile } from './div-file.model';
 
 export class HtmlReport {
 

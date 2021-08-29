@@ -1,14 +1,14 @@
-<div id="{{fileName}}">
+<div id="{{codeSnippetName}}">
     <table class="array-report method-table">
         <thead class="method-thead">
         <tr>
-            <th class="method-name-column">{{fileName}}</th>
+            <th class="method-name-column">{{codeSnippetName}}</th>
             {{#each divCodeValues}}
                 <th class="right bgwhite">
                     {{#if this.isSelected}}
-                        <span class="selected" id="div-file-{{fileName}}-{{this.metricName}}" onclick="selectOne('{{fileName}}', '{{this.metricName}}', {{this.metricNamesArray}})">{{this.metricName}}</span>
+                        <span class="selected" id="div-file-{{codeSnippetName}}-{{this.metricName}}" onclick="selectOne('{{codeSnippetName}}', '{{this.metricName}}', {{this.metricNamesArray}})">{{this.metricName}}</span>
                     {{else}}
-                        <span class="not-selected" id="div-file-{{fileName}}-{{this.metricName}}" onclick="selectOne('{{fileName}}', '{{this.metricName}}', {{this.metricNamesArray}})">{{this.metricName}}</span>
+                        <span class="not-selected" id="div-file-{{codeSnippetName}}-{{this.metricName}}" onclick="selectOne('{{codeSnippetName}}', '{{this.metricName}}', {{this.metricNamesArray}})">{{this.metricName}}</span>
                     {{/if}}
                 </th>
                 <th class="score">{{this.value}}</th>
