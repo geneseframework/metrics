@@ -19,12 +19,10 @@ const LANGUAGE = 'ts';
 
 async function start(): Promise<void> {
     const pathToAnalyse = `${process.cwd()}/src/core/mocks/siegmund-2012`;
-    // const pathToAnalyse = `${process.cwd()}/src/core/mocks/code-snippets`;
     Options.setOptions(process.cwd(), pathToAnalyse, __dirname);
     createOutDir();
     console.log(chalk.yellowBright('Json AST generation...'));
     const jsonAst: JsonAstInterface = Options.generateJsonAst ? JsonAstCreationService.start(Options.pathFolderToAnalyze, LANGUAGE as Language) : require(Options.jsonAstPath);
-    // console.log(chalk.magentaBright('JSON ASTTTT'), jsonAst);
     console.log(chalk.yellowBright('Ast model generation...'));
     const astModel: AstModel = AstModelService.generate(jsonAst);
     console.log(chalk.yellowBright('Collect measures from dataset...'));

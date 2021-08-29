@@ -62,7 +62,7 @@ export class Options {
         WINDOWS = process.platform === 'win32';
         const geneseConfigPath = `${pathCommand}/geneseconfig.json`;
         if (fs.existsSync(geneseConfigPath)) {
-            Options.setOptionsFromConfig(geneseConfigPath);
+            Options.setOptionsFromConfig(geneseConfigPath, pathFolderToAnalyze);
         }
         Options.setOptionsFromCommandLine(
             pathCommand,
@@ -87,15 +87,16 @@ export class Options {
     /**
      * Sets the options of genese-complexity module with geneseconfig.json options (higher priority than geneseconfig.json options)
      * @param geneseConfigPath  // The path of the geneseconfig.json file
+     * @param pathFolderToAnalyze
      */
-    static setOptionsFromConfig(geneseConfigPath: string): void {
+    static setOptionsFromConfig(geneseConfigPath: string, pathFolderToAnalyze: string): void {
         const config = require(geneseConfigPath);
         Options.ignore = this.filterIgnorePathsForDotSlash(config.complexity.ignore) ?? Options.ignore;
         Options.ignore.forEach((path, i) => {
             Options.ignoreRegex += i !== Options.ignore.length - 1 ? `${this.pathTransformator(path)}|` : `${this.pathTransformator(path)}`;
         });
-        Options.pathDataset = config.complexity?.pathDataset ?? `${Options.pathFolderToAnalyze}/dataset.xlsx`;
         Options.pathFolderToAnalyze = config.complexity?.pathFolderToAnalyze ?? Options.pathFolderToAnalyze;
+        Options.pathDataset = config.complexity?.pathDataset ?? `${pathFolderToAnalyze}/dataset.xlsx`;
         Options.pathOutDir = config.complexity?.pathReports ?? Options.pathOutDir;
         Options.ignore.push(Options.pathOutDir);
         Options.cognitiveCpx = config.complexity.cognitiveCpx ?? Options.cognitiveCpx;
