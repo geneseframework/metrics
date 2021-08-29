@@ -2,6 +2,7 @@ import { Measure } from '../report-generation/models/measure.model';
 import { Options } from '../core/models/options.model';
 import * as chalk from 'chalk';
 import { CellAddress, WorkBook, WorkSheet } from 'xlsx';
+import { round } from '../core/utils/numbers.util';
 
 const XLSX = require('xlsx');
 
@@ -39,16 +40,15 @@ export class DatasetService {
     private static hasMeasure(dataSheet: WorkSheet, snippetIdCellAddress: CellAddress): boolean {
         const snippetIdCoors: string = XLSX.utils.encode_cell(snippetIdCellAddress);
         const measureCellCoors: string = XLSX.utils.encode_cell({c: snippetIdCellAddress.c + 1, r: snippetIdCellAddress.r});
-        const measureValue: any = dataSheet[measureCellCoors]?.v;
-        const snippetId: string = dataSheet[snippetIdCoors]?.v;
-        const measure: number = !isNaN(measureValue) ? +measureValue : undefined;
-        return snippetId && !!measure;
+        const hasMeasureValue: boolean = !isNaN(dataSheet[measureCellCoors]?.v);
+        const hasSnippetId: boolean = !!dataSheet[snippetIdCoors]?.v;
+        return hasSnippetId && !!hasMeasureValue;
     }
 
     private static getMeasure(dataSheet: WorkSheet, snippetIdCellAddress: CellAddress): Measure {
         const snippetIdCoors: string = XLSX.utils.encode_cell(snippetIdCellAddress);
         const measureCellCoors: string = XLSX.utils.encode_cell({c: snippetIdCellAddress.c + 1, r: snippetIdCellAddress.r});
-        return new Measure(dataSheet[snippetIdCoors].v, dataSheet[measureCellCoors].v);
+        return new Measure(dataSheet[snippetIdCoors].v, round(dataSheet[measureCellCoors].v, 3));
     }
 
 }

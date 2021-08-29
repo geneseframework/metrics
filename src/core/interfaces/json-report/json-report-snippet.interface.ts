@@ -2,7 +2,7 @@ import { JsonReportLineInterface } from './json-report-line.interface';
 
 export interface JsonReportSnippetInterface {
 
-    fileName: string;
+    codeSnippetName: string;
     lines: JsonReportLineInterface[];
     measureValue?: number;
     metricName: string;

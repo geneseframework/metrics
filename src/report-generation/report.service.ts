@@ -14,7 +14,6 @@ import { MetricSelect } from './models/metric-select.model';
 import { DivFile } from './models/div-file.model';
 import { DivCodeValues } from './models/div-code-values.model';
 import * as chalk from 'chalk';
-import { removeExtension } from '../core/utils/file-system.util';
 
 export class ReportService {
 
@@ -27,9 +26,9 @@ export class ReportService {
     static selectedMetric = '';
 
     static start(jsonReport: JsonReportInterface): HtmlReport {
-        console.log(chalk.greenBright('JSON REPORTTTTT '), jsonReport.reportMetrics[0].reportSnippets.map(r => r.measureValue));
+        // console.log(chalk.greenBright('JSON REPORTTTTT '), jsonReport.reportMetrics[0].reportSnippets.map(r => r.measureValue));
         this.htmlReport.measure = jsonReport.measureName;
-        this.codeSnippetNames = unique(flat(jsonReport.reportMetrics.map(r => r.reportSnippets.map(s => removeExtension(s.fileName)))));
+        this.codeSnippetNames = unique(flat(jsonReport.reportMetrics.map(r => r.reportSnippets.map(s => s.codeSnippetName))));
         this.metricNames = unique(flat(jsonReport.reportMetrics.map(r => r.reportSnippets.map(s => s.metricName))));
         this.selectedMetric = this.metricNames[0];
         this.reportMetrics = jsonReport.reportMetrics;
@@ -62,7 +61,7 @@ export class ReportService {
     private static generateRowSnippets(hasMeasure: boolean, reportMetrics: ReportMetric[]): void {
         for (const codeSnippetName of this.codeSnippetNames) {
             const reportSnippets: ReportSnippet[] = flat(reportMetrics.map(r => r.reportSnippets));
-            const reportSnippet: ReportSnippet = reportSnippets.find(r => removeExtension(r.fileName) === codeSnippetName);
+            const reportSnippet: ReportSnippet = reportSnippets.find(r => r.codeSnippetName === codeSnippetName);
             if (reportSnippet) {
                 this.generateRowSnippet(codeSnippetName, hasMeasure, reportSnippet.measureValue, reportMetrics);
             } else {
@@ -73,8 +72,7 @@ export class ReportService {
 
     private static generateRowSnippet(codeSnippetName: string, hasMeasure: boolean, measureValue: number, reportMetrics: ReportMetric[]): void {
         const rowSnippet = new RowSnippet(codeSnippetName, hasMeasure, measureValue);
-        const fileReportSnippets: ReportSnippet[] = flat(reportMetrics.map(r => r.reportSnippets)).filter(s => removeExtension(s.fileName) === codeSnippetName);
-        // if ()
+        const fileReportSnippets: ReportSnippet[] = flat(reportMetrics.map(r => r.reportSnippets)).filter(s => s.codeSnippetName === codeSnippetName);
         rowSnippet.scores = fileReportSnippets.map(r => r?.score);
         this.htmlReport.rowSnippets.push(rowSnippet);
     }
@@ -85,11 +83,11 @@ export class ReportService {
         }
     }
 
-    private static generateDivFile(fileName: string): void {
-        const divFile = new DivFile(fileName, this.selectedMetric);
-        this.setMetricValues(divFile, fileName);
+    private static generateDivFile(codeSnippetName: string): void {
+        const divFile = new DivFile(codeSnippetName, this.selectedMetric);
+        this.setMetricValues(divFile, codeSnippetName);
         for (const metricName of this.metricNames) {
-            this.generateDivCode(metricName, fileName, divFile);
+            this.generateDivCode(metricName, codeSnippetName, divFile);
         }
         this.htmlReport.divFiles.push(divFile);
     }
@@ -103,18 +101,18 @@ export class ReportService {
     }
 
     private static getReportSnippetForGivenMetric(metricName: string, codeSnippetName: string): ReportSnippet {
-        return flat(this.reportMetrics.map(r => r.reportSnippets)).find((s: ReportSnippet) => s.metricName === metricName && removeExtension(s.fileName) === codeSnippetName);
+        return flat(this.reportMetrics.map(r => r.reportSnippets)).find((s: ReportSnippet) => s.metricName === metricName && s.codeSnippetName === codeSnippetName);
     }
 
-    private static setMetricValues(divFile: DivFile, fileName: string): void {
+    private static setMetricValues(divFile: DivFile, codeSnippetName: string): void {
         for (const metricSelect of this.htmlReport.metricSelects) {
-            this.setMetricValue(divFile, fileName, metricSelect);
+            this.setMetricValue(divFile, codeSnippetName, metricSelect);
         }
     }
 
     private static setMetricValue(divFile: DivFile, codeSnippetName: string, metricSelect: MetricSelect): void {
         const reportSnippets: ReportSnippet[] = flat(this.reportMetrics.map(r => r.reportSnippets));
-        const reportSnippetForThisFileAndThisMetric: ReportSnippet = reportSnippets.find(s => removeExtension(s.fileName) === codeSnippetName && s.metricName === metricSelect.metricName);
+        const reportSnippetForThisFileAndThisMetric: ReportSnippet = reportSnippets.find(s => s.codeSnippetName === codeSnippetName && s.metricName === metricSelect.metricName);
         divFile.divCodeValues.push(new DivCodeValues(codeSnippetName, metricSelect, reportSnippetForThisFileAndThisMetric.score, this.metricNamesArray));
     }
 
@@ -130,7 +128,7 @@ export class ReportService {
      * Creates the file of the report
      */
     private static writeReport() {
-        console.log(chalk.cyanBright('HTML REPORTTTT'), this.htmlReport);
+        // console.log(chalk.cyanBright('HTML REPORTTTT'), this.htmlReport);
         const template: HandlebarsTemplateDelegate = this.setTemplate();
         const content = template(this.htmlReport);
         const pathReport = `${Options.pathCommand}/report/report.html`;

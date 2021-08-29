@@ -3,7 +3,7 @@ import { ReportLine } from './report-line.model';
 
 export class ReportSnippet implements JsonReportSnippetInterface {
 
-    fileName: string = undefined;
+    codeSnippetName: string = undefined;
     lines: ReportLine[] = [];
     measureValue: number = undefined;
     metricName: string = undefined;
@@ -11,7 +11,7 @@ export class ReportSnippet implements JsonReportSnippetInterface {
     text: string = undefined;
 
     constructor(fileName: string, text: string, metricName: string) {
-        this.fileName = fileName;
+        this.codeSnippetName = fileName;
         this.text = text;
         this.metricName = metricName;
     }
