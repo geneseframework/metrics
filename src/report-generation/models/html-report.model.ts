@@ -1,10 +1,10 @@
 import { RowSnippet } from './row-snippet.model';
 import { MetricSelect } from './metric-select.model';
-import { DivFile } from './div-file.model';
+import { codeSnippetRow } from './div-file.model';
 
 export class HtmlReport {
 
-    divFiles: DivFile[] = [];
+    codeSnippetsTable: codeSnippetRow[] = [];
     rowSnippets: RowSnippet[] = [];
     measure: string = undefined;
     metricSelects: MetricSelect[] = [];

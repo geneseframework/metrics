@@ -11,7 +11,7 @@ import { ReportSnippet } from './models/report-snippet.model';
 import { DivCode } from './models/div-code.model';
 import { ReportCodeService } from './services/report-code.service';
 import { MetricSelect } from './models/metric-select.model';
-import { DivFile } from './models/div-file.model';
+import { codeSnippetRow } from './models/div-file.model';
 import { DivCodeValues } from './models/div-code-values.model';
 import * as chalk from 'chalk';
 
@@ -84,15 +84,15 @@ export class ReportService {
     }
 
     private static generateDivFile(codeSnippetName: string): void {
-        const divFile = new DivFile(codeSnippetName, this.selectedMetric);
+        const divFile = new codeSnippetRow(codeSnippetName, this.selectedMetric);
         this.setMetricValues(divFile, codeSnippetName);
         for (const metricName of this.metricNames) {
             this.generateDivCode(metricName, codeSnippetName, divFile);
         }
-        this.htmlReport.divFiles.push(divFile);
+        this.htmlReport.codeSnippetsTable.push(divFile);
     }
 
-    private static generateDivCode(metricName: string, codeSnippetName: string, divCodeMetric: DivFile): void {
+    private static generateDivCode(metricName: string, codeSnippetName: string, divCodeMetric: codeSnippetRow): void {
         const isSelected: boolean = metricName === this.selectedMetric;
         const divCode = new DivCode(codeSnippetName, metricName, isSelected);
         const reportSnippetForThisMetric: ReportSnippet = this.getReportSnippetForGivenMetric(metricName, codeSnippetName);
@@ -104,13 +104,13 @@ export class ReportService {
         return flat(this.reportMetrics.map(r => r.reportSnippets)).find((s: ReportSnippet) => s.metricName === metricName && s.codeSnippetName === codeSnippetName);
     }
 
-    private static setMetricValues(divFile: DivFile, codeSnippetName: string): void {
+    private static setMetricValues(divFile: codeSnippetRow, codeSnippetName: string): void {
         for (const metricSelect of this.htmlReport.metricSelects) {
             this.setMetricValue(divFile, codeSnippetName, metricSelect);
         }
     }
 
-    private static setMetricValue(divFile: DivFile, codeSnippetName: string, metricSelect: MetricSelect): void {
+    private static setMetricValue(divFile: codeSnippetRow, codeSnippetName: string, metricSelect: MetricSelect): void {
         const reportSnippets: ReportSnippet[] = flat(this.reportMetrics.map(r => r.reportSnippets));
         const reportSnippetForThisFileAndThisMetric: ReportSnippet = reportSnippets.find(s => s.codeSnippetName === codeSnippetName && s.metricName === metricSelect.metricName);
         divFile.divCodeValues.push(new DivCodeValues(codeSnippetName, metricSelect, reportSnippetForThisFileAndThisMetric.score, this.metricNamesArray));
@@ -119,7 +119,7 @@ export class ReportService {
     private static setTemplate(): HandlebarsTemplateDelegate {
         this.registerPartial("rowSnippet", 'row-snippet');
         this.registerPartial("divCode", 'div-code');
-        this.registerPartial("divFile", 'div-file');
+        this.registerPartial("codeSnippetRow", 'div-code-snippet-table');
         const reportTemplate = eol.auto(fs.readFileSync(`${Options.pathCommand}/report/templates/handlebars/report.handlebars`, 'utf-8'));
         return Handlebars.compile(reportTemplate);
     }

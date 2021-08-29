@@ -1,7 +1,7 @@
 import { DivCode } from './div-code.model';
 import { DivCodeValues } from './div-code-values.model';
 
-export class DivFile {
+export class codeSnippetRow {
 
     codeSnippetName: string = undefined;
     divCodes: DivCode[] = [];
