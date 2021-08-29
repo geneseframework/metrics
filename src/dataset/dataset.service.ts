@@ -27,12 +27,33 @@ export class DatasetService {
     private static getDataFromWorkSheet(dataSheet: WorkSheet): Measure[] {
         const topLeft: CellAddress = this.getTopLeftCell(dataSheet);
         console.log(chalk.magentaBright('TOPLEFTTTTT'), topLeft);
-        return [];
+        let snippetIdCell: CellAddress = {c: topLeft.c, r: topLeft.r + 1};
+        const measures: Measure[] = [];
+        while (this.hasMeasure(dataSheet, snippetIdCell)) {
+            measures.push(this.getMeasure(dataSheet, snippetIdCell));
+            snippetIdCell = {c: snippetIdCell.c, r: snippetIdCell.r + 1};
+        }
+        return measures;
     }
 
     private static getTopLeftCell(dataSheet: WorkSheet): CellAddress {
         const key: string = Object.keys(dataSheet).find(k => dataSheet[k].v === 'snippet_id');
         return XLSX.utils.decode_cell(key);
+    }
+
+    private static hasMeasure(dataSheet: WorkSheet, snippetIdCellAddress: CellAddress): boolean {
+        const snippetIdCoors: string = XLSX.utils.encode_cell(snippetIdCellAddress);
+        const measureCellCoors: string = XLSX.utils.encode_cell({c: snippetIdCellAddress.c + 1, r: snippetIdCellAddress.r});
+        const measureValue: any = dataSheet[measureCellCoors]?.v;
+        const snippetId: string = dataSheet[snippetIdCoors]?.v;
+        const measure: number = !isNaN(measureValue) ? +measureValue : undefined;
+        return snippetId && !!measure;
+    }
+
+    private static getMeasure(dataSheet: WorkSheet, snippetIdCellAddress: CellAddress): Measure {
+        const snippetIdCoors: string = XLSX.utils.encode_cell(snippetIdCellAddress);
+        const measureCellCoors: string = XLSX.utils.encode_cell({c: snippetIdCellAddress.c + 1, r: snippetIdCellAddress.r});
+        return new Measure(dataSheet[snippetIdCoors].v, dataSheet[measureCellCoors].v);
     }
 
 }
