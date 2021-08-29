@@ -1,11 +1,11 @@
 import { ReportSnippet } from './report-snippet.model';
-import { Stat } from './stat.model';
+import { Correlation } from '../../correlation/correlation.model';
 
 export class ReportMetric {
 
+    correlations: Correlation[] = [];
     metricName: string = undefined;
     reportSnippets: ReportSnippet[] = [];
-    stats: Stat[] = [];
 
     constructor(metricName: string) {
         this.metricName = metricName;

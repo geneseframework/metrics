@@ -1,4 +1,4 @@
-export class Stat {
+export class Correlation {
 
     name: string = undefined;
     value: number = undefined;

@@ -11,7 +11,7 @@ import { ReportMetric } from '../report-generation/models/report-metric.model';
 import { Measure } from '../report-generation/models/measure.model';
 import { MEASURES } from './const/measures.const';
 import { removeExtension } from '../core/utils/file-system.util';
-import { StatsService } from '../stats/stats.service';
+import { CorrelationService } from '../correlation/correlation.service';
 
 export class EvaluationService {
 
@@ -26,7 +26,7 @@ export class EvaluationService {
         for (const astMetric of astModel.astMetrics) {
             this.evaluateAstMetric(reportModel, astMetric);
         }
-        StatsService.setStats(reportModel);
+        CorrelationService.setStats(reportModel);
         // console.log(chalk.greenBright('REPORT MODELLLLL'), reportModel.reportMetrics[0]);
         return reportModel;
     }
