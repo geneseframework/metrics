@@ -11,7 +11,7 @@ export class DatasetService {
     static async getMeasures(): Promise<Measure[]> {
         const dataSheet: WorkSheet = await this.getXlsx();
         const measures: Measure[] = this.getDataFromWorkSheet(dataSheet);
-        console.log(chalk.greenBright('DATASET MEASURESSSS'), measures);
+        // console.log(chalk.greenBright('DATASET MEASURESSSS'), measures);
         return measures;
     }
 

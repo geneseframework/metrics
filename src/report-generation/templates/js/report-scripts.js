@@ -1,6 +1,6 @@
-function selectAll(metricSelected, metricNames, fileNames) {
+function selectAll(metricSelected, metricNames, codeSnippetNames) {
     toggleSelection('array-', metricSelected, metricNames);
-    toggleGloballyVisibility(fileNames, metricSelected, metricNames);
+    toggleGloballyVisibility(codeSnippetNames, metricSelected, metricNames);
 }
 
 function toggleSelection(rootId, metricSelected, metricNames) {
@@ -10,20 +10,20 @@ function toggleSelection(rootId, metricSelected, metricNames) {
     document.getElementById(`${rootId}${metricSelected}`).className = 'selected';
 }
 
-function toggleGloballyVisibility(fileNames, metricSelected, metricNames) {
-    for (const fileName of fileNames) {
-        selectOne(fileName, metricSelected, metricNames);
+function toggleGloballyVisibility(codeSnippetNames, metricSelected, metricNames) {
+    for (const codeSnippetName of codeSnippetNames) {
+        selectOne(codeSnippetName, metricSelected, metricNames);
     }
 }
 
-function selectOne(fileName, metricSelected, metricNames) {
-    toggleSelection(`div-file-${fileName}-`, metricSelected, metricNames);
-    toggleVisibilityForOneFile(fileName, metricSelected, metricNames);
+function selectOne(codeSnippetName, metricSelected, metricNames) {
+    toggleSelection(`div-snippet-${codeSnippetName}-`, metricSelected, metricNames);
+    toggleVisibilityForOneFile(codeSnippetName, metricSelected, metricNames);
 }
 
-function toggleVisibilityForOneFile(fileName, metricSelected, metricNames) {
+function toggleVisibilityForOneFile(codeSnippetName, metricSelected, metricNames) {
     for (const metricName of metricNames) {
-        document.getElementById(`tr-${fileName}-${metricName}`).style.display = 'none';
+        document.getElementById(`tr-${codeSnippetName}-${metricName}`).style.display = 'none';
     }
-    document.getElementById(`tr-${fileName}-${metricSelected}`).style.display = 'table';
+    document.getElementById(`tr-${codeSnippetName}-${metricSelected}`).style.display = 'table';
 }
