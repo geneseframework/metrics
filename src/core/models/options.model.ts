@@ -1,5 +1,5 @@
 import * as fs from 'fs-extra';
-import { getArrayOfPathsWithDotSlash, getPathWithSlash, } from '../utils/file-system.util';
+import { fileExists, getArrayOfPathsWithDotSlash, getPathWithSlash, } from '../utils/file-system.util';
 import { Complexity } from '../../html-generation/interfaces/complexity.interface';
 import { ComplexityType } from '../../html-generation/enums/complexity-type.enum';
 import { ChartColor } from '../../html-generation/enums/chart-color.enum';
@@ -35,13 +35,14 @@ export class Options {
     static framework: Framework = undefined;    // The framework eventually specified
     static generateJsonAst = true;
     static generateJsonReport = true;
+    static hasMeasures = true;
     static ignore: string[] = [];               // The paths of the files or folders to ignore
     static ignoreRegex: string = '';
-    static jsonAstPath = './ast.json';
+    static jsonAstPath = `${process.cwd()}/report/ast.json`;
     static jsonReportPath = './report.json';
     static measure = '';
     static metrics: MetricInterface[] = [COMPREHENSION_CPX, CYCLOMATIC_CPX];
-    static pathCommand = '';                    // The path of the folder where the command-line was entered (can't be overridden)
+    static pathCommand = process.cwd();                    // The path of the folder where the command-line was entered (can't be overridden)
     static pathDataset = '';
     static pathFolderToAnalyze = './';          // The path of the folder to analyse (can be overridden)
     static pathGeneseNodeJs = '';               // The path of the node_module Genese in the nodejs user environment (can't be overridden)
@@ -50,22 +51,20 @@ export class Options {
 
     /**
      * Sets the options of genese-complexity module
-     * @param pathCommand               // The path of the folder where the command-line was entered (can't be overridden)
      * @param pathFolderToAnalyze       // The path of the folder to analyse (can be overridden)
      * @param pathGeneseNodeJs          // The path of the node_module Genese in the nodejs user environment (can't be overridden)
      * @param framework                 // The framework eventually specified
      */
-    static setOptions(pathCommand: string, pathFolderToAnalyze: string, pathGeneseNodeJs: string, framework?: Framework): void {
+    static setOptions(pathFolderToAnalyze: string, pathGeneseNodeJs: string, framework?: Framework): void {
         if (isFramework(framework)) {
             Options.framework = framework;
         }
         WINDOWS = process.platform === 'win32';
-        const geneseConfigPath = `${pathCommand}/geneseconfig.json`;
+        const geneseConfigPath = `${process.cwd()}/geneseconfig.json`;
         if (fs.existsSync(geneseConfigPath)) {
             Options.setOptionsFromConfig(geneseConfigPath, pathFolderToAnalyze);
         }
         Options.setOptionsFromCommandLine(
-            pathCommand,
             pathFolderToAnalyze,
             pathGeneseNodeJs
         );
@@ -73,15 +72,13 @@ export class Options {
 
     /**
      * Sets the options of genese-complexity module with command-line options (lower priority than geneseconfig.json options)
-     * @param pathCommand               // The path of the folder where the command-line was entered (can't be overridden)
      * @param pathFolderToAnalyze       // The path of the folder to analyse (can be overridden)
      * @param pathGeneseNodeJs          // The path of the node_module Genese in the nodejs user environment (can't be overridden)
      */
-    static setOptionsFromCommandLine(pathCommand: string, pathFolderToAnalyze: string, pathGeneseNodeJs: string): void {
-        Options.pathCommand = pathCommand;
+    static setOptionsFromCommandLine(pathFolderToAnalyze: string, pathGeneseNodeJs: string): void {
         Options.pathFolderToAnalyze = getPathWithSlash(pathFolderToAnalyze);
         Options.pathGeneseNodeJs = pathGeneseNodeJs;
-        Options.pathOutDir = `${pathCommand}/genese/complexity/reports`;
+        Options.pathOutDir = `${process.cwd()}/genese/complexity/reports`;
     }
 
     /**
@@ -97,13 +94,13 @@ export class Options {
         });
         Options.pathFolderToAnalyze = config.complexity?.pathFolderToAnalyze ?? Options.pathFolderToAnalyze;
         Options.pathDataset = config.complexity?.pathDataset ?? `${pathFolderToAnalyze}/dataset.xlsx`;
+        Options.hasMeasures = fileExists(Options.pathDataset);
         Options.pathOutDir = config.complexity?.pathReports ?? Options.pathOutDir;
         Options.ignore.push(Options.pathOutDir);
         Options.cognitiveCpx = config.complexity.cognitiveCpx ?? Options.cognitiveCpx;
         Options.cyclomaticCpx = config.complexity.cyclomaticCpx ?? Options.cyclomaticCpx;
         Options.generateJsonAst = config.complexity.generateJsonAst === true || Options.generateJsonAst;
         Options.generateJsonReport = config.complexity.generateJsonReport === true || Options.generateJsonReport;
-        Options.jsonAstPath = config.complexity.jsonAstPath ?? Options.jsonAstPath;
         Options.jsonReportPath = config.complexity.jsonReportPath ?? Options.jsonReportPath;
         Options.measure = config.complexity.measure ?? Options.measure;
         Options.metrics = config.complexity.metrics ?? Options.metrics;

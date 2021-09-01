@@ -2,20 +2,20 @@ import { Measure } from '../report-generation/models/measure.model';
 import { Options } from '../core/models/options.model';
 import { CellAddress, WorkBook, WorkSheet } from 'xlsx';
 import { round } from '../core/utils/numbers.util';
+import * as chalk from 'chalk';
+import { fileExists } from '../core/utils/file-system.util';
 
 const XLSX = require('xlsx');
 
 export class DatasetService {
 
-    static async getMeasures(): Promise<Measure[]> {
-        const dataSheet: WorkSheet = await this.getXlsx();
+    static getMeasures(): Measure[] {
+        if (!Options.hasMeasures) {
+            return [];
+        }
+        const wb: WorkBook = XLSX.readFile(Options.pathDataset);
+        const dataSheet: WorkSheet = wb.Sheets[wb.SheetNames[0]];
         return this.getDataFromWorkSheet(dataSheet);
-    }
-
-    private static async getXlsx(): Promise<WorkSheet> {
-        const csvPath: string = Options.pathDataset;
-        const wb: WorkBook = XLSX.readFile(csvPath);
-        return wb.Sheets[wb.SheetNames[0]];
     }
 
     private static getDataFromWorkSheet(dataSheet: WorkSheet): Measure[] {

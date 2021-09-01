@@ -7,6 +7,9 @@ import { AstArrowFunction } from './ast-arrow-function.model';
 import { AstClass } from './ast-class.model';
 import { AstFunction } from './ast-function.model';
 import { AstLine } from './ast-line.model';
+import { SyntaxKind } from '../../enum/syntax-kind.enum';
+import { isIf, isStructuralNode } from '../../utils/syntax-kind.util';
+import * as chalk from 'chalk';
 
 export abstract class AstAbstract {
 
@@ -24,6 +27,7 @@ export abstract class AstAbstract {
         this.astFileText = astFileText;
         this.jsonAstNode = jsonAstNode;
         this.setAstNode();
+        this.setNesting(this.astNode);
     }
 
     get astAbstracts(): AstAbstract[] {
@@ -59,6 +63,20 @@ export abstract class AstAbstract {
     }
 
     private setAstNode(): void {
-        this.astNode = AstNodeService.generate(this.jsonAstNode, this.astFileText);
+        this.astNode = AstNodeService.generate(undefined, this.jsonAstNode, this.astFileText);
+    }
+
+    private setNesting(astNode: AstNode): void {
+        if (astNode.isNestingRoot) {
+            astNode.nesting = 0;
+        } else if (isStructuralNode(astNode.kind)) {
+            astNode.nesting = astNode.parent.nesting + 1;
+        } else {
+            astNode.nesting = astNode.parent.nesting;
+        }
+        // console.log(chalk.magentaBright('KINDDDD'), astNode.parent?.kind, astNode.kind, astNode.text, astNode.nesting);
+        for (const child of astNode.children) {
+            this.setNesting(child);
+        }
     }
 }

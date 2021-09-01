@@ -16,7 +16,6 @@ import { DivCodeValues } from './models/div-code-values.model';
 import * as chalk from 'chalk';
 import { CorrelationRow } from './models/correlation-row.model';
 import { ChartMetric } from './models/chart-metric.model';
-import { DataToCorrelate } from './data-to-correlate.model';
 import { Dot } from './models/dot.model';
 import { round } from '../core/utils/numbers.util';
 
@@ -31,17 +30,18 @@ export class ReportService {
     static selectedMetric = '';
 
     static start(jsonReport: JsonReportInterface): HtmlReport {
-        // console.log(chalk.greenBright('JSON REPORTTTTT '), jsonReport.reportMetrics[0].correlations);
+        // console.log(chalk.greenBright('JSON REPORTTTTT '), jsonReport.reportMetrics[0].reportSnippets[0].lines.map(l => l.astNodes));
         this.reportMetrics = jsonReport.reportMetrics;
         this.htmlReport.measure = jsonReport.measureName;
+        this.htmlReport.hasMeasures = Options.hasMeasures;
         this.codeSnippetNames = unique(flat(jsonReport.reportMetrics.map(r => r.reportSnippets.map(s => s.codeSnippetName))));
         this.metricNames = unique(flat(jsonReport.reportMetrics.map(r => r.reportSnippets.map(s => s.metricName))));
         this.selectedMetric = this.metricNames[0];
         this.metricNamesArray = this.setNamesArray(this.metricNames);
         this.codeSnippetNamesArray = this.setNamesArray(this.codeSnippetNames);
         this.setMetricSelects();
-        this.generateRowSnippets(!!jsonReport.measureName);
-        this.setCorrelations(!!jsonReport.measureName);
+        this.generateRowSnippets();
+        this.setCorrelations();
         this.generateDivFiles();
         this.setCharts();
         this.writeReport();
@@ -65,20 +65,20 @@ export class ReportService {
         }
     }
 
-    private static generateRowSnippets(hasMeasure: boolean): void {
+    private static generateRowSnippets(): void {
         for (const codeSnippetName of this.codeSnippetNames) {
             const reportSnippets: ReportSnippet[] = flat(this.reportMetrics.map(r => r.reportSnippets));
             const reportSnippet: ReportSnippet = reportSnippets.find(r => r.codeSnippetName === codeSnippetName);
             if (reportSnippet) {
-                this.generateRowSnippet(codeSnippetName, hasMeasure, reportSnippet.measureValue, this.reportMetrics);
+                this.generateRowSnippet(codeSnippetName, reportSnippet.measureValue, this.reportMetrics);
             } else {
                 console.log(chalk.redBright('FILE NOT FOUND'), codeSnippetName);
             }
         }
     }
 
-    private static generateRowSnippet(codeSnippetName: string, hasMeasure: boolean, measureValue: number, reportMetrics: ReportMetric[]): void {
-        const rowSnippet = new RowSnippet(codeSnippetName, hasMeasure, measureValue);
+    private static generateRowSnippet(codeSnippetName: string, measureValue: number, reportMetrics: ReportMetric[]): void {
+        const rowSnippet = new RowSnippet(codeSnippetName, Options.hasMeasures, measureValue);
         const fileReportSnippets: ReportSnippet[] = flat(reportMetrics.map(r => r.reportSnippets)).filter(s => s.codeSnippetName === codeSnippetName);
         rowSnippet.scores = fileReportSnippets.map(r => r?.score);
         this.htmlReport.rowSnippets.push(rowSnippet);
@@ -123,8 +123,8 @@ export class ReportService {
         codeSnippetRow.divCodeValues.push(new DivCodeValues(codeSnippetName, metricSelect, reportSnippetForThisFileAndThisMetric.score, this.metricNamesArray));
     }
 
-    private static setCorrelations(hasMeasures: boolean): void {
-        if (!hasMeasures) {
+    private static setCorrelations(): void {
+        if (!Options.hasMeasures) {
             return;
         }
         const correlationNames: string[] = unique(flat(this.reportMetrics.map(r => r.correlations.map(c => c.name))));
@@ -163,7 +163,7 @@ export class ReportService {
         chartMetric.width = round(100 / this.reportMetrics.length, 2);
         chartMetric.marginRight = isLastMetric ? 0 : 1;
         this.htmlReport.charts.push(chartMetric);
-        console.log(chalk.greenBright('SET CHARTTTTT MMMMM'), chartMetric);
+        // console.log(chalk.greenBright('SET CHARTTTTT MMMMM'), chartMetric);
     }
 
     private static setTemplate(): HandlebarsTemplateDelegate {
@@ -173,6 +173,7 @@ export class ReportService {
         this.registerPartial("codeSnippetRow", 'div-code-snippet-table');
         this.registerPartial("chart", 'chart');
         this.registerPartial("chartScript", 'chart-script');
+        this.registerHelper();
         const reportTemplate = eol.auto(fs.readFileSync(`${Options.pathCommand}/report/templates/handlebars/report.handlebars`, 'utf-8'));
         return Handlebars.compile(reportTemplate);
     }
@@ -181,7 +182,7 @@ export class ReportService {
      * Creates the file of the report
      */
     private static writeReport() {
-        console.log(chalk.cyanBright('HTML REPORTTTT'), this.htmlReport.charts);
+        // console.log(chalk.cyanBright('HTML REPORTTTT'), this.htmlReport.codeSnippetsTable[0]);
         const template: HandlebarsTemplateDelegate = this.setTemplate();
         const content = template(this.htmlReport);
         const pathReport = `${Options.pathCommand}/report/report.html`;
@@ -196,5 +197,34 @@ export class ReportService {
     private static registerPartial(partialName: string, filename: string): void {
         const partial = eol.auto(fs.readFileSync(`${Options.pathCommand}/report/templates/handlebars/${filename}.handlebars`, 'utf-8'));
         Handlebars.registerPartial(partialName, partial);
+    }
+
+    private static registerHelper(): void {
+        Handlebars.registerHelper('ifCond', function (v1, operator, v2, options) {
+            switch (operator) {
+                case '==':
+                    return (v1 == v2) ? options.fn(this) : options.inverse(this);
+                case '===':
+                    return (v1 === v2) ? options.fn(this) : options.inverse(this);
+                case '!=':
+                    return (v1 != v2) ? options.fn(this) : options.inverse(this);
+                case '!==':
+                    return (v1 !== v2) ? options.fn(this) : options.inverse(this);
+                case '<':
+                    return (v1 < v2) ? options.fn(this) : options.inverse(this);
+                case '<=':
+                    return (v1 <= v2) ? options.fn(this) : options.inverse(this);
+                case '>':
+                    return (v1 > v2) ? options.fn(this) : options.inverse(this);
+                case '>=':
+                    return (v1 >= v2) ? options.fn(this) : options.inverse(this);
+                case '&&':
+                    return (v1 && v2) ? options.fn(this) : options.inverse(this);
+                case '||':
+                    return (v1 || v2) ? options.fn(this) : options.inverse(this);
+                default:
+                    return options.inverse(this);
+            }
+        });
     }
 }

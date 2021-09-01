@@ -19,7 +19,7 @@ export class IdentifiersService extends AbstractMetricService {
     }
 
     private evaluateLine(astLine: AstLine, reportLine: ReportLine): void {
-        reportLine.score = astLine.nbIdentifiers;
+        reportLine.score = astLine.identifiers;
         reportLine.comments = reportLine.score > 0 ? `+${reportLine.score}` : '';
     }
 }

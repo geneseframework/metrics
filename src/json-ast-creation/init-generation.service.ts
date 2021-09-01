@@ -1,12 +1,13 @@
 import * as fs from 'fs-extra';
 import { AstFileGenerationJavaService } from './java/services/ast-file-generation-java.service';
-import { getFileExtension, platformPath } from '../core/utils/file-system.util';
+import { getFileExtension, getFilename, platformPath } from '../core/utils/file-system.util';
 import { Options } from '../core/models/options.model';
 import { JsonAstFolderInterface } from '../core/interfaces/json-ast/json-ast-folder.interface';
 import { JsonAstInterface } from '../core/interfaces/json-ast/json-ast.interface';
 import { DEV_MOCK, LIMIT_GENERATIONS } from './globals.const';
 import { isLanguage, Language } from '../core/enum/language.enum';
 import { AstFileGenerationService } from './ts/services/ast-file-generation.service';
+import * as chalk from 'chalk';
 
 /**
  * - AstFolders generation from Abstract Syntax Tree (AST) of its files (including files in subfolders)
@@ -82,7 +83,7 @@ export class InitGenerationService {
             filesOrDirs.forEach((elementName: string) => {
                 const pathElement = path + elementName;
                 currentFile = pathElement;
-                if (!Options.isIgnored(pathElement)) {
+                if (!Options.isIgnored(pathElement) && this.hasLanguageExtension(pathElement, language)) {
                     if (fs.statSync(pathElement).isDirectory() && !LIMIT_GENERATIONS) {
                         astFolder.children = astFolder.children ?? [];
                         astFolder.children.push(this.generateAstFolder(`${pathElement}/`, language));
@@ -101,6 +102,10 @@ export class InitGenerationService {
             throw error;
         }
         return astFolder;
+    }
+
+    private hasLanguageExtension(filePath: string, language: Language): boolean {
+        return getFileExtension(filePath) === language;
     }
 
     /**

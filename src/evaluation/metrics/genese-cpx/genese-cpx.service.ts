@@ -18,5 +18,6 @@ export class GeneseCpxService extends AbstractMetricService {
             reportFile.lines.push(geneseLine);
             reportFile.score = round(reportFile.score + geneseLine.score, 1);
         }
+        // console.log(chalk.magentaBright('GENESE CPXXXX REPORT F'), reportFile);
     }
 }

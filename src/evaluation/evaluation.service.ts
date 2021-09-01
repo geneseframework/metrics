@@ -12,6 +12,7 @@ import { Measure } from '../report-generation/models/measure.model';
 import { MEASURES } from './const/measures.const';
 import { removeExtension } from '../core/utils/file-system.util';
 import { CorrelationService } from '../correlation/correlation.service';
+import { Options } from '../core/models/options.model';
 
 export class EvaluationService {
 
@@ -19,14 +20,15 @@ export class EvaluationService {
 
     static evaluate(astModel: AstModel, measures: Measure[]): JsonReportInterface {
         const reportModel = new ReportModel();
-        // console.log(chalk.blueBright('MEASURESSSSS'), measures);
-        // console.log(chalk.blueBright('AST MODELLLLL'), astModel.astMetrics[0].astFiles[0].astCode.astClassOrFunctionCodes[0]);
+        // console.log(chalk.blueBright('AST MODELLLLL'), astModel.astMetrics[0].astFiles[0].astNode);
         reportModel.measureName = astModel.measure;
         this.measures = measures;
         for (const astMetric of astModel.astMetrics) {
             this.evaluateAstMetric(reportModel, astMetric);
         }
-        CorrelationService.setStats(reportModel);
+        if (Options.hasMeasures) {
+            CorrelationService.setStats(reportModel);
+        }
         // console.log(chalk.greenBright('REPORT MODELLLLL'), reportModel.reportMetrics[0]);
         return reportModel;
     }

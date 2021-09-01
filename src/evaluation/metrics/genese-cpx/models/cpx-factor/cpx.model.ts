@@ -2,11 +2,11 @@
  * The Complexity Factors
  */
 import { round } from '../../../../../core/utils/numbers.util';
+import { capitalize } from '../../../../../core/utils/strings.util';
 
 export class Cpx {
 
     aggregation: number = 0;                    // Aggregation Complexity
-    atomic: number = 0;                         // Atomic Complexity
     context: number = 0;                        // Context Complexity
     depth: number = 0;                          // Depth Complexity
     nesting: number = 0;                        // Nesting Complexity
@@ -14,6 +14,7 @@ export class Cpx {
     structural: number = 0;                     // Structural Complexity
     typing: number = 0;                         // Typing Complexity
     use: number = 0;                            // Use Complexity
+    words: number = 0;                         // Atomic Complexity
 
 
     /**
@@ -22,7 +23,7 @@ export class Cpx {
     get total(): number {
         let total = 0;
         for (const key of Object.keys(this)) {
-            total += this[key] ?? 0;
+            total += !isNaN(this[key]) ? this[key] : 0;
         }
         return round(total, 1);
     }
@@ -33,7 +34,7 @@ export class Cpx {
         }
         let text = `+ ${this.total} (`;
         for (const key of Object.keys(this)) {
-            text = this[key] > 0 ? `${text}+${round(this[key], 1)} ${key}, ` : `${text}`;
+            text = this[key] > 0 ? `${text}${capitalize(key)}: +${round(this[key], 1)}, ` : `${text}`;
         }
         return `${text.slice(0, -2)})`;
     }
