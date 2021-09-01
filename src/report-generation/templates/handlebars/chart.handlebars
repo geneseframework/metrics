@@ -8,11 +8,20 @@
         data: {
             datasets: [{
                 data: [
-                    {{#each data}}
-                        {x: {{this.metricScore}}, y: {{this.measureValue}} },
+                    {{#each dots}}
+                        {x: {{this.x}}, y: {{this.y}} },
                     {{/each}}
                 ],
                 backgroundColor: 'rgb(255, 99, 132)'
+            }, {
+                data: [
+                    {{#each linearRegressionLine}}
+                        {x: {{this.x}}, y: {{this.y}} },
+                    {{/each}}
+                ],
+                fill: false,
+                type: 'line',
+                showLine: true
             }]
         },
         options: {

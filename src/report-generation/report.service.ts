@@ -17,6 +17,7 @@ import * as chalk from 'chalk';
 import { CorrelationRow } from './models/correlation-row.model';
 import { ChartMetric } from './models/chart-metric.model';
 import { DataToCorrelate } from './data-to-correlate.model';
+import { Dot } from './models/dot.model';
 
 export class ReportService {
 
@@ -146,7 +147,6 @@ export class ReportService {
     }
 
     private static setCharts(): void {
-        // console.log(chalk.magentaBright('SET CHARTSSSS'), this.reportMetrics);
         const zzz = [this.reportMetrics[0]];
         for (const reportMetric of zzz) {
             this.setChartMetric(reportMetric);
@@ -154,13 +154,14 @@ export class ReportService {
     }
 
     private static setChartMetric(reportMetric: ReportMetric): void {
-        console.log(chalk.magentaBright('SET CHARTTTTT'), reportMetric);
         const chartMetric = new ChartMetric(reportMetric.metricName);
-        for (const reportSnippet of reportMetric.reportSnippets) {
-            chartMetric.data.push(new DataToCorrelate(reportSnippet.measureValue, reportSnippet.score));
+        const reportSnippetsSortByScore: ReportSnippet[] = reportMetric.reportSnippets.sort((a, b) => a.score - b.score);
+        for (const reportSnippet of reportSnippetsSortByScore) {
+            chartMetric.dots.push(new Dot(reportSnippet.score, reportSnippet.measureValue));
         }
+        chartMetric.setLinearRegressionLine();
         this.htmlReport.charts.push(chartMetric);
-        console.log(chalk.greenBright('SET CHARTTTTT MMMMM'), chartMetric);
+        // console.log(chalk.greenBright('SET CHARTTTTT MMMMM'), chartMetric);
     }
 
     private static setTemplate(): HandlebarsTemplateDelegate {
