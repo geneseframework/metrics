@@ -1,11 +1,18 @@
-let a = 3;
-
-// zzz
+function zzz(a: number): void {
+    if (a > 0) {
+        a = a + 1;
+    } else {
+        a = a - 1;
+    }
+}
 class Cl {
 
-    // trter
-    z(a: number) {
-        return a;
+    z(arr: number[]) {
+        let t = 0;
+        for (const a of arr) {
+            t = t + a;
+        }
+        return t;
     }
 }
 

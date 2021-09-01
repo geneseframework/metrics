@@ -1,3 +1,5 @@
 export const GENESE_WEIGHTS = {
-    "nbWords": 0.1
+    "branches": 1,
+    "loops": 1,
+    "words": 0.1
 }

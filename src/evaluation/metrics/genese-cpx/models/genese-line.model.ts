@@ -16,14 +16,20 @@ export class GeneseLine extends ReportLine {
     }
 
     evaluate(): void {
-        // console.log(chalk.cyanBright('EVAL LINEEEEE'), this.issue, this.text,  this.astLine.astNodes.map(a => a.kind));
-        this.setAtomicCpx();
+        this.setComplexities();
         this.score = round(this.cpx.total, 1);
         this.comments = this.cpx.comments;
+        // console.log(chalk.cyanBright('EVAL LINEEEEE'), this.issue, this.text,  this.astLine.astNodes.map(a => a.kind), this.cpx.words);
     }
 
-    private setAtomicCpx(): void {
-        this.cpx.atomic = round(this.astLine.nbWords * GENESE_WEIGHTS['nbWords'], 1);
+    private setComplexities(): void {
+        for (const cpxName of Object.keys(GENESE_WEIGHTS)) {
+            this.setComplexity(cpxName)
+        }
+    }
+
+    private setComplexity(cpxName: string): void {
+        this.cpx[cpxName] = round(this.astLine[cpxName] * GENESE_WEIGHTS[cpxName], 1);
     }
 
 }

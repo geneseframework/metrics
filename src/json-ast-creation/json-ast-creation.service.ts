@@ -5,6 +5,7 @@ import { createFile } from '../core/utils/file-system.util';
 import { JsonAstInterface } from '../core/interfaces/json-ast/json-ast.interface';
 import { project } from './globals.const';
 import { Options } from '../core/models/options.model';
+import * as chalk from 'chalk';
 
 /**
  * Main process of the parsing to JsonAst format
@@ -46,6 +47,7 @@ export class JsonAstCreationService {
                 jsonAst = JsonAstCreationService.generateFromAllFiles(pathToAnalyze);
                 break;
         }
+        console.log(chalk.redBright('JSON PATHHHH'), Options.jsonAstPath);
         createFile(Options.jsonAstPath, JsonService.prettifyJson(jsonAst));
         return jsonAst;
     }

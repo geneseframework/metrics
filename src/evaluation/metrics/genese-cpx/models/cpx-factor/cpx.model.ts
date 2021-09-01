@@ -6,7 +6,6 @@ import { round } from '../../../../../core/utils/numbers.util';
 export class Cpx {
 
     aggregation: number = 0;                    // Aggregation Complexity
-    atomic: number = 0;                         // Atomic Complexity
     context: number = 0;                        // Context Complexity
     depth: number = 0;                          // Depth Complexity
     nesting: number = 0;                        // Nesting Complexity
@@ -14,6 +13,7 @@ export class Cpx {
     structural: number = 0;                     // Structural Complexity
     typing: number = 0;                         // Typing Complexity
     use: number = 0;                            // Use Complexity
+    words: number = 0;                         // Atomic Complexity
 
 
     /**
@@ -22,7 +22,7 @@ export class Cpx {
     get total(): number {
         let total = 0;
         for (const key of Object.keys(this)) {
-            total += this[key] ?? 0;
+            total += !isNaN(this[key]) ? this[key] : 0;
         }
         return round(total, 1);
     }
