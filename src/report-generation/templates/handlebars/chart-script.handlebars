@@ -1,0 +1,50 @@
+<script>
+    var context = document.getElementById('chart-{{metricName}}').getContext("2d");
+    var chart = new Chart(context, {
+        type: 'scatter',
+        label: '{{metricName}}',
+        data: {
+            datasets: [{
+                data: [
+                    {{#each dots}}
+                        {x: {{this.x}}, y: {{this.y}} },
+                    {{/each}}
+                ],
+                backgroundColor: 'rgb(255, 99, 132)'
+            }, {
+                backgroundColor: '#0a3d62',
+                borderColor: '#99ccff',
+                data: [
+                    {{#each linearRegressionLine}}
+                        {x: {{this.x}}, y: {{this.y}} },
+                    {{/each}}
+                ],
+                fill: false,
+                type: 'line',
+                showLine: true
+            }]
+        },
+        options: {
+            legend: {
+                display: false
+            },
+            scales: {
+                xAxes: [{
+                    type: 'linear',
+                    position: 'bottom',
+                    scaleLabel: {
+                        display: true,
+                        labelString: '{{metricName}}'
+                    },
+                }],
+                yAxes: [{
+                    type: 'linear',
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Time'
+                    },
+                }],
+            }
+        }
+    });
+</script>

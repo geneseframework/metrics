@@ -42,16 +42,9 @@
     <!--        -------------------------------------------------------------------------------------->
 
     <div class="stats-and-charts">
-
-        <div class="div-chart-left">
-            <div class="bar bar-cognitive">
-                <canvas id="chart-left" class="cognitive-charts"></canvas>
-            </div>
-        </div>
-
-        <div class="div-chart-right">
-<!--            { {>chart charRight=.}}-->
-        </div>
+        {{#each charts}}
+            {{>chart chartMetric=.}}
+        {{/each}}
     </div>
 
     <!--        -------------------------------------------------------------------------------------->
@@ -143,7 +136,7 @@
 <script src="./templates/js/report-scripts.js"></script>
 
 {{#each charts}}
-    {{>chart chartMetric=.}}
+    {{>chartScript chartMetric=.}}
 {{/each}}
 </body>
 

@@ -1,4 +1,4 @@
-export class LinearRegression {
+export class LinearEquation {
 
     b: number = undefined;
     m: number = undefined;

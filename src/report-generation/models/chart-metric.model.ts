@@ -1,15 +1,17 @@
-import { LinearRegression } from './linear-regression.model';
+import { LinearEquation } from './linear-equation.model';
 import { Dot } from './dot.model';
 import { linearRegression, linearRegressionLine } from 'simple-statistics';
 import * as chalk from 'chalk';
 
 export class ChartMetric {
 
-    linearRegression: LinearRegression = undefined;
+    dots: Dot[] = [];
+    linearRegression: LinearEquation = undefined;
     linearRegressionLine: Dot[] = [];
+    marginRight: number = undefined;
     measureName: string = 'Time';
     metricName: string = undefined;
-    dots: Dot[] = [];
+    width: number = undefined;
 
     constructor(metricName: string) {
         this.metricName = metricName;
