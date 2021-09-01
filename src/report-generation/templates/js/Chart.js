@@ -9340,7 +9340,7 @@ helpers$1.extend(Chart.prototype, /** @lends Chart */ {
 				return me.config.data;
 			},
 			set: function(value) {
-				me.config.data = value;
+				me.config.dots = value;
 			}
 		});
 

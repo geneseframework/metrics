@@ -15,6 +15,9 @@ import { CodeSnippetRow } from './models/code-snippet-row.model';
 import { DivCodeValues } from './models/div-code-values.model';
 import * as chalk from 'chalk';
 import { CorrelationRow } from './models/correlation-row.model';
+import { ChartMetric } from './models/chart-metric.model';
+import { DataToCorrelate } from './data-to-correlate.model';
+import { Dot } from './models/dot.model';
 
 export class ReportService {
 
@@ -39,6 +42,7 @@ export class ReportService {
         this.generateRowSnippets(!!jsonReport.measureName);
         this.setCorrelations(!!jsonReport.measureName);
         this.generateDivFiles();
+        this.setCharts();
         this.writeReport();
         return this.htmlReport;
     }
@@ -142,11 +146,30 @@ export class ReportService {
             ?.value);
     }
 
+    private static setCharts(): void {
+        const zzz = [this.reportMetrics[0]];
+        for (const reportMetric of zzz) {
+            this.setChartMetric(reportMetric);
+        }
+    }
+
+    private static setChartMetric(reportMetric: ReportMetric): void {
+        const chartMetric = new ChartMetric(reportMetric.metricName);
+        const reportSnippetsSortByScore: ReportSnippet[] = reportMetric.reportSnippets.sort((a, b) => a.score - b.score);
+        for (const reportSnippet of reportSnippetsSortByScore) {
+            chartMetric.dots.push(new Dot(reportSnippet.score, reportSnippet.measureValue));
+        }
+        chartMetric.setLinearRegressionLine();
+        this.htmlReport.charts.push(chartMetric);
+        // console.log(chalk.greenBright('SET CHARTTTTT MMMMM'), chartMetric);
+    }
+
     private static setTemplate(): HandlebarsTemplateDelegate {
         this.registerPartial("correlation", 'correlation');
         this.registerPartial("rowSnippet", 'row-snippet');
         this.registerPartial("divCode", 'div-code');
         this.registerPartial("codeSnippetRow", 'div-code-snippet-table');
+        this.registerPartial("chart", 'chart');
         const reportTemplate = eol.auto(fs.readFileSync(`${Options.pathCommand}/report/templates/handlebars/report.handlebars`, 'utf-8'));
         return Handlebars.compile(reportTemplate);
     }
@@ -155,7 +178,7 @@ export class ReportService {
      * Creates the file of the report
      */
     private static writeReport() {
-        // console.log(chalk.cyanBright('HTML REPORTTTT'), this.htmlReport.correlations);
+        console.log(chalk.cyanBright('HTML REPORTTTT'), this.htmlReport.charts);
         const template: HandlebarsTemplateDelegate = this.setTemplate();
         const content = template(this.htmlReport);
         const pathReport = `${Options.pathCommand}/report/report.html`;
