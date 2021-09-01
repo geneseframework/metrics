@@ -47,7 +47,6 @@ export class JsonAstCreationService {
                 jsonAst = JsonAstCreationService.generateFromAllFiles(pathToAnalyze);
                 break;
         }
-        console.log(chalk.redBright('JSON PATHHHH'), Options.jsonAstPath);
         createFile(Options.jsonAstPath, JsonService.prettifyJson(jsonAst));
         return jsonAst;
     }

@@ -2,6 +2,7 @@
  * The Complexity Factors
  */
 import { round } from '../../../../../core/utils/numbers.util';
+import { capitalize } from '../../../../../core/utils/strings.util';
 
 export class Cpx {
 
@@ -33,7 +34,7 @@ export class Cpx {
         }
         let text = `+ ${this.total} (`;
         for (const key of Object.keys(this)) {
-            text = this[key] > 0 ? `${text}+${round(this[key], 1)} ${key}, ` : `${text}`;
+            text = this[key] > 0 ? `${text}${capitalize(key)}: +${round(this[key], 1)}, ` : `${text}`;
         }
         return `${text.slice(0, -2)})`;
     }

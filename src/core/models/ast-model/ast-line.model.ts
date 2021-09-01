@@ -2,7 +2,7 @@
  * A line of a Code object
  */
 import { AstNode } from './ast-node.model';
-import { isIdentifier, isKeyword, isLiteral, isLoop } from '../../utils/syntax-kind.util';
+import { isIdentifier, isIf, isKeyword, isLiteral, isLoop, isSwitch } from '../../utils/syntax-kind.util';
 import { SyntaxKind } from '../../enum/syntax-kind.enum';
 
 export class AstLine {
@@ -24,6 +24,10 @@ export class AstLine {
         return this.astNodeIdentifiers.length;
     }
 
+    get ifs(): number {
+        return this.getNbElements(isIf);
+    }
+
     get keywords(): number {
         return this.getNbElements(isKeyword);
     }
@@ -34,6 +38,10 @@ export class AstLine {
 
     get loops(): number {
         return this.getNbElements(isLoop);
+    }
+
+    get switches(): number {
+        return this.getNbElements(isSwitch);
     }
 
     get words(): number {
