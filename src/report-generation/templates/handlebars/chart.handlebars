@@ -1,50 +1,6 @@
-<script>
-    var chartLeftCanvas = document.getElementById('chart-left').getContext("2d");
-    <!--var chartLeftCanvas = document.getElementById('chart-{{metricName}}').getContext("2d");-->
-    console.log(chartLeftCanvas);
-    var barCognitive = new Chart(chartLeftCanvas, {
-        type: 'scatter',
-        label: '{{metricName}}',
-        data: {
-            datasets: [{
-                data: [
-                    {{#each dots}}
-                        {x: {{this.x}}, y: {{this.y}} },
-                    {{/each}}
-                ],
-                backgroundColor: 'rgb(255, 99, 132)'
-            }, {
-                data: [
-                    {{#each linearRegressionLine}}
-                        {x: {{this.x}}, y: {{this.y}} },
-                    {{/each}}
-                ],
-                fill: false,
-                type: 'line',
-                showLine: true
-            }]
-        },
-        options: {
-            legend: {
-                display: false
-            },
-            scales: {
-                xAxes: [{
-                    type: 'linear',
-                    position: 'bottom',
-                    scaleLabel: {
-                        display: true,
-                        labelString: '{{metricName}}'
-                    },
-                }],
-                yAxes: [{
-                    type: 'linear',
-                    scaleLabel: {
-                        display: true,
-                        labelString: 'Time'
-                    },
-                }],
-            }
-        }
-    });
-</script>
+
+<div class="div-chart" style="width: {{width}}%; margin-right: {{marginRight}}em;">
+    <div class="div-canvas">
+        <canvas id="chart-{{metricName}}" class="canvas"></canvas>
+    </div>
+</div>
