@@ -18,9 +18,9 @@ import { DatasetService } from './dataset-import/dataset.service';
 const LANGUAGE = 'ts';
 
 async function start(): Promise<void> {
-    const pathToAnalyse = `${process.cwd()}/src/core/mocks/code-snippets`;
-    // const pathToAnalyse = `${process.cwd()}/src/core/mocks/siegmund-2012`;
-    Options.setOptions(pathToAnalyse, __dirname);
+    // const pathToAnalyse = `${process.cwd()}/src/core/mocks/code-snippets`;
+    const pathToAnalyse = `${process.cwd()}/src/core/mocks/siegmund-2012`;
+    Options.setOptions(process.cwd(), pathToAnalyse, __dirname);
     createOutDir();
     console.log(chalk.yellowBright('Json AST generation...'));
     const jsonAst: JsonAstInterface = Options.generateJsonAst ? JsonAstCreationService.start(Options.pathFolderToAnalyze, LANGUAGE as Language) : require(Options.jsonAstPath);

@@ -30,7 +30,7 @@ export class ReportService {
     static selectedMetric = '';
 
     static start(jsonReport: JsonReportInterface): HtmlReport {
-        // console.log(chalk.greenBright('JSON REPORTTTTT '), jsonReport.reportMetrics[0].reportSnippets[0].lines.map(l => l.astNodes));
+        // console.log(chalk.greenBright('JSON REPORTTTTT '), jsonReport.reportMetrics[0].correlations);
         this.reportMetrics = jsonReport.reportMetrics;
         this.htmlReport.measure = jsonReport.measureName;
         this.htmlReport.hasMeasures = Options.hasMeasures;
@@ -182,7 +182,7 @@ export class ReportService {
      * Creates the file of the report
      */
     private static writeReport() {
-        // console.log(chalk.cyanBright('HTML REPORTTTT'), this.htmlReport.codeSnippetsTable[0]);
+        console.log(chalk.cyanBright('HTML REPORTTTT'), this.htmlReport.rowSnippets);
         const template: HandlebarsTemplateDelegate = this.setTemplate();
         const content = template(this.htmlReport);
         const pathReport = `${Options.pathCommand}/report/report.html`;
