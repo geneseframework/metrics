@@ -37,44 +37,47 @@
 
 <div class="mainContainer">
 
+{{#if hasMeasures}}
+
     <!--        -------------------------------------------------------------------------------------->
     <!--        ----------------------------------------   Charts   ---------------------------------->
     <!--        -------------------------------------------------------------------------------------->
 
-    <div class="stats-and-charts">
-        {{#each charts}}
-            {{>chart chartMetric=.}}
-        {{/each}}
-    </div>
-
-    <!--        -------------------------------------------------------------------------------------->
-    <!--        -----------------------------   Div Correlation table   ------------------------------>
-    <!--        -------------------------------------------------------------------------------------->
-
-    <div class="subfolders">
-        <div class="clearfix cognitive-subtitle">
-            <div class='fl pad1y space-right2'>
-                <span class="strong">Correlations</span>
-            </div>
-        </div>
-        <table class="array-report short-table">
-            <thead>
-            <tr>
-                <th style="width: 80%;">Correlation</th>
-                {{#each metricSelects}}
-                    {{#if this.isSelected}}
-                        <th style="max-width: 10%;"><span id="array-{{this.metricName}}" class="selected" onclick="selectAll('{{this.metricName}}', {{this.metricNamesArray}}, {{this.codeSnippetNamesArray}})">{{this.metricName}}</span></th>
-                    {{else}}
-                        <th style="max-width: 10%;"><span id="array-{{this.metricName}}" class="not-selected zzz" onclick="selectAll('{{this.metricName}}', {{this.metricNamesArray}}, {{this.codeSnippetNamesArray}})">{{this.metricName}}</span></th>
-                    {{/if}}
-                {{/each}}
-            </tr>
-            </thead>
-            {{#each correlations}}
-                {{>correlation correlation=.}}
+        <div class="stats-and-charts">
+            {{#each charts}}
+                {{>chart chartMetric=.}}
             {{/each}}
-        </table>
-    </div>
+        </div>
+
+        <!--        -------------------------------------------------------------------------------------->
+        <!--        -----------------------------   Div Correlation table   ------------------------------>
+        <!--        -------------------------------------------------------------------------------------->
+
+        <div class="subfolders">
+            <div class="clearfix cognitive-subtitle">
+                <div class='fl pad1y space-right2'>
+                    <span class="strong">Correlations</span>
+                </div>
+            </div>
+            <table class="array-report short-table">
+                <thead>
+                <tr>
+                    <th style="width: 80%;">Correlation</th>
+                    {{#each metricSelects}}
+                        {{#if this.isSelected}}
+                            <th style="max-width: 10%;"><span id="array-{{this.metricName}}" class="selected" onclick="selectAll('{{this.metricName}}', {{this.metricNamesArray}}, {{this.codeSnippetNamesArray}})">{{this.metricName}}</span></th>
+                        {{else}}
+                            <th style="max-width: 10%;"><span id="array-{{this.metricName}}" class="not-selected zzz" onclick="selectAll('{{this.metricName}}', {{this.metricNamesArray}}, {{this.codeSnippetNamesArray}})">{{this.metricName}}</span></th>
+                        {{/if}}
+                    {{/each}}
+                </tr>
+                </thead>
+                {{#each correlations}}
+                    {{>correlation correlation=.}}
+                {{/each}}
+            </table>
+        </div>
+    {{/if}}
 
 
     <!--        -------------------------------------------------------------------------------------->
@@ -91,9 +94,9 @@
             <thead>
             <tr>
                 <th style="width: 80%;">Code snippet</th>
-                {{#if measure}}
+                {{#ifCond measure '&&' hasMeasures}}
                     <th style="width: 10%;">{{measure}}</th>
-                {{/if}}
+                {{/ifCond}}
                 {{#each metricSelects}}
                     {{#if this.isSelected}}
                         <th style="max-width: 10%;"><span id="array-{{this.metricName}}" class="selected" onclick="selectAll('{{this.metricName}}', {{this.metricNamesArray}}, {{this.codeSnippetNamesArray}})">{{this.metricName}}</span></th>

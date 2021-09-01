@@ -1,5 +1,5 @@
 import * as fs from 'fs-extra';
-import { getArrayOfPathsWithDotSlash, getPathWithSlash, } from '../utils/file-system.util';
+import { fileExists, getArrayOfPathsWithDotSlash, getPathWithSlash, } from '../utils/file-system.util';
 import { Complexity } from '../../html-generation/interfaces/complexity.interface';
 import { ComplexityType } from '../../html-generation/enums/complexity-type.enum';
 import { ChartColor } from '../../html-generation/enums/chart-color.enum';
@@ -35,6 +35,7 @@ export class Options {
     static framework: Framework = undefined;    // The framework eventually specified
     static generateJsonAst = true;
     static generateJsonReport = true;
+    static hasMeasures = true;
     static ignore: string[] = [];               // The paths of the files or folders to ignore
     static ignoreRegex: string = '';
     static jsonAstPath = './ast.json';
@@ -97,6 +98,7 @@ export class Options {
         });
         Options.pathFolderToAnalyze = config.complexity?.pathFolderToAnalyze ?? Options.pathFolderToAnalyze;
         Options.pathDataset = config.complexity?.pathDataset ?? `${pathFolderToAnalyze}/dataset.xlsx`;
+        Options.hasMeasures = fileExists(Options.pathDataset);
         Options.pathOutDir = config.complexity?.pathReports ?? Options.pathOutDir;
         Options.ignore.push(Options.pathOutDir);
         Options.cognitiveCpx = config.complexity.cognitiveCpx ?? Options.cognitiveCpx;

@@ -18,6 +18,7 @@ import { DatasetService } from './dataset-import/dataset.service';
 const LANGUAGE = 'ts';
 
 async function start(): Promise<void> {
+    // const pathToAnalyse = `${process.cwd()}/src/core/mocks/code-snippets`;
     const pathToAnalyse = `${process.cwd()}/src/core/mocks/siegmund-2012`;
     Options.setOptions(process.cwd(), pathToAnalyse, __dirname);
     createOutDir();
@@ -26,7 +27,7 @@ async function start(): Promise<void> {
     console.log(chalk.yellowBright('Ast model generation...'));
     const astModel: AstModel = AstModelService.generate(jsonAst);
     console.log(chalk.yellowBright('Collect measures from dataset...'));
-    const measures: Measure[] = await DatasetService.getMeasures();
+    const measures: Measure[] = DatasetService.getMeasures();
     console.log(chalk.yellowBright('Evaluation for each metric...'));
     const jsonReport: JsonReportInterface = Options.generateJsonReport ? EvaluationService.evaluate(astModel, measures) : require(Options.jsonReportPath);
     console.log(chalk.yellowBright('Report generation...'));

@@ -7,6 +7,9 @@ import { lastElement } from './arrays.util';
  * ----------   Tools about files or folders   ---------------
  */
 
+export function fileExists(path: string): boolean {
+    return fs.pathExistsSync(path);
+}
 
 /**
  * Returns the name of the file at a given path
