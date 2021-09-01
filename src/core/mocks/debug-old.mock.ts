@@ -1,8 +1,9 @@
 function zzz(a: number): number {
     if (a > 0) {
         a = a + 1;
-    } else if (a > - 2) {
-        a = a - 1;
+        if (a > - 2) {
+            a = a - 1;
+        }
     } else {
         a = a - 1;
     }
@@ -25,5 +26,5 @@ class Cl {
         return t;
     }
 }
-
+let a;
 a = a + 1;

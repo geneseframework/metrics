@@ -3,7 +3,7 @@ import { JsonAstNodeInterface } from '../../core/interfaces/json-ast/json-ast-no
 
 export class AstNodeService {
 
-    static generate(jsonAstNode: JsonAstNodeInterface, astFileText: string): AstNode {
-        return new AstNode(jsonAstNode, astFileText);
+    static generate(parentAstNode: AstNode, jsonAstNode: JsonAstNodeInterface, astFileText: string): AstNode {
+        return new AstNode(parentAstNode, jsonAstNode, astFileText);
     }
 }

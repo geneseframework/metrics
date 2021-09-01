@@ -11,6 +11,7 @@ import { randomString } from '../../../core/utils/other-tools.util';
 import { Options } from '../../../core/models/options.model';
 import { ReactService } from '../specific/react/react.service';
 import { isJsx } from '../utils/ast.util';
+import * as chalk from 'chalk';
 
 /**
  * - AstFiles generation from their Abstract Syntax Tree (AST)

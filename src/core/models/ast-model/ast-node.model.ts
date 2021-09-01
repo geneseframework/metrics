@@ -1,16 +1,20 @@
 import { JsonAstNodeInterface } from '../../interfaces/json-ast/json-ast-node.interface';
 import { AstNodeService } from '../../../json-ast-to-ast-model/services/ast-node.service';
 import { Interval } from '../../../json-ast-to-ast-model/types/interval.type';
+import { SyntaxKind } from '../../enum/syntax-kind.enum';
 
 export class AstNode {
 
     astFileText: string = undefined;
     children: AstNode[] = [];
     jsonAstNode: JsonAstNodeInterface = undefined;
+    nesting: number = undefined;
+    parent: AstNode = undefined;
 
-    constructor(jsonAstNode: JsonAstNodeInterface, astFileText: string) {
+    constructor(parentAstNode: AstNode, jsonAstNode: JsonAstNodeInterface, astFileText: string) {
         this.jsonAstNode = jsonAstNode;
         this.astFileText = astFileText;
+        this.parent = parentAstNode;
         this.setChildren();
     }
 
@@ -30,6 +34,10 @@ export class AstNode {
 
     get interval(): Interval {
         return this.hasALineBreakBetweenPosAndStart() ? [this.getPosAfterFirstLineBreak(), this.jsonAstNode.end] : [this.jsonAstNode.pos, this.jsonAstNode.end];
+    }
+
+    get isNestingRoot(): boolean {
+        return [SyntaxKind.SourceFile, SyntaxKind.ClassDeclaration, SyntaxKind.MethodDeclaration, SyntaxKind.FunctionDeclaration].includes(this.kind as SyntaxKind)
     }
 
     get kind(): string {
@@ -71,7 +79,8 @@ export class AstNode {
     private setChildren(): void {
         const children: JsonAstNodeInterface[] = this.jsonAstNode.children ?? [];
         for (const child of children) {
-            this.children.push(AstNodeService.generate(child, this.astFileText));
+            const newChild: AstNode = AstNodeService.generate(this, child, this.astFileText);
+            this.children.push(newChild);
         }
     }
 

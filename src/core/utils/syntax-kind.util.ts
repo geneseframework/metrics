@@ -4,11 +4,9 @@ export function isIdentifier(kind: string): boolean {
     return kind === SyntaxKind.Identifier;
 }
 
-// TODO : fix bug with keyword Class not detected
 export function isKeyword(kind: string): boolean {
     return [SyntaxKind.Keyword,
         SyntaxKind.NumberKeyword,
-        SyntaxKind.ClassDeclaration,
         SyntaxKind.VariableDeclaration,
     ].includes(kind as SyntaxKind);
 }
@@ -28,6 +26,10 @@ export function isLoop(kind: string): boolean {
 
 export function isIf(kind: string): boolean {
     return [SyntaxKind.IfStatement].includes(kind as SyntaxKind);
+}
+
+export function isStructuralNode(kind: string): boolean {
+    return isLoop(kind) || isIf(kind) || isSwitch(kind);
 }
 
 export function isSwitch(kind: string): boolean {
