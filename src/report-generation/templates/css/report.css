@@ -28,7 +28,7 @@
 
 
 .stats-and-charts {
-    height: 650px;
+    height: 450px;
     display: flex;
     flex-direction: row;
 }
@@ -90,7 +90,7 @@
 }
 
 .bar-cognitive {
-    height: 65%;
+    height: 95%;
 }
 
 .bar-cyclomatic {

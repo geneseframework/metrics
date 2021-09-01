@@ -15,6 +15,8 @@ import { CodeSnippetRow } from './models/code-snippet-row.model';
 import { DivCodeValues } from './models/div-code-values.model';
 import * as chalk from 'chalk';
 import { CorrelationRow } from './models/correlation-row.model';
+import { ChartMetric } from './models/chart-metric.model';
+import { DataToCorrelate } from './data-to-correlate.model';
 
 export class ReportService {
 
@@ -39,6 +41,7 @@ export class ReportService {
         this.generateRowSnippets(!!jsonReport.measureName);
         this.setCorrelations(!!jsonReport.measureName);
         this.generateDivFiles();
+        this.setCharts();
         this.writeReport();
         return this.htmlReport;
     }
@@ -142,6 +145,24 @@ export class ReportService {
             ?.value);
     }
 
+    private static setCharts(): void {
+        // console.log(chalk.magentaBright('SET CHARTSSSS'), this.reportMetrics);
+        const zzz = [this.reportMetrics[0]];
+        for (const reportMetric of zzz) {
+            this.setChartMetric(reportMetric);
+        }
+    }
+
+    private static setChartMetric(reportMetric: ReportMetric): void {
+        console.log(chalk.magentaBright('SET CHARTTTTT'), reportMetric);
+        const chartMetric = new ChartMetric(reportMetric.metricName);
+        for (const reportSnippet of reportMetric.reportSnippets) {
+            chartMetric.data.push(new DataToCorrelate(reportSnippet.measureValue, reportSnippet.score));
+        }
+        this.htmlReport.charts.push(chartMetric);
+        console.log(chalk.greenBright('SET CHARTTTTT MMMMM'), chartMetric);
+    }
+
     private static setTemplate(): HandlebarsTemplateDelegate {
         this.registerPartial("correlation", 'correlation');
         this.registerPartial("rowSnippet", 'row-snippet');
@@ -156,7 +177,7 @@ export class ReportService {
      * Creates the file of the report
      */
     private static writeReport() {
-        // console.log(chalk.cyanBright('HTML REPORTTTT'), this.htmlReport.correlations);
+        console.log(chalk.cyanBright('HTML REPORTTTT'), this.htmlReport.charts);
         const template: HandlebarsTemplateDelegate = this.setTemplate();
         const content = template(this.htmlReport);
         const pathReport = `${Options.pathCommand}/report/report.html`;

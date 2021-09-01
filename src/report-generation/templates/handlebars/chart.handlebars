@@ -1,34 +1,40 @@
 <script>
     var chartLeftCanvas = document.getElementById('chart-left').getContext("2d");
+    <!--var chartLeftCanvas = document.getElementById('chart-{{metricName}}').getContext("2d");-->
     console.log(chartLeftCanvas);
     var barCognitive = new Chart(chartLeftCanvas, {
         type: 'scatter',
+        label: '{{metricName}}',
         data: {
-            label: 'Linear Correlation',
             datasets: [{
-                label: '# of Votes',
-                data: [{
-                    x: -10,
-                    y: 0
-                }, {
-                    x: 0,
-                    y: 10
-                }, {
-                    x: 10,
-                    y: 5
-                }, {
-                    x: 0.5,
-                    y: 5.5
-                }],
+                data: [
+                    {{#each data}}
+                        {x: {{this.metricScore}}, y: {{this.measureValue}} },
+                    {{/each}}
+                ],
                 backgroundColor: 'rgb(255, 99, 132)'
             }]
         },
         options: {
+            legend: {
+                display: false
+            },
             scales: {
-                x: {
+                xAxes: [{
                     type: 'linear',
-                    position: 'bottom'
-                }
+                    position: 'bottom',
+                    scaleLabel: {
+                        display: true,
+                        labelString: '{{metricName}}'
+                    },
+                }],
+                yAxes: [{
+                    type: 'linear',
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Time'
+                    },
+                }],
             }
         }
     });

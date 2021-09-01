@@ -2,11 +2,11 @@ import { RowSnippet } from './row-snippet.model';
 import { MetricSelect } from './metric-select.model';
 import { CodeSnippetRow } from './code-snippet-row.model';
 import { CorrelationRow } from './correlation-row.model';
+import { ChartMetric } from './chart-metric.model';
 
 export class HtmlReport {
 
-    chartLeft: any = undefined;
-    chartRight: any = undefined;
+    charts: ChartMetric[] = [];
     codeSnippetsTable: CodeSnippetRow[] = [];
     correlations: CorrelationRow[] = [];
     rowSnippets: RowSnippet[] = [];

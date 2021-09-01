@@ -142,8 +142,9 @@
 <script src="./templates/js/prism.js"></script>
 <script src="./templates/js/report-scripts.js"></script>
 
-{{>chart chartLeft=.}}
-
+{{#each charts}}
+    {{>chart chartMetric=.}}
+{{/each}}
 </body>
 
 </html>
