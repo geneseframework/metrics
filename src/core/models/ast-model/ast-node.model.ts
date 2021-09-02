@@ -2,20 +2,25 @@ import { JsonAstNodeInterface } from '../../interfaces/json-ast/json-ast-node.in
 import { AstNodeService } from '../../../json-ast-to-ast-model/services/ast-node.service';
 import { Interval } from '../../../json-ast-to-ast-model/types/interval.type';
 import { SyntaxKind } from '../../enum/syntax-kind.enum';
-import { isStructuralNode } from '../../utils/syntax-kind.util';
+import { isFunc, isIdentifier, isNestingRoot, isStructuralNode } from '../../utils/syntax-kind.util';
+import * as chalk from 'chalk';
 
 export class AstNode {
 
     astFileText: string = undefined;
     children: AstNode[] = [];
+    isRecursion: boolean = undefined;
     jsonAstNode: JsonAstNodeInterface = undefined;
+    name: string = undefined;
     nesting: number = undefined;
     parent: AstNode = undefined;
 
     constructor(parentAstNode: AstNode, jsonAstNode: JsonAstNodeInterface, astFileText: string) {
         this.jsonAstNode = jsonAstNode;
         this.astFileText = astFileText;
+        this.name = jsonAstNode.name;
         this.parent = parentAstNode;
+        this.isRecursion = this.setIsRecursion();
         this.setChildren();
     }
 
@@ -38,7 +43,7 @@ export class AstNode {
     }
 
     get isNestingRoot(): boolean {
-        return [SyntaxKind.SourceFile, SyntaxKind.ClassDeclaration, SyntaxKind.MethodDeclaration, SyntaxKind.FunctionDeclaration].includes(this.kind as SyntaxKind)
+        return isNestingRoot(this.kind);
     }
 
     get isStructuralNode(): boolean {
@@ -47,10 +52,6 @@ export class AstNode {
 
     get kind(): SyntaxKind {
         return this.jsonAstNode.kind as SyntaxKind;
-    }
-
-    get name(): string {
-        return this.jsonAstNode.name;
     }
 
     get pos(): number {
@@ -87,6 +88,25 @@ export class AstNode {
             const newChild: AstNode = AstNodeService.generate(this, child, this.astFileText);
             this.children.push(newChild);
         }
+    }
+
+    private setIsRecursion(): boolean {
+        if (!isIdentifier(this.kind) || !this.parent || isFunc(this.parent.kind)) {
+            return false;
+        }
+        const funcNode: AstNode = this.getFunctionOrMethodNode(this);
+        if (!funcNode) {
+            return false;
+        }
+        console.log(chalk.blueBright('Node txt'), this.text, funcNode.name);
+        return this.name === funcNode.name;
+    }
+
+    private getFunctionOrMethodNode(astNode: AstNode): AstNode {
+        if (isFunc(astNode.kind)) {
+            return astNode;
+        }
+        return astNode.parent ? this.getFunctionOrMethodNode(astNode.parent) : undefined;
     }
 
 }
