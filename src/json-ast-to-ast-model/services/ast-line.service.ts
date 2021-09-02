@@ -23,7 +23,7 @@ export class AstLineService {
             astLine.astNodes = this.getAstNodes(astCode.astAbstract, astLine.pos, astLine.end);
             issue++;
             position = this.getPositionAfterTextLineAndLineBreak(position, textLine);
-            astLine.setCpxParameters();
+            astLine.setIdentifiersCpx();
             astLines.push(astLine);
         }
         return astLines;

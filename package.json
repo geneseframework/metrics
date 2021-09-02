@@ -27,6 +27,7 @@
         "@types/node": "^14.14.8",
         "chalk": "^4.1.0",
         "eol": "^0.9.1",
+        "fmin": "^0.0.2",
         "fs-extra": "^9.0.1",
         "handlebars": "^4.7.6",
         "java-parser": "0.6.0",
