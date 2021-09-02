@@ -1,4 +1,4 @@
-function zzz(a: number): number {
+function zzz(a: number, f?: (elt: number) => number): number {
     if (a > 0) {
         a = a + 1;
         if (a > - 2) {
@@ -9,12 +9,23 @@ function zzz(a: number): number {
     }
     switch (a) {
         case 1:
-            return;
+            return zzz(a);
         case 2:
-            return 3;
+            return f(a);
         default:
             return 2;
     }
 }
-let a;
-a = a + 1;
+class Cl {
+
+    zMethod(arr: number[]) {
+        let t = 0;
+        for (const a of arr) {
+            t = t + a;
+        }
+        return t;
+    }
+}
+
+let b;
+b = b + 1;
