@@ -56,7 +56,7 @@ export class AstLine {
         this.astNodeIdentifiers = this.astNodes.filter(a => isIdentifier(a.kind));
     }
 
-    private getNbElements(isKindOf: (kind: string) => boolean): number {
+    private getNbElements(isKindOf: (kind: SyntaxKind) => boolean): number {
         return this.astNodes.filter(a => isKindOf(a.kind as SyntaxKind)).length;
     }
 }

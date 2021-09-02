@@ -45,8 +45,8 @@ export class AstNode {
         return isStructuralNode(this.kind);
     }
 
-    get kind(): string {
-        return this.jsonAstNode.kind;
+    get kind(): SyntaxKind {
+        return this.jsonAstNode.kind as SyntaxKind;
     }
 
     get name(): string {

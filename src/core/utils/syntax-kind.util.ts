@@ -1,37 +1,41 @@
 import { SyntaxKind } from '../enum/syntax-kind.enum';
 
-export function isIdentifier(kind: string): boolean {
+export function isIdentifier(kind: SyntaxKind): boolean {
     return kind === SyntaxKind.Identifier;
 }
 
-export function isKeyword(kind: string): boolean {
-    return [SyntaxKind.Keyword,
-        SyntaxKind.NumberKeyword,
-        SyntaxKind.VariableDeclaration,
-    ].includes(kind as SyntaxKind);
+export function isIf(kind: SyntaxKind): boolean {
+    return kind === SyntaxKind.IfStatement;
 }
 
-export function isLiteral(kind: string): boolean {
+export function isKeyword(kind: SyntaxKind): boolean {
+    return includes([SyntaxKind.Keyword,
+        SyntaxKind.NumberKeyword,
+        SyntaxKind.VariableDeclaration,
+    ], kind);
+}
+
+export function isLiteral(kind: SyntaxKind): boolean {
     return kind === SyntaxKind.Literal;
 }
 
-export function isLoop(kind: string): boolean {
-    return [SyntaxKind.ForInStatement,
+export function isLoop(kind: SyntaxKind): boolean {
+    return includes([SyntaxKind.ForInStatement,
         SyntaxKind.ForKeyword,
         SyntaxKind.ForOfStatement,
         SyntaxKind.ForStatement,
         SyntaxKind.WhileStatement
-    ].includes(kind as SyntaxKind);
+    ], kind);
 }
 
-export function isIf(kind: string): boolean {
-    return [SyntaxKind.IfStatement].includes(kind as SyntaxKind);
-}
-
-export function isStructuralNode(kind: string): boolean {
+export function isStructuralNode(kind: SyntaxKind): boolean {
     return isLoop(kind) || isIf(kind) || isSwitch(kind);
 }
 
-export function isSwitch(kind: string): boolean {
-    return [SyntaxKind.SwitchStatement].includes(kind as SyntaxKind);
+export function isSwitch(kind: SyntaxKind): boolean {
+    return kind === SyntaxKind.SwitchStatement;
+}
+
+function includes(syntaxKinds: any[], kind: SyntaxKind): boolean {
+    return syntaxKinds.includes(kind);
 }
