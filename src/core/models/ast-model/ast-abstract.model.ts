@@ -7,16 +7,12 @@ import { AstArrowFunction } from './ast-arrow-function.model';
 import { AstClass } from './ast-class.model';
 import { AstFunction } from './ast-function.model';
 import { AstLine } from './ast-line.model';
-import { SyntaxKind } from '../../enum/syntax-kind.enum';
 import {
     getFunctionOrMethodNode,
-    getParameters,
     isCallExpressionIdentifier,
     isFunc,
-    isIf,
     isStructuralNode
 } from '../../utils/syntax-kind.util';
-import * as chalk from 'chalk';
 
 export abstract class AstAbstract {
 
@@ -98,7 +94,7 @@ export abstract class AstAbstract {
             if (this.astNode !== firstAncestorWhichIsFunctionOrMethodNode) {
                 return;
             }
-            const parameterNames: string[] = getParameters(this.astNode).map(p => p.name);
+            const parameterNames: string[] = this.astNode.parameters.map(p => p.name);
             if (!callExpressionIdentifier.isRecursion && parameterNames.includes(callExpressionIdentifier.name)) {
                 callExpressionIdentifier.isCallback = true;
             }

@@ -2,15 +2,7 @@ import { JsonAstNodeInterface } from '../../interfaces/json-ast/json-ast-node.in
 import { AstNodeService } from '../../../json-ast-to-ast-model/services/ast-node.service';
 import { Interval } from '../../../json-ast-to-ast-model/types/interval.type';
 import { SyntaxKind } from '../../enum/syntax-kind.enum';
-import {
-    getFunctionOrMethodNode,
-    isFunc,
-    isIdentifier,
-    isNestingRoot,
-    isParameter,
-    isStructuralNode
-} from '../../utils/syntax-kind.util';
-import * as chalk from 'chalk';
+import { getFunctionOrMethodNode, includes, isFunc, isIdentifier, isParameter } from '../../utils/syntax-kind.util';
 
 export class AstNode {
 
@@ -29,7 +21,7 @@ export class AstNode {
         this.name = jsonAstNode.name;
         this.parent = parentAstNode;
         this.setChildren();
-        this.setIsRecursionAndIsCallback();
+        this.setIsRecursion();
     }
 
     get descendants(): AstNode[] {
@@ -46,20 +38,75 @@ export class AstNode {
         return this.jsonAstNode.end;
     }
 
+    get firstAncestorNodeOfKindFunctionOrMethod(): AstNode {
+        if (isFunc(this.kind)) {
+            return this;
+        }
+        return this.parent ? this.parent.firstAncestorNodeOfKindFunctionOrMethod : undefined;
+    }
+
+    get firstSon(): AstNode {
+        return this.children[0];
+    }
+
     get interval(): Interval {
         return this.hasALineBreakBetweenPosAndStart() ? [this.getPosAfterFirstLineBreak(), this.jsonAstNode.end] : [this.jsonAstNode.pos, this.jsonAstNode.end];
     }
 
+    get isCallExpressionIdentifier(): boolean {
+        return isIdentifier(this.kind) && this.parent?.kind === SyntaxKind.CallExpression && this.isFirstSon;
+    }
+
+    get isFirstSon(): boolean {
+        return this === this.parent?.firstSon;
+    }
+
+    get isFunc(): boolean {
+        return includes([SyntaxKind.FunctionDeclaration, SyntaxKind.MethodDeclaration], this.kind);
+    }
+
+    get isIdentifier(): boolean {
+        return this.kind === SyntaxKind.Identifier;
+    }
+
+    get isIf(): boolean {
+        return this.kind === SyntaxKind.IfStatement;
+    }
+
+    get isKeyword(): boolean {
+        return includes([SyntaxKind.Keyword, SyntaxKind.NumberKeyword, SyntaxKind.VariableDeclaration], this.kind);
+    }
+
+    get isLiteral(): boolean {
+        return this.kind === SyntaxKind.Literal;
+    }
+
+    get isLoop(): boolean {
+        return includes([SyntaxKind.ForInStatement, SyntaxKind.ForKeyword, SyntaxKind.ForOfStatement, SyntaxKind.ForStatement, SyntaxKind.WhileStatement], this.kind);
+    }
+
     get isNestingRoot(): boolean {
-        return isNestingRoot(this.kind);
+        return includes([SyntaxKind.SourceFile, SyntaxKind.ClassDeclaration, SyntaxKind.MethodDeclaration, SyntaxKind.FunctionDeclaration], this.kind);
+    }
+
+    get isParameter(): boolean {
+        return this.kind === SyntaxKind.Parameter;
     }
 
     get isStructuralNode(): boolean {
-        return isStructuralNode(this.kind);
+        return this.isLoop || this.isIf || this.isSwitch;
+    }
+
+    get isSwitch(): boolean {
+        return this.kind === SyntaxKind.SwitchStatement;
     }
 
     get kind(): SyntaxKind {
         return this.jsonAstNode.kind as SyntaxKind;
+    }
+
+    get parameters(): AstNode[] {
+        return isFunc(this.kind) ? this.children.filter(c => isParameter(c.kind)) : [];
     }
 
     get pos(): number {
@@ -96,13 +143,9 @@ export class AstNode {
             const newChild: AstNode = AstNodeService.generate(this, child, this.astFileText);
             this.children.push(newChild);
         }
-        if (this.kind === SyntaxKind.CallExpression) {
-            console.log(chalk.magentaBright('CHILDRRRRR'), this.name, this.kind, this.children.map(c => c.name));
-        }
-        // this.children.reverse();
     }
 
-    private setIsRecursionAndIsCallback(): void {
+    private setIsRecursion(): void {
         if (!isIdentifier(this.kind) || !this.parent || isFunc(this.parent.kind)) {
             return;
         }
@@ -111,18 +154,6 @@ export class AstNode {
             return;
         }
         this.isRecursion = this.name === funcNode.name;
-    }
-
-    get isFirstSon(): boolean {
-        return this === this.parent?.firstSon;
-    }
-
-    get firstSon(): AstNode {
-        return this.children[0];
-    }
-
-    get identifierChild(): AstNode {
-        return this.children.find(c => isIdentifier(c.kind));
     }
 
 }

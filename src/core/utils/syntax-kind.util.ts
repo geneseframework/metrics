@@ -1,6 +1,5 @@
 import { SyntaxKind } from '../enum/syntax-kind.enum';
 import { AstNode } from '../models/ast-model/ast-node.model';
-import * as chalk from 'chalk';
 
 export function getFunctionOrMethodNode(astNode: AstNode): AstNode {
     if (isFunc(astNode.kind)) {
@@ -9,12 +8,7 @@ export function getFunctionOrMethodNode(astNode: AstNode): AstNode {
     return astNode.parent ? getFunctionOrMethodNode(astNode.parent) : undefined;
 }
 
-export function getParameters(funcNode: AstNode): AstNode[] {
-    return isFunc(funcNode.kind) ? funcNode.children.filter(c => isParameter(c.kind)) : [];
-}
-
 export function isCallExpressionIdentifier(astNode: AstNode): boolean {
-    console.log(chalk.blueBright('IS CALLLL ID'), astNode.kind, astNode.name, astNode.parent?.kind, astNode.parent?.children.map(c => c.name), astNode?.isFirstSon);
     return isIdentifier(astNode.kind) && astNode.parent?.kind === SyntaxKind.CallExpression && astNode.isFirstSon;
 }
 
@@ -58,6 +52,6 @@ export function isSwitch(kind: SyntaxKind): boolean {
     return kind === SyntaxKind.SwitchStatement;
 }
 
-function includes(syntaxKinds: any[], kind: SyntaxKind): boolean {
+export function includes(syntaxKinds: any[], kind: SyntaxKind): boolean {
     return syntaxKinds.includes(kind);
 }
