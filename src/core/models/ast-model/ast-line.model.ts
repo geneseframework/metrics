@@ -2,8 +2,6 @@
  * A line of a Code object
  */
 import { AstNode } from './ast-node.model';
-import { isIdentifier, isIf, isKeyword, isLiteral, isLoop, isSwitch } from '../../utils/syntax-kind.util';
-import { SyntaxKind } from '../../enum/syntax-kind.enum';
 
 export class AstLine {
 
@@ -29,19 +27,19 @@ export class AstLine {
     }
 
     get ifs(): number {
-        return this.getNbElements(isIf);
+        return this.getNbElements('isIf');
     }
 
     get keywords(): number {
-        return this.getNbElements(isKeyword);
+        return this.getNbElements('isKeyword');
     }
 
     get literals(): number {
-        return this.getNbElements(isLiteral);
+        return this.getNbElements('isLiteral');
     }
 
     get loops(): number {
-        return this.getNbElements(isLoop);
+        return this.getNbElements('isLoop');
     }
 
     get recursions(): number {
@@ -49,7 +47,7 @@ export class AstLine {
     }
 
     get switches(): number {
-        return this.getNbElements(isSwitch);
+        return this.getNbElements('isSwitch');
     }
 
     get words(): number {
@@ -61,10 +59,10 @@ export class AstLine {
     }
 
     private setIdentifiersCpx(): void {
-        this.astNodeIdentifiers = this.astNodes.filter(a => isIdentifier(a.kind));
+        this.astNodeIdentifiers = this.astNodes.filter(a => a.isIdentifier);
     }
 
-    private getNbElements(isKindOf: (kind: SyntaxKind) => boolean): number {
-        return this.astNodes.filter(a => isKindOf(a.kind as SyntaxKind)).length;
+    private getNbElements(isKindOf: string): number {
+        return this.astNodes.filter(a => a[isKindOf]).length;
     }
 }

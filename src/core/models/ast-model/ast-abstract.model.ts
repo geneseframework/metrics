@@ -7,12 +7,6 @@ import { AstArrowFunction } from './ast-arrow-function.model';
 import { AstClass } from './ast-class.model';
 import { AstFunction } from './ast-function.model';
 import { AstLine } from './ast-line.model';
-import {
-    getFunctionOrMethodNode,
-    isCallExpressionIdentifier,
-    isFunc,
-    isStructuralNode
-} from '../../utils/syntax-kind.util';
 
 export abstract class AstAbstract {
 
@@ -73,7 +67,7 @@ export abstract class AstAbstract {
     private setNesting(astNode: AstNode): void {
         if (astNode.isNestingRoot) {
             astNode.nesting = 0;
-        } else if (isStructuralNode(astNode.kind)) {
+        } else if (astNode.isStructuralNode) {
             astNode.nesting = astNode.parent.nesting + 1;
         } else {
             astNode.nesting = astNode.parent.nesting;
@@ -85,13 +79,13 @@ export abstract class AstAbstract {
     }
 
     private setCallBacks(): void {
-        if (!isFunc(this.astNode.kind)) {
+        if (!this.astNode.isFunc) {
             return;
         }
-        const callExpressionIdentifiers: AstNode[] = this.astNode.descendants.filter(d => isCallExpressionIdentifier(d));
+        const callExpressionIdentifiers: AstNode[] = this.astNode.descendants.filter(d => d.isCallExpressionIdentifier);
         for (const callExpressionIdentifier of callExpressionIdentifiers) {
-            const firstAncestorWhichIsFunctionOrMethodNode: AstNode = getFunctionOrMethodNode(callExpressionIdentifier);
-            if (this.astNode !== firstAncestorWhichIsFunctionOrMethodNode) {
+            const firstAncestorNodeOfKindFunctionOrMethod: AstNode = callExpressionIdentifier.firstAncestorNodeOfKindFunctionOrMethod;
+            if (this.astNode !== firstAncestorNodeOfKindFunctionOrMethod) {
                 return;
             }
             const parameterNames: string[] = this.astNode.parameters.map(p => p.name);

@@ -2,7 +2,7 @@ import { JsonAstNodeInterface } from '../../interfaces/json-ast/json-ast-node.in
 import { AstNodeService } from '../../../json-ast-to-ast-model/services/ast-node.service';
 import { Interval } from '../../../json-ast-to-ast-model/types/interval.type';
 import { SyntaxKind } from '../../enum/syntax-kind.enum';
-import { getFunctionOrMethodNode, includes, isFunc, isIdentifier, isParameter } from '../../utils/syntax-kind.util';
+import { includes } from '../../utils/syntax-kind.util';
 
 export class AstNode {
 
@@ -39,7 +39,7 @@ export class AstNode {
     }
 
     get firstAncestorNodeOfKindFunctionOrMethod(): AstNode {
-        if (isFunc(this.kind)) {
+        if (this.isFunc) {
             return this;
         }
         return this.parent ? this.parent.firstAncestorNodeOfKindFunctionOrMethod : undefined;
@@ -54,7 +54,7 @@ export class AstNode {
     }
 
     get isCallExpressionIdentifier(): boolean {
-        return isIdentifier(this.kind) && this.parent?.kind === SyntaxKind.CallExpression && this.isFirstSon;
+        return this.isIdentifier && this.parent?.kind === SyntaxKind.CallExpression && this.isFirstSon;
     }
 
     get isFirstSon(): boolean {
@@ -106,7 +106,7 @@ export class AstNode {
     }
 
     get parameters(): AstNode[] {
-        return isFunc(this.kind) ? this.children.filter(c => isParameter(c.kind)) : [];
+        return this.isFunc ? this.children.filter(c => c.isParameter) : [];
     }
 
     get pos(): number {
@@ -146,10 +146,10 @@ export class AstNode {
     }
 
     private setIsRecursion(): void {
-        if (!isIdentifier(this.kind) || !this.parent || isFunc(this.parent.kind)) {
+        if (!this.isIdentifier || !this.parent || this.parent.isFunc) {
             return;
         }
-        const funcNode: AstNode = getFunctionOrMethodNode(this);
+        const funcNode: AstNode = this.firstAncestorNodeOfKindFunctionOrMethod;
         if (!funcNode) {
             return;
         }
