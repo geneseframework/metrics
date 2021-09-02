@@ -4,6 +4,7 @@ import * as chalk from 'chalk';
 import { Cpx } from './cpx-factor/cpx.model';
 import { GENESE_WEIGHTS } from '../const/genese-weights.const';
 import { round } from '../../../../core/utils/numbers.util';
+import { AstNode } from '../../../../core/models/ast-model/ast-node.model';
 
 export class GeneseLine extends ReportLine {
 
@@ -29,7 +30,23 @@ export class GeneseLine extends ReportLine {
     }
 
     private setComplexity(cpxName: string): void {
-        this.cpx[cpxName] = round(this.astLine[cpxName] * GENESE_WEIGHTS[cpxName], 1);
+        switch (cpxName) {
+            case 'nesting':
+                this.setNestingCpx();
+                break;
+            default:
+                this.cpx[cpxName] = round(this.astLine[cpxName] * GENESE_WEIGHTS[cpxName], 1);
+        }
     }
 
+    private setNestingCpx(): void {
+        const structuralNodes: AstNode[] = this.astLine.astNodes.filter(a => a.isStructuralNode);
+        for (const structuralNode of structuralNodes) {
+            this.setNestingCpxNode(structuralNode);
+        }
+    }
+
+    private setNestingCpxNode(structuralNode: AstNode): void {
+        this.cpx.nesting += (structuralNode.nesting - 1) * GENESE_WEIGHTS.nesting;
+    }
 }

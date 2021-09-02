@@ -9,7 +9,6 @@ export class AstMetricService {
         for (const jsonAstFile of astFiles) {
             astMetric.astFiles = astFiles;
         }
-        // console.log(chalk.cyanBright('AST METRICCCC = '), astMetric);
         return astMetric;
     }
 }

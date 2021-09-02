@@ -4,7 +4,6 @@ import { AstClassService } from './ast-class.service';
 import { AstFunctionService } from './ast-function.service';
 import { AstArrowFunctionService } from './ast-arrow-function.service';
 import { AstCodeService } from './ast-code.service';
-import * as chalk from 'chalk';
 
 export class AstFileService {
 
@@ -16,7 +15,6 @@ export class AstFileService {
         astFile.astFunctions = AstFunctionService.generate(astFile);
         astFile.astArrowFunctions = AstArrowFunctionService.generate(astFile);
         astFile.astCode = AstCodeService.generate(astFile);
-        console.log(chalk.redBright('AST FILEEEE'), astFile.name);
         return astFile;
     }
 }

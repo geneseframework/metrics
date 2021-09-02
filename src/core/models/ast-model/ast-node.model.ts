@@ -2,6 +2,7 @@ import { JsonAstNodeInterface } from '../../interfaces/json-ast/json-ast-node.in
 import { AstNodeService } from '../../../json-ast-to-ast-model/services/ast-node.service';
 import { Interval } from '../../../json-ast-to-ast-model/types/interval.type';
 import { SyntaxKind } from '../../enum/syntax-kind.enum';
+import { isStructuralNode } from '../../utils/syntax-kind.util';
 
 export class AstNode {
 
@@ -38,6 +39,10 @@ export class AstNode {
 
     get isNestingRoot(): boolean {
         return [SyntaxKind.SourceFile, SyntaxKind.ClassDeclaration, SyntaxKind.MethodDeclaration, SyntaxKind.FunctionDeclaration].includes(this.kind as SyntaxKind)
+    }
+
+    get isStructuralNode(): boolean {
+        return isStructuralNode(this.kind);
     }
 
     get kind(): string {
