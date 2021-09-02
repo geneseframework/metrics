@@ -9,7 +9,6 @@ import { Measure } from '../report-generation/models/measure.model';
 import { removeExtension } from '../core/utils/file-system.util';
 import { CorrelationService } from '../correlation/correlation.service';
 import { Options } from '../core/models/options.model';
-import { AbstractMetricService } from './metrics/abstract-metric.service';
 import { unique } from '../core/utils/arrays.util';
 import { METRIC_SERVICES } from './const/metrics-list.const';
 import { Metric } from '../core/models/metric.model';
@@ -31,7 +30,6 @@ export class EvaluationService {
         if (Options.hasMeasures) {
             CorrelationService.setStats(reportModel);
         }
-        // console.log(chalk.greenBright('REPORT MODELLLLL'), reportModel.reportMetrics[0]);
         return reportModel;
     }
 
@@ -39,7 +37,6 @@ export class EvaluationService {
         try {
             const reportMetric = new ReportMetric(astMetric.metric.name);
             for (const astFile of astMetric.astFiles) {
-                astFile.setComplexities(metricParameters);
                 const reportSnippet = new ReportSnippet(removeExtension(astFile.name), astFile.code, astMetric.metric?.name);
                 this.evaluateAstFileForMetric(astFile, reportSnippet, astMetric.metric);
                 this.setMeasure(reportSnippet);

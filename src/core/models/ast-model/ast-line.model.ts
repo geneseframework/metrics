@@ -12,21 +12,16 @@ export class AstLine {
 
     astNodes?: AstNode[] = [];                              // The array of AstNodes corresponding to AST nodes in this line of code
     comments: string = undefined;
-    // cpx = new Cpx();
     end ?= 0;                                               // The pos (in number of characters) of the end of the line
     astNodeIdentifiers: AstNode[] = [];
     issue ?= 0;                                             // The number of the line in its Code parentFunction (method)
     pos ?= 0;                                               // The absolute pos (in number of characters) of the line in the SourceFile
-    // score: number = undefined;
     text ?= '';                                             // The text of the line
 
 
     constructor(textLine: string, issue: number) {
         this.text = textLine;
         this.issue = issue;
-        // this.setComments();
-        // this.score = round(this.cpx.total, 1);
-        // this.comments = this.cpx.comments;
     }
 
     get callbacks(): number {
@@ -69,11 +64,7 @@ export class AstLine {
         return this.identifiers + this.keywords + this.literals;
     }
 
-    setCpxParameters(): void {
-        this.setIdentifiersCpx();
-    }
-
-    private setIdentifiersCpx(): void {
+    setIdentifiersCpx(): void {
         this.astNodeIdentifiers = this.astNodes.filter(a => a.isIdentifier);
     }
 
@@ -100,28 +91,4 @@ export class AstLine {
         }
         return `${text.slice(0, -2)})`;
     }
-
-    // setComplexity(metricParameter: string): void {
-    //     switch (metricParameter) {
-    //         case 'nesting':
-    //             this.setNestingCpx();
-    //             break;
-    //         default:
-    //             // this[metricParameter] = this[metricParameter];
-    //             // this.cpx[metricParameter] = this[metricParameter];
-    //         // this.cpx[metricParameter] = round(this[metricParameter] * GENESE_WEIGHTS[metricParameter], 1);
-    //     }
-    // }
-    //
-    // private setNestingCpx(): void {
-    //     const structuralNodes: AstNode[] = this.astNodes.filter(a => a.isStructuralNode);
-    //     for (const structuralNode of structuralNodes) {
-    //         this.setNestingCpxNode(structuralNode);
-    //     }
-    // }
-    //
-    // private setNestingCpxNode(structuralNode: AstNode): void {
-    //     this['nesting'] += structuralNode.nesting - 1;
-    //     // this.cpx.nesting += (structuralNode.nesting - 1) * GENESE_WEIGHTS.nesting;
-    // }
 }
