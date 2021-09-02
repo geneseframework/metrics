@@ -6,7 +6,7 @@ import { MetricWeights } from '../models/metric-weights.model';
 export class GeneseCpxService extends AbstractMetricService {
 
     evaluate(astFile: AstFile, reportFile: ReportSnippet): void {
-        const GENESE_WEIGHTS: MetricWeights = {
+        const metricWeights: MetricWeights = {
             "callbacks": 2,
             "ifs": 1,
             "loops": 1,
@@ -15,6 +15,6 @@ export class GeneseCpxService extends AbstractMetricService {
             "switches": 1,
             "words": 0.1
         }
-        this.evaluateMetric(astFile, reportFile, GENESE_WEIGHTS);
+        this.evaluateMetric(astFile, reportFile, metricWeights);
     }
 }
