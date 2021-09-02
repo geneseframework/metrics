@@ -9,7 +9,6 @@ import { ReportSnippet } from '../report-generation/models/report-snippet.model'
 import { AstMetric } from '../core/models/ast-model/ast-metric.model';
 import { ReportMetric } from '../report-generation/models/report-metric.model';
 import { Measure } from '../report-generation/models/measure.model';
-import { MEASURES } from './const/measures.const';
 import { removeExtension } from '../core/utils/file-system.util';
 import { CorrelationService } from '../correlation/correlation.service';
 import { Options } from '../core/models/options.model';

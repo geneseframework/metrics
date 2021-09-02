@@ -6,17 +6,10 @@ import { capitalize } from '../../../../../core/utils/strings.util';
 
 export class Cpx {
 
-    aggregation: number = 0;                    // Aggregation Complexity
-    context: number = 0;                        // Context Complexity
-    depth: number = 0;                          // Depth Complexity
-    nesting: number = 0;                        // Nesting Complexity
-    recursion: number = 0;                      // Recursion Complexity
-    structural: number = 0;                     // Structural Complexity
-    typing: number = 0;                         // Typing Complexity
-    use: number = 0;                            // Use Complexity
-    words: number = 0;                         // Atomic Complexity
+    [param: string]: number;
 
-
+    constructor() {
+    }
     /**
      * Returns the total of Complexity Factors (the Complexity Index)
      */
@@ -28,7 +21,7 @@ export class Cpx {
         return round(total, 1);
     }
 
-    get comments(): string {
+    get comments(): any {
         if (this.total === 0) {
             return '';
         }

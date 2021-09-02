@@ -6,6 +6,7 @@ export class ReportLine implements JsonReportLineInterface {
     issue: number = undefined;
     score: number = undefined;
     text: string = undefined;
+    // unWeightedScores:
 
     constructor(issue: number, text: string) {
         this.issue = issue;
