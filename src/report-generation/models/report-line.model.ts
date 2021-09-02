@@ -8,9 +8,11 @@ export class ReportLine implements JsonReportLineInterface {
     text: string = undefined;
     // unWeightedScores:
 
-    constructor(issue: number, text: string) {
+    constructor(issue: number, text: string, comments: string, score: number) {
         this.issue = issue;
         this.text = text;
+        this.comments = comments;
+        this.score = score;
     }
 
     getTextWithComments(maxLineLength: number): string {
