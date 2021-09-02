@@ -90,9 +90,9 @@ export class AstLine {
     //         this.setComplexity(cpxName)
     //     }
     // }
-    getScore(metric: Metric): number {
+    getScore(metricWeights: MetricWeights): number {
         let total = 0;
-        for (const [parameter, weight] of Object.entries(metric.metricWeights)) {
+        for (const [parameter, weight] of Object.entries(metricWeights)) {
             total += !isNaN(this[parameter]) ? this[parameter] * weight : 0;
         }
         return round(total, 1);

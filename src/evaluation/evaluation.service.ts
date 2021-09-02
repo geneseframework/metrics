@@ -11,6 +11,9 @@ import { CorrelationService } from '../correlation/correlation.service';
 import { Options } from '../core/models/options.model';
 import { AbstractMetricService } from './metrics/abstract-metric.service';
 import { unique } from '../core/utils/arrays.util';
+import { METRIC_SERVICES } from './const/metrics-list.const';
+import { Metric } from '../core/models/metric.model';
+import { AstFile } from '../core/models/ast-model/ast-file.model';
 
 export class EvaluationService {
 
@@ -38,8 +41,8 @@ export class EvaluationService {
             for (const astFile of astMetric.astFiles) {
                 astFile.setComplexities(metricParameters);
                 const reportSnippet = new ReportSnippet(removeExtension(astFile.name), astFile.code, astMetric.metric?.name);
-                AbstractMetricService.evaluate(astFile, reportSnippet, astMetric.metric);
-                // this.evaluateAstFileForMetric(astFile, reportSnippet, astMetric.metric);
+                // AbstractMetricService.e(astFile, reportSnippet, astMetric.metric);
+                this.evaluateAstFileForMetric(astFile, reportSnippet, astMetric.metric);
                 this.setMeasure(reportSnippet);
                 reportMetric.reportSnippets.push(reportSnippet);
             }
@@ -49,9 +52,9 @@ export class EvaluationService {
         }
     }
 
-    // private static evaluateAstFileForMetric(astFile: AstFile, reportFile: ReportSnippet, metric: Metric): void {
-    //     METRIC_SERVICES[metric.id].evaluate(astFile, reportFile);
-    // }
+    private static evaluateAstFileForMetric(astFile: AstFile, reportFile: ReportSnippet, metric: Metric): void {
+        METRIC_SERVICES[metric.id].evaluate(astFile, reportFile);
+    }
 
     private static setMeasure(reportSnippet: ReportSnippet): void {
         reportSnippet.measureValue = this.measures.find(m => m.codeSnippetName === reportSnippet.codeSnippetName)?.measureValue;

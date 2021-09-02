@@ -10,7 +10,7 @@ import { Cpx } from './genese-cpx/models/cpx-factor/cpx.model';
 import { GENESE_WEIGHTS } from './genese-cpx/const/genese-weights.const';
 import { AstNode } from '../../core/models/ast-model/ast-node.model';
 
-export class AbstractMetricService {
+export abstract class AbstractMetricService {
 
     static metricWeights: MetricWeights;
     static reportLine: ReportLine;
@@ -18,13 +18,15 @@ export class AbstractMetricService {
 
     // abstract evaluate(astFile: AstFile, reportFile: ReportSnippet): void;
 
-    static evaluate(astFile: AstFile, reportFile: ReportSnippet, metric: Metric): void {
+    abstract evaluate(astFile: AstFile, reportFile: ReportSnippet): void;
+
+    protected evaluateMetric(astFile: AstFile, reportFile: ReportSnippet, metricWeights: MetricWeights): void {
         // console.log(chalk.magentaBright('GENESE CPXXXX'), astFile);
         const astLines: AstLine[] = astFile.astCode.astLines;
         for (const astLine of astLines) {
             // const geneseLine = this.reportLine(i, astLines[i]);
             // astLine.evaluate();
-            const reportLine = new ReportLine(astLine.issue, astLine.text, astLine.comments, astLine.getScore(metric));
+            const reportLine = new ReportLine(astLine.issue, astLine.text, astLine.comments, astLine.getScore(metricWeights));
             reportFile.lines.push(reportLine);
             reportFile.score = round(reportFile.score + reportLine.score, 1);
         }
