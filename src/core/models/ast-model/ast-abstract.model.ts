@@ -72,7 +72,6 @@ export abstract class AstAbstract {
         } else {
             astNode.nesting = astNode.parent.nesting;
         }
-        // console.log(chalk.magentaBright('KINDDDD'), astNode.parent?.kind, astNode.kind, astNode.text, astNode.nesting);
         for (const child of astNode.children) {
             this.setNesting(child);
         }

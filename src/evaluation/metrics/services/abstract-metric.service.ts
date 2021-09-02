@@ -1,9 +1,9 @@
-import { AstFile } from '../../core/models/ast-model/ast-file.model';
-import { ReportSnippet } from '../../report-generation/models/report-snippet.model';
-import { MetricWeights } from './metric-weights.model';
-import { AstLine } from '../../core/models/ast-model/ast-line.model';
-import { round } from '../../core/utils/numbers.util';
-import { ReportLine } from '../../report-generation/models/report-line.model';
+import { AstFile } from '../../../core/models/ast-model/ast-file.model';
+import { ReportSnippet } from '../../../report-generation/models/report-snippet.model';
+import { MetricWeights } from '../models/metric-weights.model';
+import { AstLine } from '../../../core/models/ast-model/ast-line.model';
+import { round } from '../../../core/utils/numbers.util';
+import { ReportLine } from '../../../report-generation/models/report-line.model';
 
 export abstract class AbstractMetricService {
 

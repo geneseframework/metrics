@@ -2,9 +2,8 @@
  * A line of a Code object
  */
 import { AstNode } from './ast-node.model';
-import { Cpx } from '../../../evaluation/metrics/genese-cpx/models/cpx-factor/cpx.model';
 import { round } from '../../utils/numbers.util';
-import { MetricWeights } from '../../../evaluation/metrics/metric-weights.model';
+import { MetricWeights } from '../../../evaluation/metrics/models/metric-weights.model';
 import { capitalize } from '../../utils/strings.util';
 import { sum } from '../../utils/arrays.util';
 
