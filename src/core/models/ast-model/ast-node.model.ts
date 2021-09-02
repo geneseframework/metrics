@@ -2,14 +2,22 @@ import { JsonAstNodeInterface } from '../../interfaces/json-ast/json-ast-node.in
 import { AstNodeService } from '../../../json-ast-to-ast-model/services/ast-node.service';
 import { Interval } from '../../../json-ast-to-ast-model/types/interval.type';
 import { SyntaxKind } from '../../enum/syntax-kind.enum';
-import { isFunc, isIdentifier, isNestingRoot, isStructuralNode } from '../../utils/syntax-kind.util';
+import {
+    getFunctionOrMethodNode,
+    isFunc,
+    isIdentifier,
+    isNestingRoot,
+    isParameter,
+    isStructuralNode
+} from '../../utils/syntax-kind.util';
 import * as chalk from 'chalk';
 
 export class AstNode {
 
     astFileText: string = undefined;
     children: AstNode[] = [];
-    isRecursion: boolean = undefined;
+    isCallback = false;
+    isRecursion = false;
     jsonAstNode: JsonAstNodeInterface = undefined;
     name: string = undefined;
     nesting: number = undefined;
@@ -20,8 +28,8 @@ export class AstNode {
         this.astFileText = astFileText;
         this.name = jsonAstNode.name;
         this.parent = parentAstNode;
-        this.isRecursion = this.setIsRecursion();
         this.setChildren();
+        this.setIsRecursionAndIsCallback();
     }
 
     get descendants(): AstNode[] {
@@ -88,25 +96,33 @@ export class AstNode {
             const newChild: AstNode = AstNodeService.generate(this, child, this.astFileText);
             this.children.push(newChild);
         }
+        if (this.kind === SyntaxKind.CallExpression) {
+            console.log(chalk.magentaBright('CHILDRRRRR'), this.name, this.kind, this.children.map(c => c.name));
+        }
+        // this.children.reverse();
     }
 
-    private setIsRecursion(): boolean {
+    private setIsRecursionAndIsCallback(): void {
         if (!isIdentifier(this.kind) || !this.parent || isFunc(this.parent.kind)) {
-            return false;
+            return;
         }
-        const funcNode: AstNode = this.getFunctionOrMethodNode(this);
+        const funcNode: AstNode = getFunctionOrMethodNode(this);
         if (!funcNode) {
-            return false;
+            return;
         }
-        console.log(chalk.blueBright('Node txt'), this.text, funcNode.name);
-        return this.name === funcNode.name;
+        this.isRecursion = this.name === funcNode.name;
     }
 
-    private getFunctionOrMethodNode(astNode: AstNode): AstNode {
-        if (isFunc(astNode.kind)) {
-            return astNode;
-        }
-        return astNode.parent ? this.getFunctionOrMethodNode(astNode.parent) : undefined;
+    get isFirstSon(): boolean {
+        return this === this.parent?.firstSon;
+    }
+
+    get firstSon(): AstNode {
+        return this.children[0];
+    }
+
+    get identifierChild(): AstNode {
+        return this.children.find(c => isIdentifier(c.kind));
     }
 
 }

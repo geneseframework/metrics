@@ -8,7 +8,14 @@ import { AstClass } from './ast-class.model';
 import { AstFunction } from './ast-function.model';
 import { AstLine } from './ast-line.model';
 import { SyntaxKind } from '../../enum/syntax-kind.enum';
-import { isIf, isStructuralNode } from '../../utils/syntax-kind.util';
+import {
+    getFunctionOrMethodNode,
+    getParameters,
+    isCallExpressionIdentifier,
+    isFunc,
+    isIf,
+    isStructuralNode
+} from '../../utils/syntax-kind.util';
 import * as chalk from 'chalk';
 
 export abstract class AstAbstract {
@@ -28,6 +35,7 @@ export abstract class AstAbstract {
         this.jsonAstNode = jsonAstNode;
         this.setAstNode();
         this.setNesting(this.astNode);
+        this.setCallBacks();
     }
 
     get astAbstracts(): AstAbstract[] {
@@ -77,6 +85,23 @@ export abstract class AstAbstract {
         // console.log(chalk.magentaBright('KINDDDD'), astNode.parent?.kind, astNode.kind, astNode.text, astNode.nesting);
         for (const child of astNode.children) {
             this.setNesting(child);
+        }
+    }
+
+    private setCallBacks(): void {
+        if (!isFunc(this.astNode.kind)) {
+            return;
+        }
+        const callExpressionIdentifiers: AstNode[] = this.astNode.descendants.filter(d => isCallExpressionIdentifier(d));
+        for (const callExpressionIdentifier of callExpressionIdentifiers) {
+            const firstAncestorWhichIsFunctionOrMethodNode: AstNode = getFunctionOrMethodNode(callExpressionIdentifier);
+            if (this.astNode !== firstAncestorWhichIsFunctionOrMethodNode) {
+                return;
+            }
+            const parameterNames: string[] = getParameters(this.astNode).map(p => p.name);
+            if (!callExpressionIdentifier.isRecursion && parameterNames.includes(callExpressionIdentifier.name)) {
+                callExpressionIdentifier.isCallback = true;
+            }
         }
     }
 }

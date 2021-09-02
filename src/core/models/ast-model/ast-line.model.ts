@@ -20,6 +20,10 @@ export class AstLine {
         this.issue = issue;
     }
 
+    get callbacks(): number {
+        return this.astNodes?.filter(a => a.isCallback).length;
+    }
+
     get identifiers(): number {
         return this.astNodeIdentifiers.length;
     }
@@ -38,6 +42,10 @@ export class AstLine {
 
     get loops(): number {
         return this.getNbElements(isLoop);
+    }
+
+    get recursions(): number {
+        return this.astNodes?.filter(a => a.isRecursion).length;
     }
 
     get switches(): number {
