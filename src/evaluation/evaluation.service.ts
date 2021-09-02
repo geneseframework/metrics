@@ -41,7 +41,6 @@ export class EvaluationService {
             for (const astFile of astMetric.astFiles) {
                 astFile.setComplexities(metricParameters);
                 const reportSnippet = new ReportSnippet(removeExtension(astFile.name), astFile.code, astMetric.metric?.name);
-                // AbstractMetricService.e(astFile, reportSnippet, astMetric.metric);
                 this.evaluateAstFileForMetric(astFile, reportSnippet, astMetric.metric);
                 this.setMeasure(reportSnippet);
                 reportMetric.reportSnippets.push(reportSnippet);

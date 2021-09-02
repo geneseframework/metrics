@@ -26,7 +26,7 @@ export abstract class AbstractMetricService {
         for (const astLine of astLines) {
             // const geneseLine = this.reportLine(i, astLines[i]);
             // astLine.evaluate();
-            const reportLine = new ReportLine(astLine.issue, astLine.text, astLine.comments, astLine.getScore(metricWeights));
+            const reportLine = new ReportLine(astLine.issue, astLine.text, astLine.getComments(metricWeights), astLine.getScore(metricWeights));
             reportFile.lines.push(reportLine);
             reportFile.score = round(reportFile.score + reportLine.score, 1);
         }

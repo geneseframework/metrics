@@ -156,4 +156,16 @@ export class AstNode {
         this.isRecursion = this.name === funcNode.name;
     }
 
+    // private setNesting(): void {
+    //     const structuralNodes: AstNode[] = this.astNodes.filter(a => a.isStructuralNode);
+    //     for (const structuralNode of structuralNodes) {
+    //         this.setNestingCpxNode(structuralNode);
+    //     }
+    // }
+    //
+    // private setNestingCpxNode(structuralNode: AstNode): void {
+    //     this.nesting += structuralNode.nesting - 1;
+    //     // this.cpx.nesting += (structuralNode.nesting - 1) * GENESE_WEIGHTS.nesting;
+    // }
+
 }
