@@ -14,6 +14,7 @@ import { ReportService } from './report-generation/report.service';
 import { HtmlGenerationService } from './html-generation/html-generation.service';
 import { Measure } from './report-generation/models/measure.model';
 import { DatasetService } from './dataset-import/dataset.service';
+import { OptimizationService } from './optimization/optimization.service';
 
 const LANGUAGE = 'ts';
 
@@ -30,6 +31,8 @@ async function start(): Promise<void> {
     const measures: Measure[] = DatasetService.getMeasures();
     console.log(chalk.yellowBright('Evaluation for each metric...'));
     const jsonReport: JsonReportInterface = Options.generateJsonReport ? EvaluationService.evaluate(astModel, measures) : require(Options.jsonReportPath);
+    console.log(chalk.yellowBright('Optimization...'));
+    OptimizationService.start(jsonReport);
     console.log(chalk.yellowBright('Report generation...'));
     ReportService.start(jsonReport);
 }

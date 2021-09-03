@@ -9,10 +9,12 @@ import { Measure } from '../report-generation/models/measure.model';
 import { removeExtension } from '../core/utils/file-system.util';
 import { CorrelationService } from '../correlation/correlation.service';
 import { Options } from '../core/models/options.model';
-import { sum, unique } from '../core/utils/arrays.util';
+import { sum } from '../core/utils/arrays.util';
 import { METRIC_SERVICES } from './const/metrics-list.const';
 import { Metric } from '../core/models/metric.model';
 import { AstFile } from '../core/models/ast-model/ast-file.model';
+import { OptimizationFile } from '../optimization/optimization-file.model';
+import { Optimization } from '../optimization/optimization.model';
 
 export class EvaluationService {
 
@@ -26,7 +28,7 @@ export class EvaluationService {
         for (const astMetric of astModel.astMetrics) {
             this.evaluateAstMetric(reportModel, astMetric);
         }
-        this.setMetricParamValues(astModel);
+        this.setMetricParamValues(reportModel, astModel);
         if (Options.hasMeasures) {
             CorrelationService.setStats(reportModel);
         }
@@ -52,20 +54,25 @@ export class EvaluationService {
         METRIC_SERVICES.metricServices[metric.id].evaluate(astFile, reportFile);
     }
 
-    private static setMetricParamValues(astModel: AstModel): void {
+    private static setMetricParamValues(reportModel: ReportModel, astModel: AstModel): void {
         for (const astFile of astModel.astFiles) {
-            this.setMetricParamValuesForAstFile(astFile);
+            this.setMetricParamValuesForAstFile(reportModel, astFile);
         }
     }
 
-    private static setMetricParamValuesForAstFile(astFile: AstFile): void {
+    private static setMetricParamValuesForAstFile(reportModel: ReportModel, astFile: AstFile): void {
         for (const metricParameter of METRIC_SERVICES.metricParameters) {
             astFile.metricParamValues[metricParameter] = sum(astFile.astLines?.map(a => a[metricParameter]));
         }
-        console.log(chalk.blueBright('AST FILEEEEE'), astFile);
+        const measureValue: number = this.getMeasure(removeExtension(astFile.name));
+        reportModel.optimizationFiles.push(new OptimizationFile(removeExtension(astFile.name), astFile.metricParamValues, measureValue));
     }
 
     private static setMeasure(reportSnippet: ReportSnippet): void {
-        reportSnippet.measureValue = this.measures.find(m => m.codeSnippetName === reportSnippet.codeSnippetName)?.measureValue;
+        reportSnippet.measureValue = this.getMeasure(reportSnippet.codeSnippetName);
+    }
+
+    private static getMeasure(codeSnippetName): number {
+        return this.measures.find(m => m.codeSnippetName === codeSnippetName)?.measureValue;
     }
 }
