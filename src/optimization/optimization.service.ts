@@ -8,16 +8,23 @@ import { METRIC_SERVICES } from '../evaluation/const/metrics-list.const';
 import { Options } from '../core/models/options.model';
 import { OptimizationFile } from './optimization-file.model';
 import { nelderMead } from 'fmin';
+import { ReportMetric } from '../report-generation/models/report-metric.model';
+import { ReportSnippet } from '../report-generation/models/report-snippet.model';
+import { AstModel } from '../core/models/ast-model/ast.model';
+import { AstFile } from '../core/models/ast-model/ast-file.model';
+import { removeExtension } from '../core/utils/file-system.util';
 
 export class OptimizationService {
 
     static dataToCorrelate: DataToCorrelate[] = [];
+    // static jsonReport: JsonReportInterface = undefined;
     static optimizationFiles: OptimizationFile[] = [];
     static originalMetricWeights: MetricWeights = undefined;
     static parametersToOptimize: string[] = ['identifiers'];
 
-    static start(jsonReport: JsonReportInterface): void {
+    static optimize(astModel: AstModel, jsonReport: JsonReportInterface): void {
         // console.log(chalk.magentaBright('OPTIM FILESSSS'), jsonReport.optimizationFiles);
+        // this.jsonReport = jsonReport;
         this.optimizationFiles = jsonReport.optimizationFiles;
         this.originalMetricWeights = METRIC_SERVICES.metricServices[Options.metricToOptimize].metricWeights;
         // console.log(chalk.magentaBright('INITIAL SCORESSSS'), this.optimizationFiles.map(o => [o.codeSnippetName, this.getScore(o.metricParamValues, this.originalMetricWeights)]));
@@ -26,6 +33,11 @@ export class OptimizationService {
         // console.log(chalk.magentaBright('INITIAL VALUESSSS'), this.testFn([2.5, -0.5]));
         const solution = nelderMead(this.fitnessFunction.bind(this), [1], {maxIterations: 100});
         console.log(chalk.magentaBright('SOLUTIONNNN'), solution);
+        const zzz = this.getReportOptimizedMetric(astModel, jsonReport);
+        console.log(chalk.magentaBright('OPTI REPORTTTTT'), zzz);
+        jsonReport.reportMetrics.push(this.getReportOptimizedMetric(astModel, jsonReport));
+        // jsonReport.reportMetrics.unshift(this.getReportOptimizedMetric(astModel, jsonReport));
+        // return jsonReport;
     }
 
     private static getInitialValues(): number[] {
@@ -76,7 +88,21 @@ export class OptimizationService {
         return total;
     }
 
-    private static testFn([a, b]): number {
-        return Math.pow(a + b - 2, 2) + Math.pow(3 * a + b - 7, 2);
+    private static getReportOptimizedMetric(astModel: AstModel, jsonReport: JsonReportInterface): ReportMetric {
+        const reportMetric = new ReportMetric('optimized');
+        const originalReportMetric: ReportMetric = jsonReport.reportMetrics.find(r => r.metricName === Options.metricToOptimize);
+        const astFiles: AstFile[] = astModel.astFiles;
+        // console.log(chalk.blueBright('AST FILESSSSSS'), astFiles);
+        for (const reportSnippet of originalReportMetric.reportSnippets) {
+            const optimizedReportSnippet = new ReportSnippet(reportSnippet.codeSnippetName, reportSnippet.text, reportSnippet.metricName);
+            optimizedReportSnippet.lines = reportSnippet.lines;
+            optimizedReportSnippet.measureValue = reportSnippet.measureValue;
+            reportMetric.reportSnippets.push(optimizedReportSnippet);
+            const astFile: AstFile = astModel.astFiles.find(a => removeExtension(a.name) === reportSnippet.codeSnippetName);
+            console.log(chalk.blueBright('AST FILESSSSSS'), astFile?.name);
+            console.log(chalk.blueBright('AST FILESSSSSS MPV'), astFile?.metricParamValues);
+            METRIC_SERVICES.metricServices[Options.metricToOptimize].evaluate(astFile, optimizedReportSnippet);
+        }
+        return reportMetric;
     }
 }

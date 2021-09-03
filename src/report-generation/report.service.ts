@@ -30,7 +30,7 @@ export class ReportService {
     static selectedMetric = '';
 
     static start(jsonReport: JsonReportInterface): HtmlReport {
-        // console.log(chalk.greenBright('JSON REPORTTTTT '), jsonReport.reportMetrics[0].reportSnippets[0].lines.map(l => l.astNodes));
+        console.log(chalk.greenBright('JSON REPORTTTTT '), jsonReport.reportMetrics.map(r => { return {name: r.metricName, corr: r.correlations.map(c => c.value)}}));
         this.reportMetrics = jsonReport.reportMetrics;
         this.htmlReport.measure = jsonReport.measureName;
         this.htmlReport.hasMeasures = Options.hasMeasures;
@@ -120,7 +120,7 @@ export class ReportService {
     private static setMetricValue(codeSnippetRow: CodeSnippetRow, codeSnippetName: string, metricSelect: MetricSelect): void {
         const reportSnippets: ReportSnippet[] = flat(this.reportMetrics.map(r => r.reportSnippets));
         const reportSnippetForThisFileAndThisMetric: ReportSnippet = reportSnippets.find(s => s.codeSnippetName === codeSnippetName && s.metricName === metricSelect.metricName);
-        codeSnippetRow.divCodeValues.push(new DivCodeValues(codeSnippetName, metricSelect, reportSnippetForThisFileAndThisMetric.score, this.metricNamesArray));
+        codeSnippetRow.divCodeValues.push(new DivCodeValues(codeSnippetName, metricSelect, reportSnippetForThisFileAndThisMetric?.score, this.metricNamesArray));
     }
 
     private static setCorrelations(): void {

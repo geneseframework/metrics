@@ -10,8 +10,8 @@ export class ReportSnippet implements JsonReportSnippetInterface {
     score = 0;
     text: string = undefined;
 
-    constructor(fileName: string, text: string, metricName: string) {
-        this.codeSnippetName = fileName;
+    constructor(codeSnippetName: string, text: string, metricName: string) {
+        this.codeSnippetName = codeSnippetName;
         this.text = text;
         this.metricName = metricName;
     }

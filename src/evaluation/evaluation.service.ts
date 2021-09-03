@@ -29,9 +29,9 @@ export class EvaluationService {
             this.evaluateAstMetric(reportModel, astMetric);
         }
         this.setMetricParamValues(reportModel, astModel);
-        if (Options.hasMeasures) {
-            CorrelationService.setStats(reportModel);
-        }
+        // if (Options.hasMeasures) {
+        //     CorrelationService.setStats(reportModel);
+        // }
         return reportModel;
     }
 
