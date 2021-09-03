@@ -9,6 +9,7 @@ import { DataToCorrelate } from '../report-generation/data-to-correlate.model';
 import { METRIC_SERVICES } from '../evaluation/const/metrics-list.const';
 import { Options } from '../core/models/options.model';
 import { OptimizationFile } from './optimization-file.model';
+import { sum } from '../core/utils/arrays.util';
 // const fmin = require('fmin')
 // import { fmin } from 'fmin';
 
@@ -17,7 +18,7 @@ export class OptimizationService {
     static dataToCorrelate: DataToCorrelate[] = [];
     static optimizationFiles: OptimizationFile[] = [];
     static originalMetricWeights: MetricWeights = undefined;
-    static parametersToOptimize: string[] = ['ifs'];
+    static parametersToOptimize: string[] = ['identifiers'];
 
     static start(jsonReport: JsonReportInterface): void {
         console.log(chalk.magentaBright('OPTIM FILESSSS'), jsonReport.optimizationFiles);
@@ -28,8 +29,10 @@ export class OptimizationService {
         }
         const initialValues: number[] = this.getInitialValues();
         console.log(chalk.magentaBright('INITIAL VALUESSSS'), initialValues);
-        const solution = fmin.nelderMead(this.testFn.bind(this), [1]);
+        // console.log(chalk.magentaBright('INITIAL VALUESSSS'), this.testFn([2.5, -0.5]));
+        const solution = fmin.nelderMead(this.testFn.bind(this), [1, 2], {maxIterations: 50});
         // const solution = fmin.nelderMead(this.fitnessFunction.bind(this), initialValues);
+        // for (let val = 0; val < )
         console.log(chalk.magentaBright('SOLUTIONNNN'), solution);
     }
 
@@ -40,18 +43,25 @@ export class OptimizationService {
         }
         return initialValues;
     }
-    private static testFn(x: number): number {
-        return Math.abs(Math.abs(x) - 10);
+    // private static testFn(x: number): number {
+    //     return (x - 2) * (x - 2) + 3;
+    // }
+    private static testFn([a, b]): number {
+        const zzz = Math.pow(a + b - 2, 2) + Math.pow(3 * a + b - 7, 2);
+        console.log(chalk.greenBright('TESTFNNNN'), a, b, zzz);
+        // throw Error()
+        return zzz;
     }
 
     private static fitnessFunction(initialValues: number[]): number {
         const metricWeights: MetricWeights = this.getNewMetricWeights(initialValues);
-        // console.log(chalk.cyanBright('METR WWWWWW'), initialValues, metricWeights);
         const dataToCorrelate: DataToCorrelate[] = this.getDataToCorrelate(metricWeights);
         const measureValues: number[] = dataToCorrelate.map(d => d.measureValue);
         const metricScores: number[] = dataToCorrelate.map(d => d.metricScore);
         const pearson: number = sampleCorrelation(measureValues, metricScores);
-        const valueToMinimize: number = 1 - pearson;
+        const valueToMinimize: number = sum(dataToCorrelate.map(d => (d.measureValue - d.metricScore)^2));
+        // console.log(chalk.cyanBright('METR WWWWWW'), valueToMinimize, metricWeights);
+        // const valueToMinimize: number = 1 - pearson;
         return valueToMinimize;
     }
     private static getNewMetricWeights(values: number[]): MetricWeights {
