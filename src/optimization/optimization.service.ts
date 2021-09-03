@@ -30,10 +30,24 @@ export class OptimizationService {
         const initialValues: number[] = this.getInitialValues();
         console.log(chalk.magentaBright('INITIAL VALUESSSS'), initialValues);
         // console.log(chalk.magentaBright('INITIAL VALUESSSS'), this.testFn([2.5, -0.5]));
-        const solution = fmin.nelderMead(this.testFn.bind(this), [1, 2], {maxIterations: 50});
-        // const solution = fmin.nelderMead(this.fitnessFunction.bind(this), initialValues);
-        // for (let val = 0; val < )
+        // const solution = fmin.nelderMead(this.testFn.bind(this), [1, 2], {maxIterations: 50});
+        const solution = fmin.nelderMead(this.fitnessFunction.bind(this), [1], {maxIterations: 200});
         console.log(chalk.magentaBright('SOLUTIONNNN'), solution);
+        // this.loop();
+    }
+
+    private static loop() {
+        for (let i = 0; i <= 4.1; i = i + 0.1) {
+            const metricWeights: MetricWeights = this.getNewMetricWeights([i]);
+            console.log(chalk.blueBright('MWWWWW'), metricWeights.identifiers);
+            const dataToCorrelate: DataToCorrelate[] = this.getDataToCorrelate(metricWeights);
+            console.log(chalk.greenBright('DATAAAAA'), dataToCorrelate);
+            const measureValues: number[] = dataToCorrelate.map(d => d.measureValue);
+            const metricScores: number[] = dataToCorrelate.map(d => d.metricScore);
+            const pearson: number = sampleCorrelation(measureValues, metricScores);
+            console.log(chalk.greenBright('PEARSONNN'), pearson);
+        }
+
     }
 
     private static getInitialValues(): number[] {
@@ -43,9 +57,7 @@ export class OptimizationService {
         }
         return initialValues;
     }
-    // private static testFn(x: number): number {
-    //     return (x - 2) * (x - 2) + 3;
-    // }
+
     private static testFn([a, b]): number {
         const zzz = Math.pow(a + b - 2, 2) + Math.pow(3 * a + b - 7, 2);
         console.log(chalk.greenBright('TESTFNNNN'), a, b, zzz);
@@ -56,14 +68,17 @@ export class OptimizationService {
     private static fitnessFunction(initialValues: number[]): number {
         const metricWeights: MetricWeights = this.getNewMetricWeights(initialValues);
         const dataToCorrelate: DataToCorrelate[] = this.getDataToCorrelate(metricWeights);
+        console.log(chalk.green('INITIAL VALSSSSS'), initialValues);
+        console.log(chalk.greenBright('DATAAAAA'), dataToCorrelate);
         const measureValues: number[] = dataToCorrelate.map(d => d.measureValue);
         const metricScores: number[] = dataToCorrelate.map(d => d.metricScore);
         const pearson: number = sampleCorrelation(measureValues, metricScores);
-        const valueToMinimize: number = sum(dataToCorrelate.map(d => (d.measureValue - d.metricScore)^2));
-        // console.log(chalk.cyanBright('METR WWWWWW'), valueToMinimize, metricWeights);
-        // const valueToMinimize: number = 1 - pearson;
+        // const valueToMinimize: number = sum(dataToCorrelate.map(d => Math.pow(d.measureValue - d.metricScore, 2)));
+        console.log(chalk.cyanBright('METR WWWWWW'), initialValues, pearson, metricWeights.identifiers);
+        const valueToMinimize: number = 1 - pearson;
         return valueToMinimize;
     }
+
     private static getNewMetricWeights(values: number[]): MetricWeights {
         const optimizedMetricWeights: MetricWeights = this.getOptimizedMetricWeights(values);
         const newMetricWeights: MetricWeights = Object.assign(this.originalMetricWeights, optimizedMetricWeights);
@@ -93,7 +108,6 @@ export class OptimizationService {
         for (const [parameter, weight] of Object.entries(metricWeights)) {
             total += !isNaN(metricParamValues[parameter]) ? metricParamValues[parameter] * weight : 0;
         }
-        return round(total, 1);
-
+        return total;
     }
 }

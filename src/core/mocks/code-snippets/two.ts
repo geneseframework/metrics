@@ -1,0 +1,3 @@
+function zzz(a) {
+    return;
+}
