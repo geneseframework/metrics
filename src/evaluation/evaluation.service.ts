@@ -7,14 +7,11 @@ import { AstMetric } from '../core/models/ast-model/ast-metric.model';
 import { ReportMetric } from '../report-generation/models/report-metric.model';
 import { Measure } from '../report-generation/models/measure.model';
 import { removeExtension } from '../core/utils/file-system.util';
-import { CorrelationService } from '../correlation/correlation.service';
-import { Options } from '../core/models/options.model';
 import { sum } from '../core/utils/arrays.util';
 import { METRIC_SERVICES } from './const/metrics-list.const';
 import { Metric } from '../core/models/metric.model';
 import { AstFile } from '../core/models/ast-model/ast-file.model';
 import { OptimizationFile } from '../optimization/optimization-file.model';
-import { Optimization } from '../optimization/optimization.model';
 
 export class EvaluationService {
 
@@ -29,9 +26,6 @@ export class EvaluationService {
             this.evaluateAstMetric(reportModel, astMetric);
         }
         this.setMetricParamValues(reportModel, astModel);
-        // if (Options.hasMeasures) {
-        //     CorrelationService.setStats(reportModel);
-        // }
         return reportModel;
     }
 

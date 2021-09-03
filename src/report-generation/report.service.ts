@@ -30,7 +30,7 @@ export class ReportService {
     static selectedMetric = '';
 
     static start(jsonReport: JsonReportInterface): HtmlReport {
-        console.log(chalk.greenBright('JSON REPORTTTTT '), jsonReport.reportMetrics[3]);
+        // console.log(chalk.greenBright('JSON REPORTTTTT '), jsonReport.reportMetrics[3]);
         // console.log(chalk.greenBright('JSON REPORTTTTT '), jsonReport.reportMetrics.map(r => { return {name: r.metricName, corr: r.correlations.map(c => c.value)}}));
         this.reportMetrics = jsonReport.reportMetrics;
         this.htmlReport.measure = jsonReport.measureName;
@@ -143,7 +143,6 @@ export class ReportService {
     }
 
     private static setMetricCorrelation(correlationRow: CorrelationRow, metricName: string): void {
-        console.log(chalk.magentaBright('METRC SLCTDDDDD'), metricName);
         correlationRow.values.push(this.reportMetrics.find(r => r.metricName === metricName)
             ?.correlations.find(c => c.name === correlationRow.correlationName)
             ?.value);
@@ -165,7 +164,6 @@ export class ReportService {
         chartMetric.width = round(100 / this.reportMetrics.length, 2);
         chartMetric.marginRight = isLastMetric ? 0 : 1;
         this.htmlReport.charts.push(chartMetric);
-        // console.log(chalk.greenBright('SET CHARTTTTT MMMMM'), chartMetric);
     }
 
     private static setTemplate(): HandlebarsTemplateDelegate {

@@ -20,7 +20,7 @@ export class CorrelationService {
     }
 
     private static setStatsMetric(reportMetric: ReportMetric): void {
-        console.log(chalk.cyanBright('SET STATTTS METRIC'), reportMetric.metricName);
+        // console.log(chalk.cyanBright('SET STATTTS METRIC'), reportMetric.metricName);
         const dataToCorrelate: DataToCorrelate[] = reportMetric.reportSnippets.map(r => new DataToCorrelate(r.measureValue, r.score));
         if (dataToCorrelate?.length > 1) {
             for (const key of Object.keys(CORRELATION_KINDS)) {

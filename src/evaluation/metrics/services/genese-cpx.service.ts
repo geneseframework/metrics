@@ -12,7 +12,7 @@ export class GeneseCpxService extends AbstractMetricService {
         "nesting": 0.5,
         "recursions": 2,
         "switches": 1,
-        "identifiers": 1,
+        "identifiers": 3,
         // "words": 0.1
     }
 
