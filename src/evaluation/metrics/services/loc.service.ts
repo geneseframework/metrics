@@ -6,7 +6,7 @@ import { ReportLine } from '../../../report-generation/models/report-line.model'
 
 export class LocService extends AbstractMetricService {
 
-    metricWeights = undefined;
+    metricWeights = {};
 
     evaluate(astFile: AstFile, reportFile: ReportSnippet): void {
         const astLines: AstLine[] = astFile.astCode.astLines;

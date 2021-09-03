@@ -9,7 +9,7 @@ import { Measure } from '../report-generation/models/measure.model';
 import { removeExtension } from '../core/utils/file-system.util';
 import { CorrelationService } from '../correlation/correlation.service';
 import { Options } from '../core/models/options.model';
-import { unique } from '../core/utils/arrays.util';
+import { sum, unique } from '../core/utils/arrays.util';
 import { METRIC_SERVICES } from './const/metrics-list.const';
 import { Metric } from '../core/models/metric.model';
 import { AstFile } from '../core/models/ast-model/ast-file.model';
@@ -23,17 +23,17 @@ export class EvaluationService {
         // console.log(chalk.blueBright('AST MODELLLLL'), astModel.astMetrics[0].astFiles[0].astNode);
         reportModel.measureName = astModel.measure;
         this.measures = measures;
-        const metricParameters: string[] = unique(astModel.astMetrics.map(a => a.metric?.name));
         for (const astMetric of astModel.astMetrics) {
-            this.evaluateAstMetric(reportModel, astMetric, metricParameters);
+            this.evaluateAstMetric(reportModel, astMetric);
         }
+        this.setMetricParamValues(astModel);
         if (Options.hasMeasures) {
             CorrelationService.setStats(reportModel);
         }
         return reportModel;
     }
 
-    private static evaluateAstMetric(reportModel: ReportModel, astMetric: AstMetric, metricParameters: string[]): void {
+    private static evaluateAstMetric(reportModel: ReportModel, astMetric: AstMetric): void {
         try {
             const reportMetric = new ReportMetric(astMetric.metric.name);
             for (const astFile of astMetric.astFiles) {
@@ -49,7 +49,20 @@ export class EvaluationService {
     }
 
     private static evaluateAstFileForMetric(astFile: AstFile, reportFile: ReportSnippet, metric: Metric): void {
-        METRIC_SERVICES[metric.id].evaluate(astFile, reportFile);
+        METRIC_SERVICES.metricServices[metric.id].evaluate(astFile, reportFile);
+    }
+
+    private static setMetricParamValues(astModel: AstModel): void {
+        for (const astFile of astModel.astFiles) {
+            this.setMetricParamValuesForAstFile(astFile);
+        }
+    }
+
+    private static setMetricParamValuesForAstFile(astFile: AstFile): void {
+        for (const metricParameter of METRIC_SERVICES.metricParameters) {
+            astFile.metricParamValues[metricParameter] = sum(astFile.astLines?.map(a => a[metricParameter]));
+        }
+        console.log(chalk.blueBright('AST FILEEEEE'), astFile);
     }
 
     private static setMeasure(reportSnippet: ReportSnippet): void {

@@ -5,10 +5,11 @@ import { MetricWeights } from '../models/metric-weights.model';
 
 export class IdentifiersService extends AbstractMetricService {
 
+    metricWeights: MetricWeights = {
+        "identifiers": 1
+    }
+
     evaluate(astFile: AstFile, reportFile: ReportSnippet): void {
-        const metricWeights: MetricWeights = {
-            "identifiers": 1
-        }
-        this.evaluateMetric(astFile, reportFile, metricWeights);
+        this.evaluateMetric(astFile, reportFile, this.metricWeights);
     }
 }
