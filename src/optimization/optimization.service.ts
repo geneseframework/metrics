@@ -23,9 +23,13 @@ export class OptimizationService {
         console.log(chalk.magentaBright('OPTIM FILESSSS'), jsonReport.optimizationFiles);
         this.optimizationFiles = jsonReport.optimizationFiles;
         this.originalMetricWeights = METRIC_SERVICES.metricServices[Options.metricToOptimize].metricWeights;
+        for (const opt of this.optimizationFiles) {
+            console.log(chalk.magentaBright('INITIAL SCOREEE'), opt.codeSnippetName,  this.getScore(opt.metricParamValues, this.originalMetricWeights));
+        }
         const initialValues: number[] = this.getInitialValues();
         console.log(chalk.magentaBright('INITIAL VALUESSSS'), initialValues);
-        const solution = fmin.nelderMead(this.fitnessFunction.bind(this), initialValues);
+        const solution = fmin.nelderMead(this.testFn.bind(this), [1]);
+        // const solution = fmin.nelderMead(this.fitnessFunction.bind(this), initialValues);
         console.log(chalk.magentaBright('SOLUTIONNNN'), solution);
     }
 
@@ -35,6 +39,9 @@ export class OptimizationService {
             initialValues.push(this.originalMetricWeights[parameterToOptimize]);
         }
         return initialValues;
+    }
+    private static testFn(x: number): number {
+        return Math.abs(Math.abs(x) - 10);
     }
 
     private static fitnessFunction(initialValues: number[]): number {
@@ -65,9 +72,9 @@ export class OptimizationService {
         const dataToCorrelate: DataToCorrelate[] = [];
         for (const optimizationFile of this.optimizationFiles) {
             const score: number = this.getScore(optimizationFile.metricParamValues, metricWeights);
+            // console.log(chalk.blueBright('OPT FILEEEE'), optimizationFile.codeSnippetName, score);
             dataToCorrelate.push(new DataToCorrelate(optimizationFile.measureValue, score));
         }
-        // console.log(chalk.blueBright('DATAAAAA'), dataToCorrelate);
         return dataToCorrelate;
     }
 
