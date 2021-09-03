@@ -8,4 +8,11 @@ export class ReportModel implements JsonReportInterface {
     optimizationFiles: OptimizationFile[] = [];
     reportMetrics: ReportMetric[] = [];
 
+    constructor(jsonReportInterface?: JsonReportInterface) {
+        if (jsonReportInterface) {
+            this.measureName = jsonReportInterface.measureName;
+            this.optimizationFiles = jsonReportInterface.optimizationFiles;
+            this.reportMetrics = jsonReportInterface.reportMetrics;
+        }
+    }
 }
