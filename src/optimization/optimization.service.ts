@@ -17,14 +17,12 @@ import { removeExtension } from '../core/utils/file-system.util';
 export class OptimizationService {
 
     static dataToCorrelate: DataToCorrelate[] = [];
-    // static jsonReport: JsonReportInterface = undefined;
     static optimizationFiles: OptimizationFile[] = [];
     static originalMetricWeights: MetricWeights = undefined;
     static parametersToOptimize: string[] = ['identifiers'];
 
     static optimize(astModel: AstModel, jsonReport: JsonReportInterface): void {
         // console.log(chalk.magentaBright('OPTIM FILESSSS'), jsonReport.optimizationFiles);
-        // this.jsonReport = jsonReport;
         this.optimizationFiles = jsonReport.optimizationFiles;
         this.originalMetricWeights = METRIC_SERVICES.metricServices[Options.metricToOptimize].metricWeights;
         // console.log(chalk.magentaBright('INITIAL SCORESSSS'), this.optimizationFiles.map(o => [o.codeSnippetName, this.getScore(o.metricParamValues, this.originalMetricWeights)]));
@@ -36,8 +34,6 @@ export class OptimizationService {
         const zzz = this.getReportOptimizedMetric(astModel, jsonReport);
         console.log(chalk.magentaBright('OPTI REPORTTTTT'), zzz);
         jsonReport.reportMetrics.push(this.getReportOptimizedMetric(astModel, jsonReport));
-        // jsonReport.reportMetrics.unshift(this.getReportOptimizedMetric(astModel, jsonReport));
-        // return jsonReport;
     }
 
     private static getInitialValues(): number[] {
@@ -91,16 +87,14 @@ export class OptimizationService {
     private static getReportOptimizedMetric(astModel: AstModel, jsonReport: JsonReportInterface): ReportMetric {
         const reportMetric = new ReportMetric('optimized');
         const originalReportMetric: ReportMetric = jsonReport.reportMetrics.find(r => r.metricName === Options.metricToOptimize);
-        const astFiles: AstFile[] = astModel.astFiles;
-        // console.log(chalk.blueBright('AST FILESSSSSS'), astFiles);
         for (const reportSnippet of originalReportMetric.reportSnippets) {
-            const optimizedReportSnippet = new ReportSnippet(reportSnippet.codeSnippetName, reportSnippet.text, reportSnippet.metricName);
+            const optimizedReportSnippet = new ReportSnippet(reportSnippet.codeSnippetName, reportSnippet.text, reportMetric.metricName);
             optimizedReportSnippet.lines = reportSnippet.lines;
             optimizedReportSnippet.measureValue = reportSnippet.measureValue;
             reportMetric.reportSnippets.push(optimizedReportSnippet);
             const astFile: AstFile = astModel.astFiles.find(a => removeExtension(a.name) === reportSnippet.codeSnippetName);
-            console.log(chalk.blueBright('AST FILESSSSSS'), astFile?.name);
-            console.log(chalk.blueBright('AST FILESSSSSS MPV'), astFile?.metricParamValues);
+            // console.log(chalk.blueBright('AST FILESSSSSS'), astFile?.name);
+            // console.log(chalk.blueBright('AST FILESSSSSS MPV'), astFile?.metricParamValues);
             METRIC_SERVICES.metricServices[Options.metricToOptimize].evaluate(astFile, optimizedReportSnippet);
         }
         return reportMetric;
