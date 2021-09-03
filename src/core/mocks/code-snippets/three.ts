@@ -1,2 +1,4 @@
-let a;
-a = a + 1;
+function zzz(a) {
+    if (a > 0) {
+    }
+}

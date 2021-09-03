@@ -12,7 +12,8 @@ export class GeneseCpxService extends AbstractMetricService {
         "nesting": 0.5,
         "recursions": 2,
         "switches": 1,
-        "words": 0.1
+        "identifiers": 1,
+        // "words": 0.1
     }
 
     evaluate(astFile: AstFile, reportFile: ReportSnippet): void {
