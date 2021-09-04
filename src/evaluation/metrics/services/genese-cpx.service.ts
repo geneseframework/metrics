@@ -7,16 +7,16 @@ export class GeneseCpxService extends AbstractMetricService {
 
     metricWeights: MetricWeights = {
         // "callbacks": 2,
-        "identifiers": 3,
+        // "identifiers": 3,
         "ifs": 1,
         "loops": 1,
-        // "nesting": 0.5,
+        "nesting": 0.5,
         // "recursions": 2,
         // "switches": 1,
-        // "words": 0.1
+        "words": 0.1
     }
 
-    parametersToOptimize = ['identifiers', 'loops'];
+    parametersToOptimize = ['ifs', 'loops', 'nesting'];
 
     evaluate(astFile: AstFile, reportFile: ReportSnippet): void {
         this.evaluateMetric(astFile, reportFile, this.metricWeights);

@@ -41,7 +41,6 @@ export class Options {
     static jsonAstPath = `${process.cwd()}/report/ast.json`;
     static jsonReportPath = './report.json';
     static measure = '';
-    // static metricToOptimize = 'ast';
     static metricToOptimize = 'genese-cpx';
     static metrics: MetricInterface[] = [COMPREHENSION_CPX, CYCLOMATIC_CPX];
     static pathCommand = process.cwd();                    // The path of the folder where the command-line was entered (can't be overridden)

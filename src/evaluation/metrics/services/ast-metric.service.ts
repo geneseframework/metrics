@@ -4,6 +4,7 @@ import { ReportSnippet } from '../../../report-generation/models/report-snippet.
 import { METRIC_PARAMS } from '../enums/ast-metric.enum';
 import { MetricWeights } from '../models/metric-weights.model';
 
+// TODO: This service is a generalization of genese_cpx. Remove it if it is not necessary
 export class AstMetricService extends AbstractMetricService {
 
     metricWeights: MetricWeights = {};

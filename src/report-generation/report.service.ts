@@ -31,7 +31,6 @@ export class ReportService {
 
     static start(jsonReport: JsonReportInterface): HtmlReport {
         // console.log(chalk.greenBright('JSON REPORTTTTT '), jsonReport.reportMetrics[3]);
-        // console.log(chalk.greenBright('JSON REPORTTTTT '), jsonReport.reportMetrics.map(r => { return {name: r.metricName, corr: r.correlations.map(c => c.value)}}));
         this.reportMetrics = jsonReport.reportMetrics;
         this.htmlReport.measure = jsonReport.measureName;
         this.htmlReport.hasMeasures = Options.hasMeasures;
