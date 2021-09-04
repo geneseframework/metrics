@@ -62,7 +62,7 @@ export class OptimizationService {
     }
 
     private static getOptimizedMetricWeights(values: number[]): MetricWeights {
-        const metricWeights = new MetricWeights();
+        const metricWeights: MetricWeights = {};
         for (let i = 0; i < values.length; i++) {
             metricWeights[this.parametersToOptimize[i]] = values[i];
         }
