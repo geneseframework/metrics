@@ -1,13 +1,6 @@
 import * as fs from 'fs-extra';
 import { fileExists, getArrayOfPathsWithDotSlash, getPathWithSlash, } from '../utils/file-system.util';
-import { Complexity } from '../../html-generation/interfaces/complexity.interface';
-import { ComplexityType } from '../../html-generation/enums/complexity-type.enum';
-import { ChartColor } from '../../html-generation/enums/chart-color.enum';
-import { ComplexitiesByStatus } from '../../html-generation/interfaces/complexities-by-status.interface';
-import { Framework, isFramework } from '../types/framework.type';
-import * as chalk from 'chalk';
 import { MetricInterface } from '../interfaces/json-report/metric.interface';
-import { COMPREHENSION_CPX, CYCLOMATIC_CPX } from '../const/metrics.const';
 
 export var WINDOWS = false;
 
@@ -17,22 +10,6 @@ export var WINDOWS = false;
  */
 export class Options {
 
-    static cognitiveCpx: Complexity = {         // Options concerning the cognitive complexity
-        errorThreshold: 20,                     // A complexity strictly greater than errorThreshold will be seen as error (can be overridden)
-        type: ComplexityType.COGNITIVE,         // Sets the complexity type for this option (can't be overridden)
-        warningThreshold: 10,                   // A complexity strictly greater than warning threshold and lower or equal than errorThreshold will be seen as warning (can be overridden)
-    };
-    static colors: ChartColor[] = [             // The colors of the charts
-        ChartColor.CORRECT,
-        ChartColor.WARNING,
-        ChartColor.ERROR,
-    ];
-    static cyclomaticCpx: Complexity = {        // Options concerning the cognitive complexity
-        errorThreshold: 10,                     // A complexity strictly greater than errorThreshold will be seen as error (can be overridden)
-        type: ComplexityType.CYCLOMATIC,        // Sets the complexity type for this option (can't be overridden)
-        warningThreshold: 5,                    // A complexity strictly greater than warning threshold and lower or equal than errorThreshold will be seen as warning (can be overridden)
-    };
-    static framework: Framework = undefined;    // The framework eventually specified
     static generateJsonAst = true;
     static generateJsonReport = true;
     static hasMeasures = true;
@@ -42,7 +19,7 @@ export class Options {
     static jsonReportPath = './report.json';
     static measure = '';
     static metricToOptimize = 'genese-cpx';
-    static metrics: MetricInterface[] = [COMPREHENSION_CPX, CYCLOMATIC_CPX];
+    static metrics: MetricInterface[] = [];
     static pathCommand = process.cwd();                    // The path of the folder where the command-line was entered (can't be overridden)
     static pathDataset = '';
     static pathFolderToAnalyze = './';          // The path of the folder to analyse (can be overridden)
@@ -54,12 +31,8 @@ export class Options {
      * Sets the options of genese-complexity module
      * @param pathFolderToAnalyze       // The path of the folder to analyse (can be overridden)
      * @param pathGeneseNodeJs          // The path of the node_module Genese in the nodejs user environment (can't be overridden)
-     * @param framework                 // The framework eventually specified
      */
-    static setOptions(pathFolderToAnalyze: string, pathGeneseNodeJs: string, framework?: Framework): void {
-        if (isFramework(framework)) {
-            Options.framework = framework;
-        }
+    static setOptions(pathFolderToAnalyze: string, pathGeneseNodeJs: string): void {
         WINDOWS = process.platform === 'win32';
         const geneseConfigPath = `${process.cwd()}/geneseconfig.json`;
         if (fs.existsSync(geneseConfigPath)) {
@@ -98,8 +71,6 @@ export class Options {
         Options.hasMeasures = fileExists(Options.pathDataset);
         Options.pathOutDir = config.complexity?.pathReports ?? Options.pathOutDir;
         Options.ignore.push(Options.pathOutDir);
-        Options.cognitiveCpx = config.complexity.cognitiveCpx ?? Options.cognitiveCpx;
-        Options.cyclomaticCpx = config.complexity.cyclomaticCpx ?? Options.cyclomaticCpx;
         Options.generateJsonAst = config.complexity.generateJsonAst === true || Options.generateJsonAst;
         Options.generateJsonReport = config.complexity.generateJsonReport === true || Options.generateJsonReport;
         Options.jsonReportPath = config.complexity.jsonReportPath ?? Options.jsonReportPath;
@@ -166,18 +137,5 @@ export class Options {
             }
         });
         return pathTester;
-    }
-
-    /**
-     * Gets the different thresholds defined in Options class
-     * @returns {ComplexitiesByStatus}
-     */
-    static getThresholds(): ComplexitiesByStatus {
-        const cpxByStatus = new ComplexitiesByStatus();
-        cpxByStatus.cognitive.warning = Options.cognitiveCpx.warningThreshold;
-        cpxByStatus.cognitive.error = Options.cognitiveCpx.errorThreshold;
-        cpxByStatus.cyclomatic.warning = Options.cyclomaticCpx.warningThreshold;
-        cpxByStatus.cyclomatic.error = Options.cyclomaticCpx.errorThreshold;
-        return cpxByStatus;
     }
 }

@@ -2,7 +2,7 @@ import { AstFile } from '../../core/models/ast-model/ast-file.model';
 import { AstFunction } from '../../core/models/ast-model/ast-function.model';
 import { JsonAstNodeInterface } from '../../core/interfaces/json-ast/json-ast-node.interface';
 import { SyntaxKind } from '../../core/enum/syntax-kind.enum';
-import { AstFileOrClass, isAstFile } from '../../core/types/ast/ast-file-or-class.type';
+import { AstFileOrClass, isAstFile } from '../../core/types/ast-file-or-class.type';
 import { AstClass } from '../../core/models/ast-model/ast-class.model';
 import { AstFuncOrArrowFuncService } from './ast-func-or-arrow-func.service';
 

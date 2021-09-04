@@ -1,7 +1,6 @@
 import * as fs from 'fs-extra';
-import { OS } from '../../html-generation/enums/os.enum';
+import { OS } from '../enum/os.enum';
 import { Options, WINDOWS } from '../models/options.model';
-import { lastElement } from './arrays.util';
 
 /**
  * ----------   Tools about files or folders   ---------------
@@ -18,14 +17,6 @@ export function fileExists(path: string): boolean {
 export function getFilename(pathFile = ''): string {
     const splittedPath = pathFile.split('/');
     return splittedPath[splittedPath.length - 1];
-}
-
-/**
- * Returns the name of a folder with a given path
- * @param folderPath
- */
-export function getFolderName(folderPath: string): string {
-    return lastElement(folderPath?.split('/')) ?? undefined;
 }
 
 /**
@@ -85,26 +76,6 @@ export function getPathWithSlash(path: string): string {
 }
 
 /**
- * Returns the path between a subfolder and its root
- * For example, if relativePath = 'my/relative/path', it will return '../../..
- * @param relativePath      // The path to analyse
- */
-export function getRouteToRoot(relativePath: string): string {
-    if (!relativePath) {
-        return '';
-    }
-    let relativeRoot = '/..';
-    for (let i = 0; i < relativePath.length; i++) {
-        relativeRoot =
-            relativePath.charAt(i) === constructLink("/") &&
-                i !== relativePath.length - 1
-                ? constructLink("/") + `..${relativeRoot}`
-                : relativeRoot;
-    }
-    return relativeRoot.slice(1);
-}
-
-/**
  * Returns the extension of a file
  * @param filename      // The name of the file
  */
@@ -127,19 +98,6 @@ export function removeExtension(path: string): string {
 }
 
 /**
- * Creates a subFolder of the outDir folder
- * @param relativePath      // The relative path of the subfolder compared to the outDir path
- */
-export function createRelativeDir(relativePath: string): void {
-    const path = `${Options.pathOutDir}/${relativePath}`;
-    if (fs.existsSync(path)) {
-        fs.emptyDirSync(path);
-    } else {
-        fs.mkdirsSync(path);
-    }
-}
-
-/**
  * Creates the outDir folder
  */
 export function createOutDir(): void {
@@ -150,21 +108,6 @@ export function createOutDir(): void {
     }
 }
 
-export function deleteFile(fileName: string): void {
-    if (fs.existsSync(fileName)) {
-        fs.unlinkSync(fileName);
-    }
-}
-
-/**
- * Copy a file from a path to another one
- * @param originPath        // The origin's path
- * @param targetPath        // The target's path
- */
-export function copyFile(originPath: string, targetPath: string): void {
-    fs.copyFileSync(constructLink(originPath), constructLink(targetPath));
-}
-
 /**
  * Copy a file from a path to another one
  * @param path
@@ -172,13 +115,6 @@ export function copyFile(originPath: string, targetPath: string): void {
  */
 export function createFile(path: string, content: string): void {
     fs.writeFileSync(path, content, { encoding: "utf-8" });
-}
-
-/**
- * Returns the Javascript object corresponding to a Json file
- */
-export function requireJson(path: string): object {
-    return require(constructLink(path));
 }
 
 // ------------------------------------------------------------------------------------------------------------
@@ -214,37 +150,4 @@ export function platformPath(path: string): string {
 
 export function windowsPath(path: string): string {
     return path.replace(/\//g, '\\').replace(/\\/g, '\\\\')
-}
-
-/**
- * Replace a slash by an antislash
- * @param text
- * @returns {string}
- */
-export function antislash(text: string): string {
-    return text.split("/").join("\\");
-}
-
-/**
- * Check if the OS is windows transform the link with antislash
- * Else, returns the normal link
- * @param link
- * @returns {string}
- */
-export function constructLink(link: string): string {
-    return getOS() === OS.WINDOWS ? antislash(link) : link;
-}
-
-/**
- * Delete the last slash in a string
- * @param text
- * @returns {string}
- */
-export function deleteLastSlash(text: string): string {
-    const TEXT_REWORK = (text && constructLink(text)) || "";
-
-    return TEXT_REWORK &&
-        TEXT_REWORK[TEXT_REWORK.length - 1] === constructLink("/")
-        ? TEXT_REWORK.slice(0, TEXT_REWORK.length - 1)
-        : TEXT_REWORK;
 }

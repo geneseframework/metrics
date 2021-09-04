@@ -2,8 +2,6 @@ import { Measure } from '../report-generation/models/measure.model';
 import { Options } from '../core/models/options.model';
 import { CellAddress, WorkBook, WorkSheet } from 'xlsx';
 import { round } from '../core/utils/numbers.util';
-import * as chalk from 'chalk';
-import { fileExists } from '../core/utils/file-system.util';
 
 const XLSX = require('xlsx');
 

@@ -1,7 +1,6 @@
 import { LinearEquation } from './linear-equation.model';
 import { Dot } from './dot.model';
 import { linearRegression, linearRegressionLine } from 'simple-statistics';
-import * as chalk from 'chalk';
 
 export class ChartMetric {
 
@@ -23,7 +22,6 @@ export class ChartMetric {
         for (const abscissa of abscissas) {
             this.linearRegressionLine.push(new Dot(abscissa, this.getPredictedValue(abscissa)));
         }
-        // console.log(chalk.blueBright('LINEAR REGRRRRR'), this.linearRegression);
     }
 
     private getPredictedValue(abscissa: number): number {

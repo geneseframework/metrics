@@ -4,14 +4,11 @@ import { JsonAstFolderInterface } from '../../../core/interfaces/json-ast/json-a
 import { JsonAstNodeInterface } from '../../../core/interfaces/json-ast/json-ast-node.interface';
 import { DefinitionInfo, Identifier, Node, SourceFile } from 'ts-morph';
 import { SyntaxKind } from '../../../core/enum/syntax-kind.enum';
-import { CpxFactorsInterface } from '../../../core/interfaces/cpx-factors.interface';
 import { project, WEIGHTED_METHODS, WEIGHTS } from '../../globals.const';
 import { Ts } from './ts.service';
 import { randomString } from '../../../core/utils/other-tools.util';
-import { Options } from '../../../core/models/options.model';
-import { ReactService } from '../specific/react/react.service';
 import { isJsx } from '../utils/ast.util';
-import * as chalk from 'chalk';
+import { CpxFactorsInterface } from '../../../core/interfaces/cpx-factors.interface';
 
 /**
  * - AstFiles generation from their Abstract Syntax Tree (AST)
@@ -50,9 +47,6 @@ export class AstFileGenerationService {
             text: sourceFile.getFullText(),
             astNode: this.createAstNodeChildren(sourceFile)
         };
-        if (Options.framework === 'react') {
-            ReactService.extractHooksAndArrowFunctions(astFileInterface.astNode);
-        }
         return astFileInterface;
     }
 
