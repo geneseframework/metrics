@@ -1,5 +1,5 @@
 import { AbstractCorrelationService } from './abstract-correlation.service';
-import { DataToCorrelate } from '../../report-generation/data-to-correlate.model';
+import { DataToCorrelate } from '../../report-generation/models/data-to-correlate.model';
 import { sampleCorrelation } from 'simple-statistics';
 import { round } from '../../core/utils/numbers.util';
 

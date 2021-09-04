@@ -1,5 +1,5 @@
-import { AstFile } from '../../models/ast-model/ast-file.model';
-import { AstClass } from '../../models/ast-model/ast-class.model';
+import { AstFile } from '../models/ast-model/ast-file.model';
+import { AstClass } from '../models/ast-model/ast-class.model';
 
 export type AstFileOrClass = AstFile | AstClass;
 

@@ -4,7 +4,7 @@ import { JsonAstNodeInterface } from '../../core/interfaces/json-ast/json-ast-no
 import { SyntaxKind } from '../../core/enum/syntax-kind.enum';
 import { AstFunction } from '../../core/models/ast-model/ast-function.model';
 import { AstClass } from '../../core/models/ast-model/ast-class.model';
-import { AstFileOrClass, isAstFile } from '../../core/types/ast/ast-file-or-class.type';
+import { AstFileOrClass, isAstFile } from '../../core/types/ast-file-or-class.type';
 import { AstFuncOrArrowFuncService } from './ast-func-or-arrow-func.service';
 
 export class AstArrowFunctionService {

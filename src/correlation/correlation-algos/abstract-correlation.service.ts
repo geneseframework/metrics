@@ -1,4 +1,4 @@
-import { DataToCorrelate } from '../../report-generation/data-to-correlate.model';
+import { DataToCorrelate } from '../../report-generation/models/data-to-correlate.model';
 
 export abstract class AbstractCorrelationService {
 

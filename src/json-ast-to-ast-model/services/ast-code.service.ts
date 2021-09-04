@@ -10,7 +10,6 @@ import { AstLineService } from './ast-line.service';
 export class AstCodeService {
 
     static generate(astAbstract: AstAbstract): AstCode {
-        // console.log(chalk.blueBright('AST ABSTRAAAA KINDDDD'), astAbstract.kind);
         const intervalsOutsideClassesAndFunctions: Interval[] = this.getComplementaryIntervals(astAbstract);
         const text: string = this.getText(astAbstract, intervalsOutsideClassesAndFunctions);
         const astCode = new AstCode(astAbstract, text);

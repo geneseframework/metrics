@@ -51,7 +51,6 @@ export class InitGenerationService {
     /**
      * Generates the AstFolder corresponding to a given path and to its potential AstFolder parent
      * @param  {string} path              // The path of the AstFolder
-     * @param  {Language} language
      * @returns JsonAstFolderInterface
      */
     private generateAstFolder(path: string): JsonAstFolderInterface {
@@ -95,7 +94,6 @@ export class InitGenerationService {
     /**
      * Returns true if a path corresponds to a file to generate in JsonAst
      * @param  {string} path  // The path of the file
-     * @param  {Language} language
      * @returns boolean
      */
     private isFileToGenerate(path: string): boolean {
