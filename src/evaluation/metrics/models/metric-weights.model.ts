@@ -1,4 +1,4 @@
-export class MetricWeights {
+export interface MetricWeights {
 
     [parameter: string]: number;
 

@@ -7,6 +7,8 @@ import { ReportLine } from '../../../report-generation/models/report-line.model'
 
 export abstract class AbstractMetricService {
 
+    parametersToOptimize: string[] = [];
+
     abstract metricWeights: MetricWeights;
 
     abstract evaluate(astFile: AstFile, reportFile: ReportSnippet): void;

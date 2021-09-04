@@ -6,15 +6,17 @@ import { MetricWeights } from '../models/metric-weights.model';
 export class GeneseCpxService extends AbstractMetricService {
 
     metricWeights: MetricWeights = {
-        "callbacks": 2,
+        // "callbacks": 2,
+        // "identifiers": 3,
         "ifs": 1,
         "loops": 1,
         "nesting": 0.5,
-        "recursions": 2,
-        "switches": 1,
-        "identifiers": 3,
-        // "words": 0.1
+        // "recursions": 2,
+        // "switches": 1,
+        "words": 0.1
     }
+
+    parametersToOptimize = ['ifs', 'loops', 'nesting'];
 
     evaluate(astFile: AstFile, reportFile: ReportSnippet): void {
         this.evaluateMetric(astFile, reportFile, this.metricWeights);
