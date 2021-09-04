@@ -18,13 +18,14 @@ export class OptimizationService {
 
     static dataToCorrelate: DataToCorrelate[] = [];
     static optimizationFiles: OptimizationFile[] = [];
-    static modifiedMetricWeights: MetricWeights = undefined;
+    static modifiedMetricWeights: MetricWeights = {'ifs': 1, 'identifiers': 3};
+    // static modifiedMetricWeights: MetricWeights = undefined;
     static parametersToOptimize: string[] = ['identifiers'];
 
     static optimize(astModel: AstModel, jsonReport: JsonReportInterface): void {
         // console.log(chalk.magentaBright('OPTIM FILESSSS'), jsonReport.optimizationFiles);
         this.optimizationFiles = jsonReport.optimizationFiles;
-        this.modifiedMetricWeights = METRIC_SERVICES.metricServices[Options.metricToOptimize].metricWeights;
+        // this.modifiedMetricWeights = METRIC_SERVICES.metricServices[Options.metricToOptimize].metricWeights;
         const initialValues: number[] = this.getInitialValues();
         this.applyFitnessFunctionAndOptimizeMetricWeights(initialValues);
         const reportOptimizedMetric = this.getReportOptimizedMetric(astModel, jsonReport);
@@ -41,7 +42,8 @@ export class OptimizationService {
 
     private static applyFitnessFunctionAndOptimizeMetricWeights(initialValues: number[]): void {
         const solution = nelderMead(this.fitnessFunction.bind(this), initialValues, {maxIterations: 100});
-        // console.log(chalk.magentaBright('SOLUTIONNNN'), solution);
+        console.log(chalk.magentaBright('SOLUTIONNNN'), solution);
+        console.log(chalk.magentaBright('MWWWWW'), this.modifiedMetricWeights);
     }
 
     private static fitnessFunction(initialValues: number[]): number {
@@ -50,6 +52,7 @@ export class OptimizationService {
         const measureValues: number[] = dataToCorrelate.map(d => d.measureValue);
         const metricScores: number[] = dataToCorrelate.map(d => d.metricScore);
         const pearson: number = sampleCorrelation(measureValues, metricScores);
+        console.log(chalk.cyanBright('PEARSONNNN'), pearson);
         const valueToMinimize: number = 1 - pearson;
         return valueToMinimize;
     }
