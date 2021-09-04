@@ -8,7 +8,7 @@ export class GeneseCpxService extends AbstractMetricService {
     metricWeights: MetricWeights = {
         // "callbacks": 2,
         // "identifiers": 3,
-        "ifs": 1,
+        "ifs": 8,
         "loops": 1,
         "nesting": 0.5,
         // "recursions": 2,
