@@ -18,9 +18,8 @@ export class AstLine {
     text ?= '';                                             // The text of the line
 
 
-    constructor(textLine: string, issue: number) {
+    constructor(textLine: string) {
         this.text = textLine;
-        this.issue = issue;
     }
 
     get callbacks(): number {

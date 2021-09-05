@@ -13,6 +13,7 @@ export class AstCodeService {
         const intervalsOutsideClassesAndFunctions: Interval[] = this.getComplementaryIntervals(astAbstract);
         const text: string = this.getText(astAbstract, intervalsOutsideClassesAndFunctions);
         const astCode = new AstCode(astAbstract, text);
+        astCode.start = astAbstract.astNode.start;
         this.generateAstClassOrFunctionCodes(astAbstract, astCode);
         astCode.linesOutsideClassesAndFunctions = AstLineService.generate(astCode);
         return astCode;

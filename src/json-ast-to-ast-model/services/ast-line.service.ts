@@ -13,16 +13,17 @@ export class AstLineService {
         }
         let textLines: string[] = astCode.textOutsideClassesAndFunctions.split('\n');
         this.removeLastLineBreak(textLines);
-        let issue = 1;
+        let issueOutsideClassesAndFunctions = 1;
         const astLines: AstLine[] = [];
         let position: number = astCode.astAbstract.interval[0];
         for (const textLine of textLines) {
-            const astLine = new AstLine(textLine, issue);
-            astLine.pos = this.getLinePos(position, astCode.astAbstract, issue);
+            const astLine = new AstLine(textLine);
+            astLine.pos = this.getLinePos(position, astCode.astAbstract, issueOutsideClassesAndFunctions);
             astLine.end = astLine.pos + textLine.length;
             astLine.astNodes = this.getAstNodes(astCode.astAbstract, astLine.pos, astLine.end);
-            issue++;
+            issueOutsideClassesAndFunctions++;
             position = this.getPositionAfterTextLineAndLineBreak(position, textLine);
+            this.setLineIssue(astLine, astCode);
             astLine.setIdentifiersCpx();
             astLines.push(astLine);
         }
@@ -46,6 +47,13 @@ export class AstLineService {
 
     private static getPositionAfterTextLineAndLineBreak(position: number, textLine: string): number {
         return position + textLine.length + 1;
+    }
+
+    private static setLineIssue(astLine: AstLine, astCode: AstCode): void {
+        const lineStart = astLine.astNodes[0]?.start;
+        const fileText = astCode.astAbstract.astFileText;
+        const lineBreaks = fileText.slice(0, lineStart).split('\n').length;
+        astLine.issue = lineBreaks;
     }
 
 }

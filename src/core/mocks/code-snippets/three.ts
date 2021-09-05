@@ -1,4 +1,9 @@
 function zzz(a) {
-    if (a > 0) {
-    }
+    a = 3;
+}
+
+let a;
+
+class zzz {
+    b;
 }

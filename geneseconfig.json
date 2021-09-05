@@ -4,16 +4,13 @@
         "measure": "Time",
         "metrics": [
             {
+                "id": "dynamic",
+                "name": "dynamic",
+                "dynamic": true
+            },
+            {
                 "id": "genese-cpx",
                 "name": "genese-cpx"
-            },
-            {
-                "id": "identifiers",
-                "name": "#identifiers"
-            },
-            {
-                "id": "loc",
-                "name": "LOC"
             }
         ]
     }

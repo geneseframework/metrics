@@ -117,6 +117,11 @@ export function createFile(path: string, content: string): void {
     fs.writeFileSync(path, content, { encoding: "utf-8" });
 }
 
+export function ensureDirAndCopy(source: string, target: string): void {
+    fs.ensureDirSync(target);
+    fs.copySync(source, target);
+}
+
 // ------------------------------------------------------------------------------------------------------------
 // ----------------------------------   Paths management depending of the OS   --------------------------------
 // ------------------------------------------------------------------------------------------------------------
