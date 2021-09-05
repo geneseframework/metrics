@@ -17,10 +17,6 @@ export class AstFile extends AstAbstract {
         this.jsonAstFile = jsonAstFile;
     }
 
-    // get astLines(): AstLine[] {
-    //     return this.astCode?.astLines;
-    // }
-
     get descendants(): AstNode[] {
         return this.getDescendants(this.astNode);
     }

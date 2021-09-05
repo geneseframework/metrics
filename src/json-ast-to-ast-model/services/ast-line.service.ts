@@ -11,7 +11,6 @@ export class AstLineService {
 
     static setLines(astFile: AstFile): void {
         const codeSplit: string[] = astFile.text.split('\n');
-        // console.log(chalk.redBright('SETLPPPPPP'), astFile.text);
         console.log(chalk.yellowBright('DESCCCCC'), astFile.descendants.map(d => d.kind));
         let linePos = 0;
         for (let i = 0; i < codeSplit.length; i++) {
@@ -19,9 +18,9 @@ export class AstLineService {
             astLine.issue = i + 1;
             astLine.pos = linePos;
             astLine.end = astLine.pos + codeSplit[i].length;
-            astLine.astNodes = astFile.descendants.filter(d => isInInterval(d.pos, [linePos, linePos + astLine.end]));
-            console.log(chalk.blueBright('STLINNN'), astLine.issue);
-            console.log(chalk.blueBright('STLINNN'), astLine.astNodes.map(a => a.kind));
+            // console.log(chalk.redBright('SETLPPPPPP'), astLine.text, astLine.pos, astLine.end);
+            astLine.astNodes = astFile.descendants.filter(d => isInInterval(d.start, [linePos, astLine.end]));
+            // console.log(chalk.blueBright('STLINNN'), astLine.issue, astLine.astNodes.map(a => a.kind));
             linePos += codeSplit[i].length + 1;
             astLine.setIdentifiersCpx();
             astFile.astLines.push(astLine);
