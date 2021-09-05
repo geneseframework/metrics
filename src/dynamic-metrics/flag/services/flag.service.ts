@@ -14,8 +14,18 @@
 // import { addImportDeclarationFromRelativeOriginalPath, enumImports } from '../utils/ast-imports.util';
 
 import { Options } from '../../../core/models/options.model';
-import { Expression, SourceFile, Statement, SyntaxKind } from 'ts-morph';
+import {
+    Expression,
+    SourceFile,
+    Node,
+    Statement,
+    StatementedNode,
+    SyntaxKind,
+    SyntaxList,
+    ClassDeclaration
+} from 'ts-morph';
 import * as chalk from 'chalk';
+import { unique } from '../../../core/utils/arrays.util';
 
 const FORCE_CLONE = false;
 
@@ -42,7 +52,9 @@ export abstract class FlagService {
         // if (enumsImports.length > 0) {
         //     EnumService.setKuzzyEnumGetters(sourceFile, enumsImports);
         // }
-        sourceFile.saveSync();
+        console.log(chalk.blueBright('TXTTTTT'), sourceFile.getFullText());
+        // TODO : save flagged file
+        // sourceFile.saveSync();
     }
 
 //
@@ -59,22 +71,44 @@ export abstract class FlagService {
     }
 
     private static addImports(sourceFile: SourceFile): void {
+        // ts.has
         // addImportDeclarationFromRelativeOriginalPath(sourceFile, 'CreateInstance', '/frontend/flag/decorators/create-instance.decorator.ts');
         // addImportDeclarationFromRelativeOriginalPath(sourceFile, 'Flash', '/frontend/flag/decorators/flash.decorator.ts');
         // addImportDeclarationFromRelativeOriginalPath(sourceFile, 'parse', '/frontend/utils/coverage.util.ts');
         // addImportDeclarationFromRelativeOriginalPath(sourceFile, 'ClassEnum', '/frontend/flag/models/class-enum.model.ts');
     }
 
+
     private static flagStatements(sourceFile: SourceFile): void {
-        const statements: (Statement | Expression)[] = sourceFile.getDescendantStatements();
-        // console.log(chalk.greenBright('STATEMENTTTTSSSS'), statements);
-        for (const statement of statements) {
-            this.flagStatement(statement);
+    // private static flagStatements(sourceFile: Node | SourceFile): void {
+        const zzz = sourceFile.getStartLineNumber();
+        console.log(chalk.magentaBright('zzz'), zzz);
+        const firstNodes: Node[] = sourceFile.getDescendants().filter(d => d.isFirstNodeOnLine());
+        const starts: number[] = unique(firstNodes.map(f => f.getStart()).reverse());
+        console.log(chalk.magentaBright('STRTTTT'), starts);
+        for (const start of starts) {
+            console.log(chalk.greenBright('start'), start);
+            sourceFile.insertText(start, `// Flag\n`);
         }
+
+        console.log(chalk.blueBright('TXTTTTT'), sourceFile.getFullText());
     }
 
-    private static flagStatement(statement: (Statement | Expression)): void {
-        console.log(chalk.blueBright('STATEMENTTTT'), statement.getKindName());
+    // private static flagStatements(sourceFile: SourceFile): void {
+    //     let statements: (Statement | Expression)[] = sourceFile.getDescendantStatements();
+    //     statements = statements.sort((a, b) => b.getStart() - a.getStart());
+    //     // console.log(chalk.greenBright('STATEMENTTTTSSSS'), statements);
+    //     const starts: number[] = statements.map(s => s.getStart());
+    //     console.log(chalk.magentaBright('STATEMENTTTT'), starts);
+    //     for (const statement of statements) {
+    //         this.flagStatement(statement, sourceFile);
+    //     }
+    // }
+
+    private static flagStatement(statement: Statement | Expression, sourceFile: SourceFile): void {
+        console.log(chalk.blueBright('STATEMENTTTT'), statement.getKindName(), statement.getStart());
+        // const stt = statement as StatementedNode<any>;
+        sourceFile.insertStatements(0, `// Flaggggg\n`);
     }
 
 
