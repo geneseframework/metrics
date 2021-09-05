@@ -15,7 +15,7 @@ export class DynamicService {
         if (hasDynamicMetric) {
             this.createProject();
             this.createFlaggedProject();
-            FlagService.start();
+            FlagService.start(astModel);
         }
     }
 

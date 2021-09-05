@@ -26,28 +26,46 @@ import {
 } from 'ts-morph';
 import * as chalk from 'chalk';
 import { unique } from '../../../core/utils/arrays.util';
+import { AstModel } from '../../../core/models/ast-model/ast.model';
+import { AstFile } from '../../../core/models/ast-model/ast-file.model';
+import { AstLine } from '../../../core/models/ast-model/ast-line.model';
 
 const FORCE_CLONE = false;
 
 export abstract class FlagService {
 
 
-    static start(): void {
+    static start(astModel: AstModel): void {
         // await EnumService.createEnumerableFiles();
         if (FORCE_CLONE) {
             // await this.resetFlags();
         }
-        // console.log(chalk.yellowBright(`Flag ${GLOBAL.fileUtsToFlag.length} ${plural('file', GLOBAL.fileUtsToFlag.length)}...`));
-        for (const sourceFile of Options.project.getSourceFiles()) {
-            this.flagSourceFile(sourceFile);
+        for (const astFile of astModel.astFiles) {
+            console.log(chalk.greenBright('AST FILLL'), astFile.astLines.filter(a => a.astNodes.length > 0));
+            // console.log(chalk.greenBright('AST FILLL'), astFile.astLines.map(a => a.pos));
+            this.flagAstFile(astFile);
         }
+        // for (const sourceFile of Options.project.getSourceFiles()) {
+        //     this.flagSourceFile(sourceFile);
+        // }
     }
 
+
+    static flagAstFile(astFile: AstFile): void {
+        const sourceFile: SourceFile = Options.project.getSourceFile(astFile.name);
+        // console.log(chalk.greenBright('TXTTTTTTT'), sourceFile.getFullText());
+        // console.log(chalk.magentaBright('SRCFFFFF'), sourceFile?.getBaseName());
+        const astLines: AstLine[] = astFile.astLines.filter(a => a.astNodes.length > 0).sort((a, b) => b.issue - a.issue);
+        for (const astLine of astLines) {
+            // console.log(chalk.cyanBright('LINESSSS ISSUE'), astLine.issue, astLine.pos);
+            // sourceFile.insertText(astLine.pos, `flag(${astLine.issue});\n`);
+        }
+        // console.log(chalk.greenBright('TXTTTTTTT'), sourceFile.getFullText());
+    }
 
     static flagSourceFile(sourceFile: SourceFile): void {
         this.addImportDeclarations(sourceFile);
         this.flagStatements(sourceFile);
-        // this.flagInterfaces(sourceFile);
         // const enumsImports: ImportDeclaration[] = enumImports(getOriginalSourceFile(sourceFile));
         // if (enumsImports.length > 0) {
         //     EnumService.setKuzzyEnumGetters(sourceFile, enumsImports);
