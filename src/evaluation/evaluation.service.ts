@@ -33,7 +33,7 @@ export class EvaluationService {
         try {
             const reportMetric = new ReportMetric(astMetric.metric.name);
             for (const astFile of astMetric.astFiles) {
-                const reportSnippet = new ReportSnippet(removeExtension(astFile.name), astFile.code, astMetric.metric?.name);
+                const reportSnippet = new ReportSnippet(removeExtension(astFile.name), astFile.text, astMetric.metric?.name);
                 this.evaluateAstFileForMetric(astFile, reportSnippet, astMetric.metric);
                 this.setMeasure(reportSnippet);
                 reportMetric.reportSnippets.push(reportSnippet);

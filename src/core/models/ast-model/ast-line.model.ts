@@ -1,6 +1,3 @@
-/**
- * A line of a Code object
- */
 import { AstNode } from './ast-node.model';
 import { round } from '../../utils/numbers.util';
 import { MetricWeights } from '../../../evaluation/metrics/models/metric-weights.model';

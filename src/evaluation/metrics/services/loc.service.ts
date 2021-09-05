@@ -9,7 +9,7 @@ export class LocService extends AbstractMetricService {
     metricWeights = {};
 
     evaluate(astFile: AstFile, reportFile: ReportSnippet): void {
-        const astLines: AstLine[] = astFile.astCode.astLines;
+        const astLines: AstLine[] = astFile.astLines;
         for (let i = 0; i < astLines.length; i++) {
             const score = astLines[i].astNodes.length > 0 ? 1 : 0;
             const comments = astLines[i].astNodes.length > 0 ? '+1' : '';

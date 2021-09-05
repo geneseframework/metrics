@@ -14,7 +14,7 @@ export abstract class AbstractMetricService {
     abstract evaluate(astFile: AstFile, reportFile: ReportSnippet): void;
 
     protected evaluateMetric(astFile: AstFile, reportFile: ReportSnippet, metricWeights: MetricWeights): void {
-        const astLines: AstLine[] = astFile.astCode.astLines;
+        const astLines: AstLine[] = astFile.astLines;
         for (const astLine of astLines) {
             const reportLine = new ReportLine(astLine.issue, astLine.text, astLine.getComments(metricWeights), astLine.getScore(metricWeights));
             reportFile.lines.push(reportLine);

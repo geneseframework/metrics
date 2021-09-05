@@ -1,5 +1,5 @@
-function zzz(a) {
-    a = 3;
+function f(p: number) {
+    return p + 1;
 }
 
 let a;
