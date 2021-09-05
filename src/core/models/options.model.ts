@@ -11,6 +11,8 @@ export var WINDOWS = false;
  */
 export class Options {
 
+    static flaggedProject: Project = undefined;
+    static flaggedProjectPath: string = undefined;
     static generateJsonAst = true;
     static generateJsonReport = true;
     static hasMeasures = true;

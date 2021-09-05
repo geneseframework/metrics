@@ -4,15 +4,18 @@ import * as chalk from 'chalk';
 // import { GLOBAL } from './flag/const/global.const';
 import { Project } from 'ts-morph';
 import { Options } from '../core/models/options.model';
+import { ensureDirAndCopy } from '../core/utils/file-system.util';
+import { FlagService } from './flag/services/flag.service';
 
 export class DynamicService {
 
     static async start(astModel: AstModel): Promise<void> {
-        console.log(chalk.magentaBright('DYNAMICCCCC'), astModel);
+        // console.log(chalk.magentaBright('DYNAMICCCCC'), astModel);
         const hasDynamicMetric = true; // TODO
         if (hasDynamicMetric) {
             this.createProject();
-            // await FlagService.start();
+            this.createFlaggedProject();
+            FlagService.start();
         }
     }
 
@@ -20,17 +23,14 @@ export class DynamicService {
     private static createProject(): void {
         Options.project = new Project();
         const projectPath = `${Options.pathFolderToAnalyze}*.ts`;
-        console.log(chalk.blueBright('PATH PROJJJJ'), projectPath);
         Options.project.addSourceFilesAtPaths(projectPath);
-        console.log(chalk.blueBright('PATH PROJJJJ NB'), Options.project.getSourceFiles().length);
     }
 
 
-    // private static async createFlaggedProject(): Promise<void> {
-    //     copySync(GLOBAL.configFilePath, kuzzyPath(GLOBAL.configFilePath));
-    //     GLOBAL.flaggedProject = new Project({
-    //         tsConfigFilePath: kuzzyPath(GLOBAL.configFilePath),
-    //         skipFileDependencyResolution: true
-    //     });
-    // }
+    private static createFlaggedProject(): void {
+        Options.flaggedProjectPath = `${Options.pathCommand}/dist/flags/`;
+        ensureDirAndCopy(Options.pathFolderToAnalyze, Options.flaggedProjectPath);
+        Options.flaggedProject = new Project();
+        Options.flaggedProject.addSourceFilesAtPaths( `${Options.flaggedProjectPath}*.ts`);
+    }
 }

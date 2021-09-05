@@ -1,11 +1,5 @@
-// import { FunctionDeclaration, MethodDeclaration, Node, PropertyDeclaration, SourceFile, SyntaxKind } from 'ts-morph';
-// // import { MethodOrFunctionDeclaration } from '../../frontend/flag/types/method-or-function-declaration.type';
-// // import { originalPath } from '../../frontend/utils/kuzzy-folder.util';
-// import { GLOBAL } from '../const/global.const';
-// import { MethodOrFunctionDeclaration } from '../types/method-or-function-declaration.type';
-// import { originalPath } from './kuzzy-folder.util';
-//
-//
+import { SourceFile } from 'ts-morph';
+
 // export function isVoidMethod(methodOrFunctionDeclaration: MethodOrFunctionDeclaration): boolean {
 //     // const sourceFile: SourceFile = methodDeclaration.getSourceFile();
 //     // const sourceFile: SourceFile = GLOBAL.project.getSourceFile(filePath);
@@ -17,14 +11,12 @@
 // // function isVoidMethodNode(node: MethodDeclaration | FunctionDeclaration): boolean {
 //     return methodOrFunctionDeclaration?.getStructure().returnType === 'void';
 // }
-//
-//
+
 // export function hasStatements(sourceFile: SourceFile): boolean {
 //     return sourceFile.getClasses().filter(c => c.getDescendantStatements().length > 0).length > 0
 //         || sourceFile.getFunctions().filter(c => c.getDescendantStatements().length > 0).length > 0;
 // }
-//
-//
+
 // export function getDeclaration(node: Node): PropertyDeclaration | FunctionDeclaration | MethodDeclaration {
 //     if (!node) {
 //         return undefined;

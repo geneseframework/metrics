@@ -12,23 +12,39 @@
 // import { InitService } from './init.service';
 // import { getOriginalSourceFile, hasStatements } from '../utils/ast-statements.util';
 // import { addImportDeclarationFromRelativeOriginalPath, enumImports } from '../utils/ast-imports.util';
-//
-// const FORCE_CLONE = false;
-//
-// export abstract class FlagService {
-//
-//
-//     static async start(): Promise<void> {
-//         await EnumService.createEnumerableFiles();
-//         if (FORCE_CLONE) {
-//             await this.resetFlags();
-//         }
-//         console.log(chalk.yellowBright(`Flag ${GLOBAL.fileUtsToFlag.length} ${plural('file', GLOBAL.fileUtsToFlag.length)}...`));
-//         for (const sourceFile of GLOBAL.fileUtsToFlag) {
-//             await this.flagSourceFile(sourceFile);
-//         }
-//     }
-//
+
+import { Options } from '../../../core/models/options.model';
+import { Expression, SourceFile, Statement, SyntaxKind } from 'ts-morph';
+import * as chalk from 'chalk';
+
+const FORCE_CLONE = false;
+
+export abstract class FlagService {
+
+
+    static start(): void {
+        // await EnumService.createEnumerableFiles();
+        if (FORCE_CLONE) {
+            // await this.resetFlags();
+        }
+        // console.log(chalk.yellowBright(`Flag ${GLOBAL.fileUtsToFlag.length} ${plural('file', GLOBAL.fileUtsToFlag.length)}...`));
+        for (const sourceFile of Options.project.getSourceFiles()) {
+            this.flagSourceFile(sourceFile);
+        }
+    }
+
+
+    static flagSourceFile(sourceFile: SourceFile): void {
+        this.addImportDeclarations(sourceFile);
+        this.flagStatements(sourceFile);
+        // this.flagInterfaces(sourceFile);
+        // const enumsImports: ImportDeclaration[] = enumImports(getOriginalSourceFile(sourceFile));
+        // if (enumsImports.length > 0) {
+        //     EnumService.setKuzzyEnumGetters(sourceFile, enumsImports);
+        // }
+        sourceFile.saveSync();
+    }
+
 //
 //     private static async resetFlags(): Promise<void> {
 //         await removeFiles(GLOBAL.flaggedProject.getSourceFiles().map(s => s.getFilePath()));
@@ -36,51 +52,32 @@
 //         await InitService.resetFlaggedProject();
 //         GLOBAL.fileUtsToFlag = GLOBAL.flaggedProject.getSourceFiles();
 //     }
-//
-//
-//     static async flagSourceFile(sourceFile: SourceFile): Promise<void> {
-//         if (hasStatements(sourceFile)) {
-//             this.addImportDeclarations(sourceFile);
-//             await this.flagClassesAndFunctions(sourceFile);
-//         }
-//         this.flagInterfaces(sourceFile);
-//         const enumsImports: ImportDeclaration[] = enumImports(getOriginalSourceFile(sourceFile));
-//         if (enumsImports.length > 0) {
-//             EnumService.setKuzzyEnumGetters(sourceFile, enumsImports);
-//         }
-//         await sourceFile.save();
-//     }
-//
-//
-//     private static addImportDeclarations(sourceFile: SourceFile): void {
-//         if (getExtension(sourceFile.getBaseName()) !== 'ts') {
-//             // TODO : .js case
-//             return;
-//         }
-//         this.addImports(sourceFile);
-//         KzFilePathService.addConstants(sourceFile);
-//     }
-//
-//
-//     private static addImports(sourceFile: SourceFile): void {
-//         addImportDeclarationFromRelativeOriginalPath(sourceFile, 'CreateInstance', '/frontend/flag/decorators/create-instance.decorator.ts');
-//         addImportDeclarationFromRelativeOriginalPath(sourceFile, 'Flash', '/frontend/flag/decorators/flash.decorator.ts');
-//         addImportDeclarationFromRelativeOriginalPath(sourceFile, 'parse', '/frontend/utils/coverage.util.ts');
-//         addImportDeclarationFromRelativeOriginalPath(sourceFile, 'ClassEnum', '/frontend/flag/models/class-enum.model.ts');
-//     }
-//
-//
-//     private static async flagClassesAndFunctions(sourceFile: SourceFile): Promise<void> {
-//         for (const classDeclaration of sourceFile.getClasses()) {
-//             KzFilePathService.setClassDecorator(classDeclaration);
-//             await FlagMethodsService.flagMethods(classDeclaration);
-//         }
-//         for (const functionDeclaration of sourceFile.getFunctions()) {
-//             await FlagStatementsService.flagStatements(new CallerInformations(functionDeclaration));
-//         }
-//     }
-//
-//
+
+    private static addImportDeclarations(sourceFile: SourceFile): void {
+        this.addImports(sourceFile);
+        // KzFilePathService.addConstants(sourceFile);
+    }
+
+    private static addImports(sourceFile: SourceFile): void {
+        // addImportDeclarationFromRelativeOriginalPath(sourceFile, 'CreateInstance', '/frontend/flag/decorators/create-instance.decorator.ts');
+        // addImportDeclarationFromRelativeOriginalPath(sourceFile, 'Flash', '/frontend/flag/decorators/flash.decorator.ts');
+        // addImportDeclarationFromRelativeOriginalPath(sourceFile, 'parse', '/frontend/utils/coverage.util.ts');
+        // addImportDeclarationFromRelativeOriginalPath(sourceFile, 'ClassEnum', '/frontend/flag/models/class-enum.model.ts');
+    }
+
+    private static flagStatements(sourceFile: SourceFile): void {
+        const statements: (Statement | Expression)[] = sourceFile.getDescendantStatements();
+        // console.log(chalk.greenBright('STATEMENTTTTSSSS'), statements);
+        for (const statement of statements) {
+            this.flagStatement(statement);
+        }
+    }
+
+    private static flagStatement(statement: (Statement | Expression)): void {
+        console.log(chalk.blueBright('STATEMENTTTT'), statement.getKindName());
+    }
+
+
 //     private static flagInterfaces(sourceFile: SourceFile): void {
 //         const interfaceDeclarations: InterfaceDeclaration[] = sourceFile.getInterfaces();
 //         for (const interfaceDeclaration of interfaceDeclarations) {
@@ -94,4 +91,4 @@
 //             methodSignature.addParameter({ name: 'callingInstancePath', type: 'any' });
 //         }
 //     }
-// }
+}

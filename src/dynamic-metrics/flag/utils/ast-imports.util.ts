@@ -1,3 +1,4 @@
+import { SourceFile } from 'ts-morph';
 // import {
 //     Identifier,
 //     ImportDeclaration,
@@ -46,17 +47,18 @@
 //         addImportDeclaration(sourceFile, importName, path);
 //     }
 // }
-//
-//
-// export function addImportDeclaration(sourceFile: SourceFile, importName: string, path: string): void {
-//     const defaultImport = `{ ${importName} }`;
-//     sourceFile.addImportDeclaration({
-//         defaultImport: defaultImport,
-//         moduleSpecifier: path
-//     });
-// }
-//
-//
+
+
+
+export function addImportDeclaration(sourceFile: SourceFile, importName: string, path: string): void {
+    const defaultImport = `{ ${importName} }`;
+    sourceFile.addImportDeclaration({
+        defaultImport: defaultImport,
+        moduleSpecifier: path
+    });
+}
+
+
 // export function getDefaultImport(importDeclaration: ImportDeclaration): string {
 //     const importSpecifiers: ImportSpecifier[] = importDeclaration.getNamedImports();
 //     return importSpecifiers.length > 0 ? importSpecifiers[0].getName() : undefined;
