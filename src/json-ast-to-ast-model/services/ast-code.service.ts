@@ -6,16 +6,22 @@ import { Interval, isInInterval } from '../types/interval.type';
 import { AstAbstract } from '../../core/models/ast-model/ast-abstract.model';
 import { firstElement } from '../../core/utils/arrays.util';
 import { AstLineService } from './ast-line.service';
+import * as chalk from 'chalk';
 
 export class AstCodeService {
 
     static generate(astAbstract: AstAbstract): AstCode {
         const intervalsOutsideClassesAndFunctions: Interval[] = this.getComplementaryIntervals(astAbstract);
         const text: string = this.getText(astAbstract, intervalsOutsideClassesAndFunctions);
+        // console.log(chalk.blueBright('CODDDD'), astAbstract.text);
         const astCode = new AstCode(astAbstract, text);
         astCode.start = astAbstract.astNode.start;
+        // console.log(chalk.magentaBright('AST NODDDD'), astAbstract.astNode.jsonAstNode, astAbstract.astNode.kind);
+        // console.log(chalk.cyanBright('AST CODDDD'), astCode);
         this.generateAstClassOrFunctionCodes(astAbstract, astCode);
         astCode.linesOutsideClassesAndFunctions = AstLineService.generate(astCode);
+        // console.log(chalk.greenBright('LINNNNN'), astCode.astLines);
+        // throw 0
         return astCode;
     }
 

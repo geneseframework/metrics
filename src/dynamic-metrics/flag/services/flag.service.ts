@@ -41,7 +41,7 @@ export abstract class FlagService {
             // await this.resetFlags();
         }
         for (const astFile of astModel.astFiles) {
-            console.log(chalk.greenBright('AST FILLL'), astFile.astLines.filter(a => a.astNodes.length > 0));
+            // console.log(chalk.greenBright('AST FILLL'), astFile.astLines.filter(a => a.astNodes.length > 0));
             // console.log(chalk.greenBright('AST FILLL'), astFile.astLines.map(a => a.pos));
             this.flagAstFile(astFile);
         }

@@ -11,6 +11,10 @@
             {
                 "id": "genese-cpx",
                 "name": "genese-cpx"
+            },
+            {
+                "id": "loc",
+                "name": "LOC"
             }
         ]
     }

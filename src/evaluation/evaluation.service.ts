@@ -19,7 +19,7 @@ export class EvaluationService {
 
     static evaluate(astModel: AstModel, measures: Measure[]): JsonReportInterface {
         const reportModel = new ReportModel();
-        // console.log(chalk.blueBright('AST MODELLLLL'), astModel);
+        console.log(chalk.blueBright('AST MODELLLLL'), astModel);
         reportModel.measureName = astModel.measure;
         this.measures = measures;
         for (const astMetric of astModel.astMetrics) {
