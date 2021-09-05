@@ -4,7 +4,6 @@ import { AstLine } from '../../core/models/ast-model/ast-line.model';
 import { AstNode } from '../../core/models/ast-model/ast-node.model';
 import { firstElement } from '../../core/utils/arrays.util';
 import { Interval } from '../types/interval.type';
-import * as chalk from 'chalk';
 
 export class AstLineService {
 
@@ -14,14 +13,15 @@ export class AstLineService {
         }
         let textLines: string[] = astCode.textOutsideClassesAndFunctions.split('\n');
         this.removeLastLineBreak(textLines);
-        let issue = 1;
+        let issueOutsideClassesAndFunctions = 1;
         const astLines: AstLine[] = [];
         let position: number = astCode.astAbstract.interval[0];
         for (const textLine of textLines) {
-            const astLine = new AstLine(textLine, issue);
-            astLine.pos = this.getLinePos(position, astCode.astAbstract, issue);
+            const astLine = new AstLine(textLine);
+            astLine.pos = this.getLinePos(position, astCode.astAbstract, issueOutsideClassesAndFunctions);
             astLine.end = astLine.pos + textLine.length;
-            astLine.astNodes = this.getAstNodes(astCode.astAbstract, astLine.pos, astLine.end);issue++;
+            astLine.astNodes = this.getAstNodes(astCode.astAbstract, astLine.pos, astLine.end);
+            issueOutsideClassesAndFunctions++;
             position = this.getPositionAfterTextLineAndLineBreak(position, textLine);
             this.setLineIssue(astLine, astCode);
             astLine.setIdentifiersCpx();
@@ -54,7 +54,6 @@ export class AstLineService {
         const fileText = astCode.astAbstract.astFileText;
         const lineBreaks = fileText.slice(0, lineStart).split('\n').length;
         astLine.issue = lineBreaks;
-        // console.log(chalk.blueBright('AST CODE STARTTTT'), astCode.start, lineStart, lineBreaks);
     }
 
 }
