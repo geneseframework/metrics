@@ -70,7 +70,7 @@ export abstract class FlagService {
         // if (enumsImports.length > 0) {
         //     EnumService.setKuzzyEnumGetters(sourceFile, enumsImports);
         // }
-        console.log(chalk.blueBright('TXTTTTT'), sourceFile.getFullText());
+        // console.log(chalk.blueBright('TXTTTTT'), sourceFile.getFullText());
         // TODO : save flagged file
         // sourceFile.saveSync();
     }
