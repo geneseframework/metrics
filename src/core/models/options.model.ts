@@ -1,6 +1,7 @@
 import * as fs from 'fs-extra';
 import { fileExists, getArrayOfPathsWithDotSlash, getPathWithSlash, } from '../utils/file-system.util';
 import { MetricInterface } from '../interfaces/json-report/metric.interface';
+import { Project } from 'ts-morph';
 
 export var WINDOWS = false;
 
@@ -25,6 +26,7 @@ export class Options {
     static pathFolderToAnalyze = './';          // The path of the folder to analyse (can be overridden)
     static pathGeneseNodeJs = '';               // The path of the node_module Genese in the nodejs user environment (can't be overridden)
     static pathOutDir = '';                     // The path where the reports are created (can be overridden)
+    static project: Project = undefined;
     static typing = true;                       // True if we want to add a complexity weight for lacks of typing
 
     /**

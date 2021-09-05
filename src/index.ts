@@ -14,6 +14,7 @@ import { Measure } from './report-generation/models/measure.model';
 import { DatasetService } from './dataset-import/dataset.service';
 import { OptimizationService } from './optimization/optimization.service';
 import { CorrelationService } from './correlation/correlation.service';
+import { DynamicService } from './dynamic-metrics/dynamic.service';
 
 
 async function start(): Promise<void> {
@@ -25,6 +26,8 @@ async function start(): Promise<void> {
     const jsonAst: JsonAstInterface = Options.generateJsonAst ? JsonAstCreationService.start(Options.pathFolderToAnalyze) : require(Options.jsonAstPath);
     console.log(chalk.yellowBright('Ast model generation...'));
     const astModel: AstModel = AstModelService.generate(jsonAst);
+    console.log(chalk.yellowBright('Execute dynamic metrics...'));
+    await DynamicService.start(astModel);
     console.log(chalk.yellowBright('Collect measures from dataset...'));
     const measures: Measure[] = DatasetService.getMeasures();
     console.log(chalk.yellowBright('Evaluation for each metric...'));
