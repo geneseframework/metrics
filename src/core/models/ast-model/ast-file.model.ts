@@ -3,6 +3,7 @@ import { AstAbstract } from './ast-abstract.model';
 import { MetricParamValues } from '../../../evaluation/metrics/models/metric-param-value.model';
 import { AstLine } from './ast-line.model';
 import { AstNode } from './ast-node.model';
+import * as chalk from 'chalk';
 
 export class AstFile extends AstAbstract {
 
@@ -21,9 +22,14 @@ export class AstFile extends AstAbstract {
     // }
 
     get descendants(): AstNode[] {
+        return this.getDescendants(this.astNode);
+    }
+
+    getDescendants(parent: AstNode): AstNode[] {
         const descendants: AstNode[] = [];
-        for (const child of this.astNode.children) {
-            descendants.push(...child.descendants);
+        for (const child of parent.children) {
+            descendants.push(child);
+            descendants.push(...this.getDescendants(child));
         }
         return descendants;
     }
