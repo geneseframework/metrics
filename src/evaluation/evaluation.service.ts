@@ -19,7 +19,7 @@ export class EvaluationService {
 
     static evaluate(astModel: AstModel, measures: Measure[]): JsonReportInterface {
         const reportModel = new ReportModel();
-        console.log(chalk.blueBright('AST MODELLLLL'), astModel);
+        // console.log(chalk.blueBright('AST MODELLLLL'), astModel);
         reportModel.measureName = astModel.measure;
         this.measures = measures;
         for (const astMetric of astModel.astMetrics) {
@@ -33,7 +33,7 @@ export class EvaluationService {
         try {
             const reportMetric = new ReportMetric(astMetric.metric.name);
             for (const astFile of astMetric.astFiles) {
-                const reportSnippet = new ReportSnippet(removeExtension(astFile.name), astFile.code, astMetric.metric?.name);
+                const reportSnippet = new ReportSnippet(removeExtension(astFile.name), astFile.text, astMetric.metric?.name);
                 this.evaluateAstFileForMetric(astFile, reportSnippet, astMetric.metric);
                 this.setMeasure(reportSnippet);
                 reportMetric.reportSnippets.push(reportSnippet);
