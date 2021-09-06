@@ -31,6 +31,15 @@ export function lastElement<T>(array: T[]): T {
     return Array.isArray(array) && array.length > 0 ? array[array.length - 1] : undefined;
 }
 
+/**
+ * Checks if a number is the last index of a given array
+ * @param i         // The index
+ * @param arr       // The array
+ */
+export function isLastIndex(i: number, arr: any[]): boolean {
+    return (i === arr.length - 1);
+}
+
 export function haveSameElements(array1: any[] = [], array2: any[] = []): boolean {
     if (array1.length !== array2.length) {
         return false;

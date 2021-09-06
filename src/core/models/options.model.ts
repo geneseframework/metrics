@@ -29,6 +29,7 @@ export class Options {
     static pathOutDir = '';                     // The path where the reports are created (can be overridden)
     static pathReport = '';                     // The path where the reports are created (can be overridden)
     static project: Project = undefined;
+    static traceFunctionName = 'traceProcess';
     static typing = true;                       // True if we want to add a complexity weight for lacks of typing
 
     /**

@@ -9,3 +9,9 @@ function start(args: string[]): void {
     var2 = temp;
     console.log(var1);
 }
+
+
+export function traceProcess() {
+    start([]);
+}
+const console = {log: (...args) => {}}

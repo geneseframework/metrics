@@ -6,8 +6,6 @@ export class AstFileService {
 
     static generate(jsonAstFile: JsonAstFileInterface): AstFile {
         const astFile = new AstFile(jsonAstFile);
-        astFile.text = jsonAstFile.text;
-        astFile.name = jsonAstFile.name;
         AstLineService.setLines(astFile);
         return astFile;
     }

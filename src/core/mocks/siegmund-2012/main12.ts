@@ -3,8 +3,7 @@
 function start(args: string[]): void {
     let word = "otto";
     let result = true;
-    for (let i = 0, j = word.length - 1; i < word.length/2; i++, // Note: "int" before j had to be removed to allow compilation
-        j--) {
+    for (let i = 0, j = word.length - 1; i < word.length/2; i++, j--) {  // Note: "int" before j had to be removed to allow compilation
         if (word.charAt(i) != word.charAt(j)) {
             result = false;
             break;
@@ -12,4 +11,10 @@ function start(args: string[]): void {
     }
     console.log(result);
 }
+
+
+export function traceProcess() {
+    start([]);
+}
+const console = {log: (...args) => {}}
 

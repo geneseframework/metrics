@@ -8,12 +8,20 @@ function start(args: string[]): void {
     let index1 = word.indexOf(key1);
     let index2 = word.indexOf(key2);
 
-    if (index1 != -1)
+    if (index1 != -1) {
         console.log("Substring is contained: " + key1);
-    else
+    } else {
         console.log("Substring is not contained: " + key1);
-    if (index2 != -1)
+    }
+    if (index2 != -1) {
         console.log("Substring is contained: " + key2);
-    else
+    } else {
         console.log("Substring is not contained: " + key2);
+    }
 }
+
+
+export function traceProcess() {
+    start([]);
+}
+const console = {log: (...args) => {}}

@@ -7,7 +7,13 @@ function start(args: string[]): void {
 
     while (number!= 0) {
         result = result + number % 10;
-        number = number / 10;
+        number = Math.floor(number / 10) // originally number = number / 10 in Java;
     }
     console.log(result);
 }
+
+
+export function traceProcess() {
+    start([]);
+}
+const console = {log: (...args) => {}}

@@ -7,13 +7,19 @@ function start(args: string[]): void {
     let index2 = array.length - 1;
     while (index1 <= index2) {
         let m = (index1 + index2) / 2;
-        if (key < array[m])
+        if (key < array[m]) {
             index2 = m - 1;
-        else if (key > array[m])
+        } else if (key > array[m]) {
             index1 = m + 1;
-        else {
+        } else {
             console.log(m);
             break;
         }
     }
 }
+
+
+export function traceProcess() {
+    start([]);
+}
+const console = {log: (...args) => {}}

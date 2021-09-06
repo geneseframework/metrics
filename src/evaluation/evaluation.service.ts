@@ -26,6 +26,7 @@ export class EvaluationService {
             this.evaluateAstMetric(reportModel, astMetric);
         }
         this.setMetricParamValues(reportModel, astModel);
+        // console.log(chalk.blueBright('REPORT MODELLLLL'), reportModel.reportMetrics[0]);
         return reportModel;
     }
 

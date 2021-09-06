@@ -1,15 +1,16 @@
 function start(p: number) {
     let a = 3;
     const z = 5;
+    for (let i = 0; i < 3; i++) {
+        a = a + i;
+    }
     return p + a + z;
 }
 
-var LINES = [];
-export function main() {
+export function traceProcess() {
     start(2);
-    return LINES;
 }
-// start(2);
+
 // class ZZZ {
 //
 //     b;
