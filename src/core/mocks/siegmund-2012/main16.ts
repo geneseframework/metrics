@@ -6,3 +6,9 @@ function start(args: string[]): void {
     let result = (a + b) / 2;
     console.log(result);
 }
+
+
+export function traceProcess() {
+    start([]);
+}
+const console = {log: (...args) => {}}

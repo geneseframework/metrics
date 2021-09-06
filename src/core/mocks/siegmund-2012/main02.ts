@@ -18,5 +18,11 @@ function start(args: string[]): void {
             counter++;
         }
     }
-    console.log(counter);
+    // console.log(counter);
 }
+
+export function traceProcess() {
+    start([]);
+}
+const console = {log: (...args) => {}}
+

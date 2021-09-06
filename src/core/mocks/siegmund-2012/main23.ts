@@ -10,3 +10,9 @@ function start(args: string[]): void {
         console.log(array[i]);
     }
 }
+
+
+export function traceProcess() {
+    start([]);
+}
+const console = {log: (...args) => {}}

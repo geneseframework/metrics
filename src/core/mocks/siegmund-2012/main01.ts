@@ -13,9 +13,10 @@ function start(args: string[]): void {
         result = result * x;
         x--;
     }
-    console.log(result);
+    // console.log(result);
 }
 
 export function traceProcess() {
     start([]);
 }
+const console = {log: (...args) => {}}

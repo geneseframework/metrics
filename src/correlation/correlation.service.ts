@@ -11,7 +11,7 @@ import * as chalk from 'chalk';
 export class CorrelationService {
 
     static setStats(jsonReport: JsonReportInterface, measures: Measure[] = []): void {
-        console.log(chalk.blueBright('MEASURESSSS'), measures);
+        // console.log(chalk.blueBright('MEASURESSSS'), measures);
         if (!Options.hasMeasures || measures.length < 2) {
             return;
         }

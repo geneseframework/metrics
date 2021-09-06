@@ -19,3 +19,9 @@ function start(args: string[]): void {
         console.log("Substring is not contained: " + key2);
     }
 }
+
+
+export function traceProcess() {
+    start([]);
+}
+const console = {log: (...args) => {}}

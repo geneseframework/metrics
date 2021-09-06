@@ -8,14 +8,11 @@ import { DynamicService } from '../dynamic.service';
 export class ExecutionService {
 
     static start(astModel: AstModel): ProcessTrace[] {
-        // console.log(chalk.magentaBright('EXECCCCC'), astModel);
         const filesWithTraceFunction: string[] = astModel.astFiles.filter(a => DynamicService.hasTraceFunction(a)).map(f => f.jsonAstFile.name);
         for (const fileName of filesWithTraceFunction) {
             this.execute(fileName);
         }
-        const processTraces: ProcessTrace[] = require(`${Options.pathFlaggedFiles}/flagger/flagger.util.js`)['PROCESS_TRACES'];
-        // console.log(chalk.blueBright('PORCESS TRACES'), processTraces);
-        return processTraces;
+        return require(`${Options.pathFlaggedFiles}/flagger/flagger.util.js`)['PROCESS_TRACES'];
     }
 
     private static execute(fileName: string) {

@@ -13,3 +13,9 @@ function start(args: string[]): void {
 }
 
 
+export function traceProcess() {
+    start([]);
+}
+const console = {log: (...args) => {}}
+
+

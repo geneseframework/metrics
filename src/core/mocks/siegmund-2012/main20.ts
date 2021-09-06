@@ -10,8 +10,14 @@ function start(args: string[]): void {
         } else {
             result = "1" + result;
         }
-        i=i/2;
+        i = Math.floor(i / 2); // originally in Java :  i=i/2;
     }
 
     console.log(result);
 }
+
+
+export function traceProcess() {
+    start([]);
+}
+const console = {log: (...args) => {}}
