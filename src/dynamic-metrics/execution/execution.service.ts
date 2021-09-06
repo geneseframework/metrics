@@ -13,6 +13,7 @@ export class ExecutionService {
     }
 
     private static execute(fileName: string) {
+        console.log(chalk.cyanBright('BEFORE EXECCCC'));
         const zz = execSync(`tsc ${Options.pathOutDir}/**/*.ts`, {encoding: 'utf-8'});
         console.log(chalk.cyanBright('ZZZ'), zz);
 

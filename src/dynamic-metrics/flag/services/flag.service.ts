@@ -32,7 +32,7 @@ export abstract class FlagService {
         for (const astLine of astLinesInReverseOrder) {
             sourceFile.insertText(astLine.pos, `flag(${astLine.issue});\n`);
         }
-        addImportDeclaration(sourceFile, 'flag', './flag/flagger.util.js');
+        addImportDeclaration(sourceFile, 'flag', './flagger/flagger.util.js');
         console.log(chalk.blueBright('FILE TXTTTTT'), sourceFile.getFullText());
         sourceFile.saveSync();
     }
