@@ -35,7 +35,10 @@ export class DynamicService {
         console.log(chalk.magentaBright('TRACESSSS'), processTraces);
         const astFiles: AstFile[] = [];
         for (const astFile of astModel.astFiles) {
-            astFiles.push(this.getAstFileWithDynamicCode(astFile, processTraces));
+            console.log(chalk.cyanBright('HAS TRACEEEE'), this.hasTraceFunction(astFile));
+            if (this.hasTraceFunction(astFile)) {
+                astFiles.push(this.getAstFileWithDynamicCode(astFile, processTraces));
+            }
         }
         for (const astMetric of astModel.astMetrics) {
             astMetric.astFiles = astFiles;
@@ -46,21 +49,26 @@ export class DynamicService {
         const dynamicAstFile = new AstFile(astFile.jsonAstFile);
         const astLines: AstLine[] = [];
         const processTrace: ProcessTrace = processTraces.find(p => p.fileName === astFile.name);
-        console.log(chalk.cyanBright('TRACEEEEE'), processTrace);
+        // console.log(chalk.cyanBright('TRACEEEEE'), processTrace);
         let hasCalledStartMethod = false;
         for (const line of processTrace.lines) {
             const astLine: AstLine = astFile.astLines.find(a => a.issue === line);
-            console.log(chalk.cyanBright('LINEEEE'), astLine.text);
+            // console.log(chalk.cyanBright('LINEEEE'), astLine.text);
             if (hasCalledStartMethod) {
-                console.log(chalk.greenBright('LINEEEE'), astLine.text);
+                // console.log(chalk.greenBright('LINEEEE'), astLine.text);
                 astLines.push(astLine);
             } else {
                 hasCalledStartMethod = this.hasCalledStartMethod(astLine);
             }
         }
         dynamicAstFile.astLines = astLines;
-        console.log(chalk.cyanBright('DYN LINEEEE'), astLines);
+        // console.log(chalk.cyanBright('DYN LINEEEE'), astLines);
         return dynamicAstFile;
+    }
+
+    static hasTraceFunction(astFile: AstFile): boolean {
+        // console.log(chalk.greenBright('CHILDRRRRR'), astFile.astNode.children);
+        return !!astFile.astNode.children.find(c => c.kind === 'FunctionDeclaration' && c.name === Options.traceFunctionName);
     }
 
     private static hasCalledStartMethod(astLine: AstLine): boolean {

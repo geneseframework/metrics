@@ -7,7 +7,7 @@ function start(p: number) {
     return p + a + z;
 }
 
-export function trace() {
+export function traceProcess() {
     start(2);
 }
 

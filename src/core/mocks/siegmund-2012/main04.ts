@@ -12,6 +12,7 @@ function start(args: string[]): void {
         }
     }
 
-    for (let counter3 = 0; counter3 < array.length; counter3++)
+    for (let counter3 = 0; counter3 < array.length; counter3++) {
         console.log(array[counter3]);
+    }
 }

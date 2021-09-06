@@ -5,9 +5,11 @@ function start(args: string[]): void {
     let string2 = "Hamburg";
 
     let length;
-    if (string1.length < string2.length)
+    if (string1.length < string2.length) {
         length = string1.length;
-    else length = string2.length;
+    } else {
+        length = string2.length;
+    }
 
     let counter=0;
 
