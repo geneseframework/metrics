@@ -1,25 +1,25 @@
 import * as chalk from 'chalk';
 import { AstModel } from '../../core/models/ast-model/ast.model';
 import { Options } from '../../core/models/options.model';
-import { execSync } from 'child_process';
 import { removeExtension } from '../../core/utils/file-system.util';
+import { ProcessTrace } from '../flag/flagger/process-trace.model';
 
 export class ExecutionService {
 
     static start(astModel: AstModel) {
-        // console.log(chalk.magentaBright('EXECCCCC'), astModel.astFileNames);
+        // console.log(chalk.magentaBright('EXECCCCC'), astModel);
         for (const fileName of astModel.astFileNames) {
             this.execute(fileName);
         }
+        const processTraces: ProcessTrace[] = require(`${Options.pathFlaggedFiles}/flagger/flagger.util.js`)?.PROCESS_TRACES;
+        // console.log(chalk.blueBright('PORCESS TRACES'), processTraces);
     }
 
     private static execute(fileName: string) {
         const jsFileName = `${removeExtension(fileName)}.js`;
         const flaggedFilePath = `${Options.pathFlaggedFiles}/${jsFileName}`;
-        console.log(chalk.cyanBright('PATHHH'), flaggedFilePath);
         const flaggedFile = require(flaggedFilePath);
-        console.log(chalk.blueBright('START FNNNN'), flaggedFile);
-        flaggedFile.main();
+        flaggedFile.trace();
     }
 
 }

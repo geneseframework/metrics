@@ -16,14 +16,13 @@ export abstract class FlagService {
         for (const astFile of astModel.astFiles) {
             this.flagAstFile(astFile);
         }
+        this.transpile();
     }
 
     private static copyFlagger(): void {
         const source2 = `${Options.pathCommand}/src/dynamic-metrics/flag/flagger`;
         const target2 = `${Options.pathFlaggedFiles}/flagger`;
         ensureDirAndCopy(source2, target2);
-        execSync(`tsc ${Options.pathOutDir}/**/*.ts`, {encoding: 'utf-8'});
-        execSync(`tsc ${Options.pathOutDir}/flagged-files/flagger/*.ts`, {encoding: 'utf-8'});
     }
 
     private static flagAstFile(astFile: AstFile): void {
@@ -31,11 +30,17 @@ export abstract class FlagService {
         const astLinesInReverseOrder: AstLine[] = astFile.astLines.filter(a => a.astNodes.length > 0)
             .sort((a, b) => b.issue - a.issue);
         for (const astLine of astLinesInReverseOrder) {
-            sourceFile.insertText(astLine.pos, `flag(${astLine.issue});\n`);
+            sourceFile.insertText(astLine.pos, `flag('${astFile.name}', ${astLine.issue});\n`);
         }
         addImportDeclaration(sourceFile, 'flag', './flagger/flagger.util.js');
         // console.log(chalk.blueBright('FILE TXTTTTT'), sourceFile.getFullText());
         sourceFile.saveSync();
     }
+
+    private static transpile(): void {
+        execSync(`tsc ${Options.pathOutDir}/**/*.ts`, {encoding: 'utf-8'});
+        execSync(`tsc ${Options.pathOutDir}/flagged-files/flagger/*.ts`, {encoding: 'utf-8'});
+    }
+
 
 }

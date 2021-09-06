@@ -4,7 +4,7 @@ function start(p: number) {
     return p + a + z;
 }
 
-export function main() {
+export function trace() {
     start(2);
 }
 
