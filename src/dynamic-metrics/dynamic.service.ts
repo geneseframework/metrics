@@ -12,10 +12,10 @@ export class DynamicService {
         // console.log(chalk.magentaBright('DYNAMICCCCC'), astModel);
         const hasDynamicMetric = true; // TODO
         if (hasDynamicMetric) {
-            this.createProject();
+            // this.createProject();
             this.createFlaggedProject();
             FlagService.start(astModel);
-            ExecutionService.start();
+            ExecutionService.start(astModel);
         }
     }
 
@@ -28,9 +28,9 @@ export class DynamicService {
 
 
     private static createFlaggedProject(): void {
-        Options.flaggedProjectPath = `${Options.pathCommand}/dist/flags/`;
-        ensureDirAndCopy(Options.pathFolderToAnalyze, Options.flaggedProjectPath);
+        ensureDirAndCopy(Options.pathFolderToAnalyze, Options.pathFlaggedFiles);
         Options.flaggedProject = new Project();
-        Options.flaggedProject.addSourceFilesAtPaths( `${Options.flaggedProjectPath}*.ts`);
+        Options.flaggedProject.addSourceFilesAtPaths( `${Options.pathFlaggedFiles}/*.ts`);
+        console.log(chalk.blueBright('FLAGGED PR'), Options.flaggedProject.getSourceFiles().map(s => s.getBaseName()));
     }
 }

@@ -19,21 +19,22 @@ export abstract class FlagService {
     }
 
     private static copyFlagger(): void {
-        const source = `${Options.pathCommand}/src/dynamic-metrics/flag/utils/flagger.util.ts`;
-        const target = `${Options.pathCommand}/dist/flags/flag/flagger.util.ts`;
+        const source = `${Options.pathCommand}/src/dynamic-metrics/flag/utils/flagger.util.js`;
+        const target = `${Options.pathFlaggedFiles}/flagger/flagger.util.js`;
         copyFile(source, target);
 
     }
 
     private static flagAstFile(astFile: AstFile): void {
-        const sourceFile: SourceFile = Options.project.getSourceFile(astFile.name);
+        const sourceFile: SourceFile = Options.flaggedProject.getSourceFile(astFile.name);
         const astLinesInReverseOrder: AstLine[] = astFile.astLines.filter(a => a.astNodes.length > 0)
             .sort((a, b) => b.issue - a.issue);
         for (const astLine of astLinesInReverseOrder) {
             sourceFile.insertText(astLine.pos, `flag(${astLine.issue});\n`);
         }
-        addImportDeclaration(sourceFile, 'flag', './flag/flagger.util.ts');
+        addImportDeclaration(sourceFile, 'flag', './flag/flagger.util.js');
         console.log(chalk.blueBright('FILE TXTTTTT'), sourceFile.getFullText());
+        sourceFile.saveSync();
     }
 
 }

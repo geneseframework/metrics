@@ -11,6 +11,10 @@ export class AstModel {
         return unique(flat(this.astMetrics.map(a => a.astFiles)));
     }
 
+    get astFileNames(): string[] {
+        return this.astFiles.map(a => a.name).sort();
+    }
+
     get metricParameters(): string[] {
         return unique(this.astMetrics.map(a => a.metric?.name));
     }

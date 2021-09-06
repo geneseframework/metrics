@@ -16,6 +16,7 @@ import { OptimizationService } from './optimization/optimization.service';
 import { CorrelationService } from './correlation/correlation.service';
 import { DynamicService } from './dynamic-metrics/dynamic.service';
 import { flat, haveSameElements, unique } from './core/utils/arrays.util';
+import { ReportModel } from './report-generation/models/report.model';
 
 
 async function start(): Promise<void> {
@@ -45,7 +46,7 @@ async function start(): Promise<void> {
 
 function hasCorrectDataset(measures: Measure[], jsonReport: JsonReportInterface): boolean {
     const codeSnippetNamesInDataset: string[] = measures.map(m => m.codeSnippetName).sort();
-    const codeSnippetNamesInJsonReport: string[] = unique(flat(jsonReport.reportMetrics.map(r => r.reportSnippets.map((s => s.codeSnippetName))))).sort();
+    const codeSnippetNamesInJsonReport: string[] = new ReportModel(jsonReport).codeSnippetNames;
     return haveSameElements(codeSnippetNamesInDataset, codeSnippetNamesInJsonReport);
 }
 

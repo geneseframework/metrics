@@ -12,7 +12,6 @@ export var WINDOWS = false;
 export class Options {
 
     static flaggedProject: Project = undefined;
-    static flaggedProjectPath: string = undefined;
     static generateJsonAst = true;
     static generateJsonReport = true;
     static hasMeasures = true;
@@ -42,7 +41,7 @@ export class Options {
         const geneseConfigPath = `${this.pathCommand}/geneseconfig.json`;
         Options.pathFolderToAnalyze = getPathWithSlash(pathFolderToAnalyze);
         Options.pathOutDir = `${this.pathCommand}/dist`;
-        Options.pathFlaggedFiles = `${this.pathOutDir}/flags`;
+        Options.pathFlaggedFiles = `${this.pathOutDir}/flagged-files`;
         Options.pathReport = `${this.pathOutDir}/report`;
         Options.pathJsonAst = `${this.pathReport}/ast.json`;
         if (fs.existsSync(geneseConfigPath)) {
