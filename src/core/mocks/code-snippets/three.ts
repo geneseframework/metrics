@@ -1,6 +1,9 @@
 function start(p: number) {
     let a = 3;
     const z = 5;
+    for (let i = 0; i < 3; i++) {
+        a = a + i;
+    }
     return p + a + z;
 }
 

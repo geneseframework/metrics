@@ -6,7 +6,6 @@ import { DefinitionInfo, Identifier, Node, SourceFile } from 'ts-morph';
 import { SyntaxKind } from '../../../core/enum/syntax-kind.enum';
 import { project, WEIGHTED_METHODS, WEIGHTS } from '../../globals.const';
 import { Ts } from './ts.service';
-import { randomString } from '../../../core/utils/other-tools.util';
 import { isJsx } from '../utils/ast.util';
 import { CpxFactorsInterface } from '../../../core/interfaces/cpx-factors.interface';
 
@@ -21,7 +20,7 @@ export class AstFileGenerationService {
      * @returns {{astNode: JsonAstNodeInterface, name: string, text: string}}
      */
     generateFromString(sourceCode: string): JsonAstFileInterface {
-        const randomName = randomString(10);
+        const randomName = this.randomString(10);
         const sourceFile = project.createSourceFile(`./${randomName}.ts`, sourceCode);
         return {
             name: `${randomName}.ts`,
@@ -153,5 +152,16 @@ export class AstFileGenerationService {
         const path = definition.getSourceFile().getFilePath();
         return path.match(/typescript\/lib/) ? 'typescript' : undefined;
     }
+
+    randomString(length): string {
+        let result           = '';
+        const characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        const charactersLength = characters.length;
+        for ( let i = 0; i < length; i++ ) {
+            result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+        return result;
+    }
+
 
 }

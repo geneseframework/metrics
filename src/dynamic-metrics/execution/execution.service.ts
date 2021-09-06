@@ -6,13 +6,14 @@ import { ProcessTrace } from '../flag/flagger/process-trace.model';
 
 export class ExecutionService {
 
-    static start(astModel: AstModel) {
+    static start(astModel: AstModel): ProcessTrace[] {
         // console.log(chalk.magentaBright('EXECCCCC'), astModel);
         for (const fileName of astModel.astFileNames) {
             this.execute(fileName);
         }
-        const processTraces: ProcessTrace[] = require(`${Options.pathFlaggedFiles}/flagger/flagger.util.js`)?.PROCESS_TRACES;
+        const processTraces: ProcessTrace[] = require(`${Options.pathFlaggedFiles}/flagger/flagger.util.js`)['PROCESS_TRACES'];
         // console.log(chalk.blueBright('PORCESS TRACES'), processTraces);
+        return processTraces;
     }
 
     private static execute(fileName: string) {

@@ -1,8 +1,9 @@
-import { isLastIndex, isLastKey } from '../core/utils/other-tools.util';
-
 /**
  * Service managing the transformation of a given JsonFile in a JsonAst format
  */
+import { isLastKey } from '../core/utils/objects.util';
+import { isLastIndex } from '../core/utils/arrays.util';
+
 export class JsonService {
 
     /**

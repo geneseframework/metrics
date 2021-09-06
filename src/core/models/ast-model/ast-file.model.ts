@@ -20,6 +20,7 @@ export class AstFile {
         this.jsonAstFile = jsonAstFile;
         this.text = jsonAstFile.text;
         this.jsonAstNode = jsonAstFile.astNode;
+        this.name = jsonAstFile.name;
         this.setAstNode();
         this.setNesting(this.astNode);
         this.setCallBacks();
