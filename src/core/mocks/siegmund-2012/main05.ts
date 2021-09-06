@@ -1,6 +1,6 @@
 
 // 5. Binary search
-function main05(args: string[]): void {
+function start(args: string[]): void {
     let array = [2, 4, 5, 6, 8, 10, 13];
     let key = 5;
     let index1 = 0;

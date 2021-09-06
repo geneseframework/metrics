@@ -1,6 +1,6 @@
 
 // 14. Reverse string
-function main14(args: string[]): void {
+function start(args: string[]): void {
     let word = "Hello";
     let result = new String();
 

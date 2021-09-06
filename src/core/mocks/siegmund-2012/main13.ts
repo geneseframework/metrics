@@ -1,6 +1,6 @@
 
 // 13. Swap
-function main13(args: string[]): void {
+function start(args: string[]): void {
     let var1 = 23;
     let var2 = 42;
     let temp;

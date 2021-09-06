@@ -1,6 +1,6 @@
 
 // 4. BubbleSort
-function main04(args: string[]): void {
+function start(args: string[]): void {
     let array = [14,5,7];
     for (let counter1 = 0; counter1 < array.length; counter1++) {
         for (let counter2 = counter1; counter2 > 0; counter2--) {

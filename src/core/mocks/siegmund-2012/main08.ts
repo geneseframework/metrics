@@ -1,7 +1,7 @@
 
 
 // 8. Cross sum
-function main08(args: string[]): void {
+function start(args: string[]): void {
     let number = 323;
     let result = 0;
 

@@ -1,7 +1,6 @@
 /.idea/
 /node_modules/
 /dist/
-/genese
 /docs/
 /ast.json
 /report

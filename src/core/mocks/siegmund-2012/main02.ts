@@ -1,6 +1,6 @@
 
 // 2. Count same chars at same positions in String
-function main02(args: string[]): void {
+function start(args: string[]): void {
     let string1 = "Magdeburg";
     let string2 = "Hamburg";
 

@@ -1,7 +1,7 @@
 
 
 // 19. Capitalize first letter of word
-function main19(args: string[]): void {
+function start(args: string[]): void {
     let s = "here are a bunch of words";
 
     // @ts-ignore

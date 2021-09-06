@@ -1,11 +1,10 @@
 import { AstModel } from '../core/models/ast-model/ast.model';
 import * as chalk from 'chalk';
-// import { FlagService } from './flag/services/flag.service';
-// import { GLOBAL } from './flag/const/global.const';
 import { Project } from 'ts-morph';
 import { Options } from '../core/models/options.model';
 import { ensureDirAndCopy } from '../core/utils/file-system.util';
 import { FlagService } from './flag/services/flag.service';
+import { ExecutionService } from './execution/execution.service';
 
 export class DynamicService {
 
@@ -16,6 +15,7 @@ export class DynamicService {
             this.createProject();
             this.createFlaggedProject();
             FlagService.start(astModel);
+            ExecutionService.start();
         }
     }
 

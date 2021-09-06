@@ -114,7 +114,22 @@ export function createOutDir(): void {
  * @param content
  */
 export function createFile(path: string, content: string): void {
+    fs.ensureDirSync(getFolderPath(path));
     fs.writeFileSync(path, content, { encoding: "utf-8" });
+}
+
+export function removeFile(filePath: string): void {
+    fs.removeSync(filePath);
+}
+
+export function copyFile(source: string, target: string): void {
+    fs.ensureDirSync(getFolderPath(target));
+    fs.copySync(source, target);
+}
+
+
+export function getFolderPath(filePath: string): string {
+    return filePath?.slice(0, -getFilename(filePath).length - 1) ?? undefined;
 }
 
 export function ensureDirAndCopy(source: string, target: string): void {

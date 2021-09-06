@@ -1,9 +1,15 @@
-function f(p: number) {
-    return p + 1;
+function start(p: number) {
+    let a = 3;
+    const z = new ZZZ(5);
+    return p + a + z.b;
 }
 
-let a;
 
-class zzz {
+class ZZZ {
+
     b;
+
+    constructor(b: number) {
+        this.b = b;
+    }
 }

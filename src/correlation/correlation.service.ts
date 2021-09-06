@@ -5,11 +5,14 @@ import { DataToCorrelate } from '../report-generation/models/data-to-correlate.m
 import { Correlation } from './correlation.model';
 import { JsonReportInterface } from '../core/interfaces/json-report/json-report.interface';
 import { Options } from '../core/models/options.model';
+import { Measure } from '../report-generation/models/measure.model';
+import * as chalk from 'chalk';
 
 export class CorrelationService {
 
-    static setStats(jsonReport: JsonReportInterface): void {
-        if (!Options.hasMeasures) {
+    static setStats(jsonReport: JsonReportInterface, measures: Measure[] = []): void {
+        console.log(chalk.blueBright('MEASURESSSS'), measures);
+        if (!Options.hasMeasures || measures.length < 2) {
             return;
         }
         const reportModel = new ReportModel(jsonReport);
