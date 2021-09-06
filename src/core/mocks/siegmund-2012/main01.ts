@@ -5,7 +5,7 @@
  */
 
 // 1. Faculty
-function main01(args: string[]): void {
+function start(args: string[]): void {
     let result = 1;
     let x = 4;
 

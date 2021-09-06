@@ -22,7 +22,7 @@ export class JsonAstCreationService {
         project.addSourceFilesAtPaths(`${pathToAnalyze}**/*.js`);
         project.addSourceFilesAtPaths(`${pathToAnalyze}**/*.jsx`);
         jsonAst = JsonAstCreationService.generateFromFiles(pathToAnalyze);
-        createFile(Options.jsonAstPath, JsonService.prettifyJson(jsonAst));
+        createFile(Options.pathJsonAst, JsonService.prettifyJson(jsonAst));
         return jsonAst;
     }
 

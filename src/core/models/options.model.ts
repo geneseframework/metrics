@@ -12,22 +12,22 @@ export var WINDOWS = false;
 export class Options {
 
     static flaggedProject: Project = undefined;
-    static flaggedProjectPath: string = undefined;
     static generateJsonAst = true;
     static generateJsonReport = true;
     static hasMeasures = true;
     static ignore: string[] = [];               // The paths of the files or folders to ignore
     static ignoreRegex: string = '';
-    static jsonAstPath = `${process.cwd()}/report/ast.json`;
     static jsonReportPath = './report.json';
     static measure = '';
     static metricToOptimize = 'genese-cpx';
     static metrics: MetricInterface[] = [];
     static pathCommand = process.cwd();                    // The path of the folder where the command-line was entered (can't be overridden)
     static pathDataset = '';
+    static pathFlaggedFiles = '';
     static pathFolderToAnalyze = './';          // The path of the folder to analyse (can be overridden)
-    static pathGeneseNodeJs = '';               // The path of the node_module Genese in the nodejs user environment (can't be overridden)
+    static pathJsonAst = ``;
     static pathOutDir = '';                     // The path where the reports are created (can be overridden)
+    static pathReport = '';                     // The path where the reports are created (can be overridden)
     static project: Project = undefined;
     static typing = true;                       // True if we want to add a complexity weight for lacks of typing
 
@@ -38,25 +38,15 @@ export class Options {
      */
     static setOptions(pathFolderToAnalyze: string, pathGeneseNodeJs: string): void {
         WINDOWS = process.platform === 'win32';
-        const geneseConfigPath = `${process.cwd()}/geneseconfig.json`;
+        const geneseConfigPath = `${this.pathCommand}/geneseconfig.json`;
+        Options.pathFolderToAnalyze = getPathWithSlash(pathFolderToAnalyze);
+        Options.pathOutDir = `${this.pathCommand}/dist`;
+        Options.pathFlaggedFiles = `${this.pathOutDir}/flagged-files`;
+        Options.pathReport = `${this.pathOutDir}/report`;
+        Options.pathJsonAst = `${this.pathReport}/ast.json`;
         if (fs.existsSync(geneseConfigPath)) {
             Options.setOptionsFromConfig(geneseConfigPath, pathFolderToAnalyze);
         }
-        Options.setOptionsFromCommandLine(
-            pathFolderToAnalyze,
-            pathGeneseNodeJs
-        );
-    }
-
-    /**
-     * Sets the options of genese-complexity module with command-line options (lower priority than geneseconfig.json options)
-     * @param pathFolderToAnalyze       // The path of the folder to analyse (can be overridden)
-     * @param pathGeneseNodeJs          // The path of the node_module Genese in the nodejs user environment (can't be overridden)
-     */
-    static setOptionsFromCommandLine(pathFolderToAnalyze: string, pathGeneseNodeJs: string): void {
-        Options.pathFolderToAnalyze = getPathWithSlash(pathFolderToAnalyze);
-        Options.pathGeneseNodeJs = pathGeneseNodeJs;
-        Options.pathOutDir = `${process.cwd()}/genese/complexity/reports`;
     }
 
     /**
@@ -73,7 +63,6 @@ export class Options {
         Options.pathFolderToAnalyze = config.complexity?.pathFolderToAnalyze ?? Options.pathFolderToAnalyze;
         Options.pathDataset = config.complexity?.pathDataset ?? `${pathFolderToAnalyze}/dataset.xlsx`;
         Options.hasMeasures = fileExists(Options.pathDataset);
-        Options.pathOutDir = config.complexity?.pathReports ?? Options.pathOutDir;
         Options.ignore.push(Options.pathOutDir);
         Options.generateJsonAst = config.complexity.generateJsonAst === true || Options.generateJsonAst;
         Options.generateJsonReport = config.complexity.generateJsonReport === true || Options.generateJsonReport;

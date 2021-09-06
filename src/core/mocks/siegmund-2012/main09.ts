@@ -1,7 +1,7 @@
 
 
 // 9. Prime test
-function main09(args: string[]): void {
+function start(args: string[]): void {
     let number = 11;
     let result = true;
     for(let i = 2; i < number; i++) {

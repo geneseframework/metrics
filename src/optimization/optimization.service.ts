@@ -1,5 +1,4 @@
 import { JsonReportInterface } from '../core/interfaces/json-report/json-report.interface';
-import * as chalk from 'chalk';
 import { MetricWeights } from '../evaluation/metrics/models/metric-weights.model';
 import { MetricParamValues } from '../evaluation/metrics/models/metric-param-value.model';
 import { sampleCorrelation } from 'simple-statistics';

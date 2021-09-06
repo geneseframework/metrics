@@ -3,7 +3,7 @@
     "version": "0.0.1",
     "description": "Analyzes complexity of source code for multiple metrics. Part of the @genese tool suite.",
     "scripts": {
-        "build": "rm -rf report && tsc && mkdir -p report && cp -r src/report-generation/templates report/templates",
+        "build": "rm -rf report && tsc",
         "start": "npm run build && node dist/src/index.js",
         "publish_package": "npm run build && npm publish",
         "republish_package": "npm run build && npm unpublish -f && npm publish"
@@ -27,6 +27,7 @@
         "@types/fs-extra": "^9.0.12",
         "@types/node": "^14.14.8",
         "chalk": "^4.1.0",
+        "child_process": "^1.0.2",
         "eol": "^0.9.1",
         "fmin": "^0.0.2",
         "fs-extra": "^9.0.1",

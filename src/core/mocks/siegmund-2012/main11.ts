@@ -1,6 +1,6 @@
 
 // 11. Power
-function main11(args: string[]): void {
+function start(args: string[]): void {
     let num1 = 2;
     let num2 = 3;
     let result = num1;

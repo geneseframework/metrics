@@ -1,7 +1,7 @@
 
 
 // 7. Find max in list of numbers
-function main07(args: string[]): void {
+function start(args: string[]): void {
     let array = [2, 19, 5, 17];
     let result = array[0];
     for (let i = 1; i < array.length; i++)

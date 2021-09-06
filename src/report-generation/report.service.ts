@@ -18,6 +18,7 @@ import { CorrelationRow } from './models/correlation-row.model';
 import { ChartMetric } from './models/chart-metric.model';
 import { Dot } from './models/dot.model';
 import { round } from '../core/utils/numbers.util';
+import { ensureDirAndCopy } from '../core/utils/file-system.util';
 
 export class ReportService {
 
@@ -39,6 +40,7 @@ export class ReportService {
         this.selectedMetric = this.metricNames[0];
         this.metricNamesArray = this.setNamesArray(this.metricNames);
         this.codeSnippetNamesArray = this.setNamesArray(this.codeSnippetNames);
+        this.copyTemplatesDir();
         this.setMetricSelects();
         this.generateRowSnippets();
         this.setCorrelations();
@@ -173,7 +175,7 @@ export class ReportService {
         this.registerPartial("chart", 'chart');
         this.registerPartial("chartScript", 'chart-script');
         this.registerHelper();
-        const reportTemplate = eol.auto(fs.readFileSync(`${Options.pathCommand}/report/templates/handlebars/report.handlebars`, 'utf-8'));
+        const reportTemplate = eol.auto(fs.readFileSync(`${Options.pathReport}/templates/handlebars/report.handlebars`, 'utf-8'));
         return Handlebars.compile(reportTemplate);
     }
 
@@ -184,8 +186,13 @@ export class ReportService {
         // console.log(chalk.cyanBright('HTML REPORTTTT'), this.htmlReport.rowSnippets);
         const template: HandlebarsTemplateDelegate = this.setTemplate();
         const content = template(this.htmlReport);
-        const pathReport = `${Options.pathCommand}/report/report.html`;
+        const pathReport = `${Options.pathReport}/report.html`;
         fs.writeFileSync(pathReport, content, { encoding: 'utf-8' });
+    }
+
+    private static copyTemplatesDir(): void {
+        const pathTemplates = `${Options.pathCommand}/src/report-generation/templates/`;
+        ensureDirAndCopy(pathTemplates, `${Options.pathReport}/templates`);
     }
 
     /**
@@ -194,7 +201,7 @@ export class ReportService {
      * @param filename      // The name of the file
      */
     private static registerPartial(partialName: string, filename: string): void {
-        const partial = eol.auto(fs.readFileSync(`${Options.pathCommand}/report/templates/handlebars/${filename}.handlebars`, 'utf-8'));
+        const partial = eol.auto(fs.readFileSync(`${Options.pathReport}/templates/handlebars/${filename}.handlebars`, 'utf-8'));
         Handlebars.registerPartial(partialName, partial);
     }
 

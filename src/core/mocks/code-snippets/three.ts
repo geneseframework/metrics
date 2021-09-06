@@ -1,9 +1,20 @@
-function f(p: number) {
-    return p + 1;
+function start(p: number) {
+    let a = 3;
+    const z = 5;
+    return p + a + z;
 }
 
-let a;
-
-class zzz {
-    b;
+var LINES = [];
+export function main() {
+    start(2);
+    return LINES;
 }
+// start(2);
+// class ZZZ {
+//
+//     b;
+//
+//     constructor(b: number) {
+//         this.b = b;
+//     }
+// }

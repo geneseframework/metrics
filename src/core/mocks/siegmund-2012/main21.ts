@@ -1,6 +1,6 @@
 
 // 21. Reverse entries of array
-function main21(args: string[]): void {
+function start(args: string[]): void {
     let array = [1, 6, 4, 10, 2 ];
 
     for (let i = 0; i <= array.length/2-1; i++){

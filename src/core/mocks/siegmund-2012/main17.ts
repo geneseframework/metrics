@@ -1,6 +1,6 @@
 
 // 17. Check whether substring is contained
-function main17(args: string[]): void {
+function start(args: string[]): void {
     let word = "Programming in Java";
     let key1 = "Java";
     let key2 = "Pascal";

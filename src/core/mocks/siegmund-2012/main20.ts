@@ -1,6 +1,6 @@
 
 // 20. Decimal to binary
-function main20(args: string[]): void {
+function start(args: string[]): void {
     let i=14;
     let result="";
 

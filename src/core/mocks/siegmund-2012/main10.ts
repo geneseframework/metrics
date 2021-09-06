@@ -1,7 +1,7 @@
 
 
 // 10. Find middle number of three numbers
-function main10(args: string[]): void {
+function start(args: string[]): void {
     let num1 = 5;
     let num2 = 3;
     let num3 = 10;
