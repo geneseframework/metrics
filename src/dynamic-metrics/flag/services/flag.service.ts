@@ -19,9 +19,12 @@ export abstract class FlagService {
     }
 
     private static copyFlagger(): void {
-        const source = `${Options.pathCommand}/src/dynamic-metrics/flag/utils/flagger.util.js`;
-        const target = `${Options.pathFlaggedFiles}/flagger/flagger.util.js`;
-        copyFile(source, target);
+        // const source = `${Options.pathCommand}/src/dynamic-metrics/flag/utils/flagger.util.js`;
+        // const target = `${Options.pathFlaggedFiles}/flagger/flagger.util.js`;
+        // copyFile(source, target);
+        const source2 = `${Options.pathCommand}/src/dynamic-metrics/flag/utils/flagger.util.ts`;
+        const target2 = `${Options.pathFlaggedFiles}/flagger/flagger.util.ts`;
+        copyFile(source2, target2);
 
     }
 
@@ -33,7 +36,7 @@ export abstract class FlagService {
             sourceFile.insertText(astLine.pos, `flag(${astLine.issue});\n`);
         }
         addImportDeclaration(sourceFile, 'flag', './flagger/flagger.util.js');
-        console.log(chalk.blueBright('FILE TXTTTTT'), sourceFile.getFullText());
+        // console.log(chalk.blueBright('FILE TXTTTTT'), sourceFile.getFullText());
         sourceFile.saveSync();
     }
 
