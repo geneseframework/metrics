@@ -4,12 +4,10 @@ function start(p: number) {
     return p + a + z;
 }
 
-var LINES = [];
 export function main() {
     start(2);
-    return LINES;
 }
-// start(2);
+
 // class ZZZ {
 //
 //     b;

@@ -4,8 +4,8 @@ import { AstModel } from '../../../core/models/ast-model/ast.model';
 import { AstFile } from '../../../core/models/ast-model/ast-file.model';
 import { AstLine } from '../../../core/models/ast-model/ast-line.model';
 import { addImportDeclaration } from '../utils/ast-imports.util';
-import * as chalk from 'chalk';
-import { copyFile } from '../../../core/utils/file-system.util';
+import { ensureDirAndCopy } from '../../../core/utils/file-system.util';
+import { execSync } from 'child_process';
 
 
 export abstract class FlagService {
@@ -19,13 +19,11 @@ export abstract class FlagService {
     }
 
     private static copyFlagger(): void {
-        // const source = `${Options.pathCommand}/src/dynamic-metrics/flag/utils/flagger.util.js`;
-        // const target = `${Options.pathFlaggedFiles}/flagger/flagger.util.js`;
-        // copyFile(source, target);
-        const source2 = `${Options.pathCommand}/src/dynamic-metrics/flag/utils/flagger.util.ts`;
-        const target2 = `${Options.pathFlaggedFiles}/flagger/flagger.util.ts`;
-        copyFile(source2, target2);
-
+        const source2 = `${Options.pathCommand}/src/dynamic-metrics/flag/flagger`;
+        const target2 = `${Options.pathFlaggedFiles}/flagger`;
+        ensureDirAndCopy(source2, target2);
+        execSync(`tsc ${Options.pathOutDir}/**/*.ts`, {encoding: 'utf-8'});
+        execSync(`tsc ${Options.pathOutDir}/flagged-files/flagger/*.ts`, {encoding: 'utf-8'});
     }
 
     private static flagAstFile(astFile: AstFile): void {

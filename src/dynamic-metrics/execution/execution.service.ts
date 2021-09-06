@@ -14,8 +14,6 @@ export class ExecutionService {
     }
 
     private static execute(fileName: string) {
-        execSync(`tsc ${Options.pathOutDir}/**/*.ts`, {encoding: 'utf-8'});
-        execSync(`tsc ${Options.pathOutDir}/flagged-files/flagger/*.ts`, {encoding: 'utf-8'});
         const jsFileName = `${removeExtension(fileName)}.js`;
         const flaggedFilePath = `${Options.pathFlaggedFiles}/${jsFileName}`;
         console.log(chalk.cyanBright('PATHHH'), flaggedFilePath);
