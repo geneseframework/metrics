@@ -25,13 +25,13 @@ export class ReportService {
     static codeSnippetNames: string[] = [];
     static codeSnippetNamesArray: string = '';
     static htmlReport = new HtmlReport();
-    static reportMetrics: ReportMetric[] = [];
     static metricNames: string[] = [];
     static metricNamesArray: string = '';
+    static reportMetrics: ReportMetric[] = [];
     static selectedMetric = '';
 
     static start(jsonReport: JsonReportInterface): HtmlReport {
-        // console.log(chalk.greenBright('JSON REPORTTTTT '), jsonReport.reportMetrics[3]);
+        console.log(chalk.greenBright('JSON REPORTTTTT '), jsonReport.reportMetrics[0].reportSnippets);
         this.reportMetrics = jsonReport.reportMetrics;
         this.htmlReport.measure = jsonReport.measureName;
         this.htmlReport.hasMeasures = Options.hasMeasures;

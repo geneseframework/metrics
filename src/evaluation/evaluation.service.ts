@@ -12,21 +12,27 @@ import { METRIC_SERVICES } from './metrics/const/metric-services.const';
 import { Metric } from '../core/models/metric.model';
 import { AstFile } from '../core/models/ast-model/ast-file.model';
 import { OptimizationFile } from '../optimization/optimization-file.model';
+import { OptimizationService } from '../optimization/optimization.service';
+import { hasCorrectDataset } from '../index';
 
 export class EvaluationService {
 
-    static measures: Measure[] = [];
+    // static measures: Measure[] = [];
 
-    static evaluate(astModel: AstModel, measures: Measure[]): JsonReportInterface {
+    static evaluate(astModel: AstModel): JsonReportInterface {
         const reportModel = new ReportModel();
         // console.log(chalk.blueBright('AST MODELLLLL'), astModel);
-        reportModel.measureName = astModel.measure;
-        this.measures = measures;
+        reportModel.measureName = astModel.measureName;
+        // this.measures = measures;
         for (const astMetric of astModel.astMetrics) {
             this.evaluateAstMetric(reportModel, astMetric);
         }
-        this.setMetricParamValues(reportModel, astModel);
-        // console.log(chalk.blueBright('REPORT MODELLLLL'), reportModel.reportMetrics[0]);
+        // this.setMetricParamValues(reportModel, astModel);
+        console.log(chalk.blueBright('REPORT MODELLLLL'), reportModel.reportMetrics[0]);
+        // if (hasCorrectDataset(measures, reportModel)) {
+            console.log(chalk.yellowBright('Optimization...'));
+            OptimizationService.optimize(astModel, reportModel);
+        // }
         return reportModel;
     }
 
@@ -36,7 +42,8 @@ export class EvaluationService {
             for (const astFile of astMetric.astFiles) {
                 const reportSnippet = new ReportSnippet(removeExtension(astFile.name), astFile.text, astMetric.metric?.name);
                 this.evaluateAstFileForMetric(astFile, reportSnippet, astMetric.metric);
-                this.setMeasure(reportSnippet);
+                reportSnippet.measureValue = astFile.measureValue;
+                // this.setMeasure(reportSnippet, astFile);
                 reportMetric.reportSnippets.push(reportSnippet);
             }
             reportModel.reportMetrics.push(reportMetric);
@@ -49,25 +56,26 @@ export class EvaluationService {
         METRIC_SERVICES.metricServices[metric.id].evaluate(astFile, reportFile);
     }
 
-    private static setMetricParamValues(reportModel: ReportModel, astModel: AstModel): void {
-        for (const astFile of astModel.astFiles) {
-            this.setMetricParamValuesForAstFile(reportModel, astFile);
-        }
-    }
+    // private static setMetricParamValues(reportModel: ReportModel, astModel: AstModel): void {
+    //     for (const astFile of astModel.astFiles) {
+    //         this.setMetricParamValuesForAstFile(reportModel, astFile);
+    //     }
+    // }
 
-    private static setMetricParamValuesForAstFile(reportModel: ReportModel, astFile: AstFile): void {
-        for (const metricParameter of METRIC_SERVICES.metricParameters) {
-            astFile.metricParamValues[metricParameter] = sum(astFile.astLines?.map(a => a[metricParameter]));
-        }
-        const measureValue: number = this.getMeasure(removeExtension(astFile.name));
-        reportModel.optimizationFiles.push(new OptimizationFile(removeExtension(astFile.name), astFile.metricParamValues, measureValue));
-    }
+    // private static setMetricParamValuesForAstFile(reportModel: ReportModel, astFile: AstFile): void {
+    //     for (const metricParameter of METRIC_SERVICES.metricParameters) {
+    //         astFile.metricParamValues[metricParameter] = sum(astFile.astLines?.map(a => a[metricParameter]));
+    //     }
+    //     const measureValue: number = this.getMeasure(removeExtension(astFile.name));
+    //     reportModel.optimizationFiles.push(new OptimizationFile(removeExtension(astFile.name), astFile.metricParamValues, measureValue));
+    // }
 
-    private static setMeasure(reportSnippet: ReportSnippet): void {
-        reportSnippet.measureValue = this.getMeasure(reportSnippet.codeSnippetName);
-    }
-
-    private static getMeasure(codeSnippetName): number {
-        return this.measures.find(m => m.codeSnippetName === codeSnippetName)?.measureValue;
-    }
+    // private static setMeasure(reportSnippet: ReportSnippet, astFile: AstFile): void {
+    //     reportSnippet.measureValue = astFile.measureValue;
+    //     // reportSnippet.measureValue = this.getMeasure(reportSnippet.codeSnippetName);
+    // }
+    //
+    // private static getMeasure(codeSnippetName: string): number {
+    //     return this.measures.find(m => m.codeSnippetName === codeSnippetName)?.measureValue;
+    // }
 }

@@ -7269,7 +7269,7 @@ var core_layouts = {
 	},
 
 	/**
-	 * Fits boxes of the given chart into the given size by having each box measure itself
+	 * Fits boxes of the given chart into the given size by having each box measureName itself
 	 * then running a fitting algorithm
 	 * @param {Chart} chart - the chart
 	 * @param {number} width - the width to fit into
@@ -10823,7 +10823,7 @@ var core_helpers = function() {
 			if (thing !== undefined && thing !== null && helpers$1.isArray(thing) !== true) {
 				longest = helpers$1.measureText(ctx, data, gc, longest, thing);
 			} else if (helpers$1.isArray(thing)) {
-				// if it is an array lets measure each element
+				// if it is an array lets measureName each element
 				// to do maybe simplify this function a bit so we can do this more recursively?
 				for (j = 0, jlen = thing.length; j < jlen; j++) {
 					nestedThing = thing[j];
@@ -11223,7 +11223,7 @@ function computeLabelSizes(ctx, tickFonts, ticks, caches) {
 			width = helpers$1.measureText(ctx, cache.data, cache.gc, width, label);
 			height = lineHeight;
 		} else if (isArray(label)) {
-			// if it is an array let's measure each element
+			// if it is an array let's measureName each element
 			for (j = 0, jlen = label.length; j < jlen; ++j) {
 				nestedLabel = label[j];
 				// Undefined labels and arrays should not be measured

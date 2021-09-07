@@ -10,7 +10,7 @@ export class AstModelService {
 
     static generate(jsonAst: JsonAstInterface): AstModel {
         const astModel = new AstModel();
-        astModel.measure = jsonAst.measure;
+        astModel.measureName = jsonAst.measure;
         const astFiles: AstFile[] = this.createAstFiles(jsonAst.astFolder);
         for (const metric of jsonAst.metrics) {
             const astMetric = new Metric(metric);

@@ -13,21 +13,26 @@ import { AstFile } from '../core/models/ast-model/ast-file.model';
 import { removeExtension } from '../core/utils/file-system.util';
 import { AbstractMetricService } from '../evaluation/metrics/services/abstract-metric.service';
 import * as chalk from 'chalk';
+import { ReportModel } from '../report-generation/models/report.model';
 
 export class OptimizationService {
 
+    static astModel: AstModel = undefined;
     static dataToCorrelate: DataToCorrelate[] = [];
-    static optimizationFiles: OptimizationFile[] = [];
+    // static optimizationFiles: OptimizationFile[] = [];
     static metricService: AbstractMetricService = undefined;
 
-    static optimize(astModel: AstModel, jsonReport: JsonReportInterface): void {
-        console.log(chalk.magentaBright('OPTIM FILESSSS'), jsonReport.optimizationFiles);
-        this.optimizationFiles = jsonReport.optimizationFiles;
+    static optimize(astModel: AstModel, reportModel: ReportModel): void {
+        console.log(chalk.magentaBright('OPTIM FILESSSS'), reportModel);
+        console.log(chalk.cyan('OPTIM FILESSSS'), astModel.astFiles.map(a => a.measureValue));
+        // console.log(chalk.magentaBright('OPTIM FILESSSS'), reportModel.reportMetrics[0].reportSnippets[0].lines);
+        // this.optimizationFiles = reportModel.optimizationFiles;
+        this.astModel = astModel;
         this.metricService = METRIC_SERVICES.metricServices[Options.metricToOptimize];
         const initialValues: number[] = this.getInitialValues();
         this.applyFitnessFunctionAndOptimizeMetricWeights(initialValues);
-        const reportOptimizedMetric = this.getReportOptimizedMetric(astModel, jsonReport);
-        jsonReport.reportMetrics.push(reportOptimizedMetric);
+        const reportOptimizedMetric = this.getReportOptimizedMetric(astModel, reportModel);
+        reportModel.reportMetrics.push(reportOptimizedMetric);
     }
 
     private static getInitialValues(): number[] {
@@ -40,7 +45,7 @@ export class OptimizationService {
 
     private static applyFitnessFunctionAndOptimizeMetricWeights(initialValues: number[]): void {
         const solution = nelderMead(this.fitnessFunction.bind(this), initialValues, {maxIterations: 200});
-        // console.log(chalk.magentaBright('SOLUTIONNNN'), solution);
+        console.log(chalk.magentaBright('SOLUTION : '), solution);
         console.log(chalk.magentaBright('OPTIMIZED METRIC : '), this.metricService.metricWeights);
         console.log(chalk.magentaBright('PEARSON : '), 1 - solution.fx);
     }
@@ -69,15 +74,19 @@ export class OptimizationService {
 
     private static getDataToCorrelate(): DataToCorrelate[] {
         const dataToCorrelate: DataToCorrelate[] = [];
-        for (const optimizationFile of this.optimizationFiles) {
-            const score: number = this.getScore(optimizationFile.metricWeights);
-            dataToCorrelate.push(new DataToCorrelate(optimizationFile.measureValue, score));
+        for (const astFile of this.astModel.astFiles) {
+            // console.log(chalk.blueBright('MWEIGHTTTTTT'), this.metricService.metricWeights);
+            const score: number = this.metricService.getFileScore(astFile);
+            // const score: number = this.getLineScore(astFile.metricWeights);
+            dataToCorrelate.push(new DataToCorrelate(astFile.measureValue, score));
         }
+        // console.log(chalk.magentaBright('DATAAAA'), dataToCorrelate);
         return dataToCorrelate;
     }
 
     private static getScore(metricWeights: MetricWeights): number {
         let total = 0;
+        // for (const astLine of )
         for (const [parameter, weight] of Object.entries(this.metricService.metricWeights)) {
             total += !isNaN(metricWeights[parameter]) ? metricWeights[parameter] * weight : 0;
         }
