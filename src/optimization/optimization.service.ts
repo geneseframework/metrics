@@ -1,6 +1,5 @@
 import { JsonReportInterface } from '../core/interfaces/json-report/json-report.interface';
 import { MetricWeights } from '../evaluation/metrics/models/metric-weights.model';
-import { MetricParamValues } from '../evaluation/metrics/models/metric-param-value.model';
 import { sampleCorrelation } from 'simple-statistics';
 import { DataToCorrelate } from '../report-generation/models/data-to-correlate.model';
 import { METRIC_SERVICES } from '../evaluation/metrics/const/metric-services.const';
@@ -13,6 +12,7 @@ import { AstModel } from '../core/models/ast-model/ast.model';
 import { AstFile } from '../core/models/ast-model/ast-file.model';
 import { removeExtension } from '../core/utils/file-system.util';
 import { AbstractMetricService } from '../evaluation/metrics/services/abstract-metric.service';
+import * as chalk from 'chalk';
 
 export class OptimizationService {
 
@@ -21,7 +21,7 @@ export class OptimizationService {
     static metricService: AbstractMetricService = undefined;
 
     static optimize(astModel: AstModel, jsonReport: JsonReportInterface): void {
-        // console.log(chalk.magentaBright('OPTIM FILESSSS'), jsonReport.optimizationFiles);
+        console.log(chalk.magentaBright('OPTIM FILESSSS'), jsonReport.optimizationFiles);
         this.optimizationFiles = jsonReport.optimizationFiles;
         this.metricService = METRIC_SERVICES.metricServices[Options.metricToOptimize];
         const initialValues: number[] = this.getInitialValues();
@@ -41,7 +41,8 @@ export class OptimizationService {
     private static applyFitnessFunctionAndOptimizeMetricWeights(initialValues: number[]): void {
         const solution = nelderMead(this.fitnessFunction.bind(this), initialValues, {maxIterations: 200});
         // console.log(chalk.magentaBright('SOLUTIONNNN'), solution);
-        // console.log(chalk.magentaBright('OPTIMIZED METRIC : '), this.metricService.metricWeights);
+        console.log(chalk.magentaBright('OPTIMIZED METRIC : '), this.metricService.metricWeights);
+        console.log(chalk.magentaBright('PEARSON : '), 1 - solution.fx);
     }
 
     private static fitnessFunction(initialValues: number[]): number {
@@ -69,16 +70,16 @@ export class OptimizationService {
     private static getDataToCorrelate(): DataToCorrelate[] {
         const dataToCorrelate: DataToCorrelate[] = [];
         for (const optimizationFile of this.optimizationFiles) {
-            const score: number = this.getScore(optimizationFile.metricParamValues);
+            const score: number = this.getScore(optimizationFile.metricWeights);
             dataToCorrelate.push(new DataToCorrelate(optimizationFile.measureValue, score));
         }
         return dataToCorrelate;
     }
 
-    private static getScore(metricParamValues: MetricParamValues): number {
+    private static getScore(metricWeights: MetricWeights): number {
         let total = 0;
         for (const [parameter, weight] of Object.entries(this.metricService.metricWeights)) {
-            total += !isNaN(metricParamValues[parameter]) ? metricParamValues[parameter] * weight : 0;
+            total += !isNaN(metricWeights[parameter]) ? metricWeights[parameter] * weight : 0;
         }
         return total;
     }

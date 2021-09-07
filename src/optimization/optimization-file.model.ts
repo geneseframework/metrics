@@ -1,14 +1,14 @@
-import { MetricParamValues } from '../evaluation/metrics/models/metric-param-value.model';
+import { MetricWeights } from '../evaluation/metrics/models/metric-weights.model';
 
 export class OptimizationFile {
 
     codeSnippetName: string = undefined;
     measureValue: number = undefined;
-    metricParamValues: MetricParamValues = undefined;
+    metricWeights: MetricWeights = undefined;
 
-    constructor(codeSnippetName: string, metricParamValues: MetricParamValues, measureValue: number) {
+    constructor(codeSnippetName: string, metricWeights: MetricWeights, measureValue: number) {
         this.codeSnippetName = codeSnippetName;
-        this.metricParamValues = metricParamValues;
+        this.metricWeights = metricWeights;
         this.measureValue = measureValue;
     }
 

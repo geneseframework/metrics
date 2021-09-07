@@ -12,6 +12,7 @@ export class AstLine {
     astNodeIdentifiers: AstNode[] = [];
     issue ?= 0;                                             // The number of the line in its Code parentFunction (method)
     pos ?= 0;                                               // The absolute pos (in number of characters) of the line in the SourceFile
+    score = 0;
     text ?= '';                                             // The text of the line
 
 

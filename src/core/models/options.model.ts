@@ -19,7 +19,7 @@ export class Options {
     static ignoreRegex: string = '';
     static jsonReportPath = './report.json';
     static measure = '';
-    static metricToOptimize = 'genese-cpx';
+    static metricToOptimize = 'dynamic';
     static metrics: MetricInterface[] = [];
     static pathCommand = process.cwd();                    // The path of the folder where the command-line was entered (can't be overridden)
     static pathDataset = '';
@@ -35,9 +35,8 @@ export class Options {
     /**
      * Sets the options of genese-complexity module
      * @param pathFolderToAnalyze       // The path of the folder to analyse (can be overridden)
-     * @param pathGeneseNodeJs          // The path of the node_module Genese in the nodejs user environment (can't be overridden)
      */
-    static setOptions(pathFolderToAnalyze: string, pathGeneseNodeJs: string): void {
+    static setOptions(pathFolderToAnalyze: string): void {
         WINDOWS = process.platform === 'win32';
         const geneseConfigPath = `${this.pathCommand}/geneseconfig.json`;
         Options.pathFolderToAnalyze = getPathWithSlash(pathFolderToAnalyze);
