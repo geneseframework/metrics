@@ -9,7 +9,7 @@ export class DynamicMetricService extends AbstractMetricService {
         // "callbacks": 2,
         // "identifiers": 3,
         // "ifs": 1,
-        "loops": 1,
+        "loops": 5,
         // "nesting": 0.5,
         // "repetition": 0.8,
         // "recursions": 2,

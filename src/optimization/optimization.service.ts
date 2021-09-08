@@ -50,6 +50,7 @@ export class OptimizationService {
     private static fitnessFunction(initialValues: number[]): number {
         this.modifyOriginalMetricWeights(initialValues);
         const dataToCorrelate: DataToCorrelate[] = this.getDataToCorrelate();
+        console.log(chalk.redBright('DATAAAAAAA'), dataToCorrelate.map(d => [d.measureValue, d.metricScore]));
         const measureValues: number[] = dataToCorrelate.map(d => d.measureValue);
         const metricScores: number[] = dataToCorrelate.map(d => d.metricScore);
         const pearson: number = sampleCorrelation(measureValues, metricScores);
