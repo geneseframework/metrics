@@ -7,17 +7,17 @@ export class DynamicMetricService extends AbstractMetricService {
 
     metricWeights: MetricWeights = {
         // "callbacks": 2,
-        // "identifiers": 3,
-        // "ifs": 1,
-        "loops": 5,
+        "identifiers": 2,
+        // "ifs": 3,
+        // "loops": 5,
         // "nesting": 0.5,
         // "repetition": 0.8,
         // "recursions": 2,
         // "switches": 1,
-        "words": 0.1
+        "words": 1
     }
 
-    parametersToOptimize = ['loops'];
+    parametersToOptimize = ['words'];
     // parametersToOptimize = ['ifs', 'loops', 'nesting', 'repetition'];
 
     evaluate(astFile: AstFile, reportFile: ReportSnippet): void {

@@ -6,6 +6,7 @@ import { round } from '../../../core/utils/numbers.util';
 import { ReportLine } from '../../../report-generation/models/report-line.model';
 import { capitalize } from '../../../core/utils/strings.util';
 import { sum } from '../../../core/utils/arrays.util';
+import * as chalk from 'chalk';
 
 export abstract class AbstractMetricService {
 
@@ -21,6 +22,7 @@ export abstract class AbstractMetricService {
             reportFile.lines.push(reportLine);
             reportFile.score = round(reportFile.score + reportLine.score, 1);
         }
+        console.log(chalk.blueBright('FILE SCOREEEE'), reportFile.codeSnippetName, reportFile.score);
     }
 
     getFileScore(astFile: AstFile): number {
@@ -29,10 +31,13 @@ export abstract class AbstractMetricService {
 
     getLineScore(astLine: AstLine): number {
         let total = 0;
+        console.log(chalk.cyanBright('GET LINE SCORRRRR'), astLine.text, this.metricWeights);
         for (const [parameter, weight] of Object.entries(this.metricWeights)) {
             total += !isNaN(astLine[parameter]) ? astLine[parameter] * weight : 0;
         }
-        return round(total, 1);
+        console.log(chalk.cyanBright('GET LINE SCORRRRR TOTAL'), total);
+        return total;
+        // return round(total, 1);
     }
 
     getComments(astLine: AstLine): any {

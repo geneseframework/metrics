@@ -22,7 +22,7 @@ export class OptimizationService {
     static metricService: AbstractMetricService = undefined;
 
     static optimize(astModel: AstModel, reportModel: ReportModel): void {
-        console.log(chalk.magentaBright('OPTIM FILESSSS'), reportModel);
+        // console.log(chalk.magentaBright('OPTIM FILESSSS'), reportModel);
         // console.log(chalk.cyan('OPTIM FILESSSS'), astModel.astFiles.map(a => a.measureValue));
         this.astModel = astModel;
         this.metricService = METRIC_SERVICES.metricServices[Options.metricToOptimize];
@@ -40,30 +40,36 @@ export class OptimizationService {
         return initialValues;
     }
 
-    private static applyFitnessFunctionAndOptimizeMetricWeights(initialValues: number[]): void {
-        const solution = nelderMead(this.fitnessFunction.bind(this), initialValues, {maxIterations: 2});
+    private static applyFitnessFunctionAndOptimizeMetricWeights(values: number[]): void {
+        const solution = nelderMead(this.fitnessFunction.bind(this), values, {maxIterations: 200});
         console.log(chalk.magentaBright('SOLUTION : '), solution);
         console.log(chalk.magentaBright('OPTIMIZED METRIC : '), this.metricService.metricWeights);
         console.log(chalk.magentaBright('PEARSON : '), 1 - solution.fx);
     }
 
-    private static fitnessFunction(initialValues: number[]): number {
-        this.modifyOriginalMetricWeights(initialValues);
+    private static fitnessFunction(values: number[]): number {
+        console.log(chalk.redBright('VALUESSSS'), values);
+        this.modifyOriginalMetricWeights(values);
+        console.log(chalk.redBright('MODIFIED  WWWWWthis.metricService.metricWeights'), this.metricService.metricWeights);
         const dataToCorrelate: DataToCorrelate[] = this.getDataToCorrelate();
         console.log(chalk.redBright('DATAAAAAAA'), dataToCorrelate.map(d => [d.measureValue, d.metricScore]));
         const measureValues: number[] = dataToCorrelate.map(d => d.measureValue);
         const metricScores: number[] = dataToCorrelate.map(d => d.metricScore);
         const pearson: number = sampleCorrelation(measureValues, metricScores);
         const valueToMinimize: number = 1 - pearson;
+        console.log(chalk.redBright('PEARSON : '), 1 - valueToMinimize);
         return valueToMinimize;
     }
 
     private static modifyOriginalMetricWeights(values: number[]): MetricWeights {
-        return Object.assign(this.metricService.metricWeights, this.getOptimizedMetricWeights(values));
+        const zzz = Object.assign(this.metricService.metricWeights, this.getOptimizedMetricWeights(values));
+        console.log(chalk.magentaBright('MODIGY WWWWW'), zzz);
+        return zzz;
     }
 
     private static getOptimizedMetricWeights(values: number[]): MetricWeights {
         const metricWeights: MetricWeights = {};
+        console.log(chalk.yellowBright('this.metricService.parametersToOptimize WWWWW'), this.metricService.parametersToOptimize);
         for (let i = 0; i < values.length; i++) {
             metricWeights[this.metricService.parametersToOptimize[i]] = values[i];
         }
@@ -75,6 +81,7 @@ export class OptimizationService {
         for (const astFile of this.astModel.astFiles) {
             console.log(chalk.blueBright('MWEIGHTTTTTT'), this.metricService.metricWeights);
             const score: number = this.metricService.getFileScore(astFile);
+            console.log(chalk.blueBright('SCOREEEE'), score);
             // const score: number = this.getLineScore(astFile.metricWeights);
             dataToCorrelate.push(new DataToCorrelate(astFile.measureValue, score));
         }

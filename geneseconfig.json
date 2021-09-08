@@ -6,10 +6,6 @@
             {
                 "id": "dynamic",
                 "name": "dynamic"
-            },
-            {
-                "id": "loc",
-                "name": "LOC"
             }
         ]
     }

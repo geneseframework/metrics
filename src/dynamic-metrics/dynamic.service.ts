@@ -14,14 +14,14 @@ import { SyntaxKind } from '../core/enum/syntax-kind.enum';
 export class DynamicService {
 
     static async start(astModel: AstModel): Promise<void> {
-        console.log(chalk.magentaBright('DYNAMICCCCC'), astModel.astMetrics);
+        // console.log(chalk.magentaBright('DYNAMICCCCC'), astModel.astMetrics);
         const hasDynamicMetric = true; // TODO
         if (hasDynamicMetric) {
             this.createFlaggedProject();
             FlagService.start(astModel);
             const processTraces: ProcessTrace[] = ExecutionService.start(astModel);
             this.setDynamicAstLines(astModel, processTraces);
-            console.log(chalk.magentaBright('DYNAMICCCCC END'), astModel.astMetrics);
+            // console.log(chalk.magentaBright('DYNAMICCCCC END'), astModel.astMetrics);
         }
     }
 
