@@ -19,14 +19,11 @@ export class OptimizationService {
 
     static astModel: AstModel = undefined;
     static dataToCorrelate: DataToCorrelate[] = [];
-    // static optimizationFiles: OptimizationFile[] = [];
     static metricService: AbstractMetricService = undefined;
 
     static optimize(astModel: AstModel, reportModel: ReportModel): void {
         console.log(chalk.magentaBright('OPTIM FILESSSS'), reportModel);
-        console.log(chalk.cyan('OPTIM FILESSSS'), astModel.astFiles.map(a => a.measureValue));
-        // console.log(chalk.magentaBright('OPTIM FILESSSS'), reportModel.reportMetrics[0].reportSnippets[0].lines);
-        // this.optimizationFiles = reportModel.optimizationFiles;
+        // console.log(chalk.cyan('OPTIM FILESSSS'), astModel.astFiles.map(a => a.measureValue));
         this.astModel = astModel;
         this.metricService = METRIC_SERVICES.metricServices[Options.metricToOptimize];
         const initialValues: number[] = this.getInitialValues();
@@ -44,7 +41,7 @@ export class OptimizationService {
     }
 
     private static applyFitnessFunctionAndOptimizeMetricWeights(initialValues: number[]): void {
-        const solution = nelderMead(this.fitnessFunction.bind(this), initialValues, {maxIterations: 200});
+        const solution = nelderMead(this.fitnessFunction.bind(this), initialValues, {maxIterations: 2});
         console.log(chalk.magentaBright('SOLUTION : '), solution);
         console.log(chalk.magentaBright('OPTIMIZED METRIC : '), this.metricService.metricWeights);
         console.log(chalk.magentaBright('PEARSON : '), 1 - solution.fx);
@@ -75,7 +72,7 @@ export class OptimizationService {
     private static getDataToCorrelate(): DataToCorrelate[] {
         const dataToCorrelate: DataToCorrelate[] = [];
         for (const astFile of this.astModel.astFiles) {
-            // console.log(chalk.blueBright('MWEIGHTTTTTT'), this.metricService.metricWeights);
+            console.log(chalk.blueBright('MWEIGHTTTTTT'), this.metricService.metricWeights);
             const score: number = this.metricService.getFileScore(astFile);
             // const score: number = this.getLineScore(astFile.metricWeights);
             dataToCorrelate.push(new DataToCorrelate(astFile.measureValue, score));

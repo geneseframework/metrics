@@ -20,8 +20,8 @@ import { ReportModel } from './report-generation/models/report.model';
 
 
 async function start(): Promise<void> {
-    // const pathToAnalyse = `${process.cwd()}/src/core/mocks/code-snippets`;
-    const pathToAnalyse = `${process.cwd()}/src/core/mocks/siegmund-2012`;
+    const pathToAnalyse = `${process.cwd()}/src/core/mocks/code-snippets`;
+    // const pathToAnalyse = `${process.cwd()}/src/core/mocks/siegmund-2012`;
     Options.setOptions(pathToAnalyse);
     createOutDir();
     console.log(chalk.yellowBright('Json AST generation...'));

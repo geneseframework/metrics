@@ -11,18 +11,14 @@ import * as chalk from 'chalk';
 export class CorrelationService {
 
     static setStats(jsonReport: JsonReportInterface): void {
-    // static setStats(jsonReport: JsonReportInterface, measures: Measure[] = []): void {
-    //     const measures: Measure[] = []
         if (!Options.hasMeasures) {
         // if (!Options.hasMeasures || measures.length < 2) {
             return;
         }
         const reportModel = new ReportModel(jsonReport);
-        console.log(chalk.blueBright('SET STATSSSS'), reportModel);
         for (const reportMetric of reportModel.reportMetrics) {
             this.setStatsMetric(reportMetric);
         }
-        // console.log(chalk.blueBright('SET STATSSSS 222'), reportModel);
     }
 
     private static setStatsMetric(reportMetric: ReportMetric): void {
