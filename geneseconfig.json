@@ -6,6 +6,14 @@
             {
                 "id": "dynamic",
                 "name": "dynamic"
+            },
+            {
+                "id": "loc",
+                "name": "LOC"
+            },
+            {
+                "id": "genese-cpx",
+                "name": "genese-cpx"
             }
         ]
     }

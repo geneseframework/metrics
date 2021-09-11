@@ -6,14 +6,12 @@ import { MetricWeights } from '../models/metric-weights.model';
 export class DynamicMetricService extends AbstractMetricService {
 
     metricWeights: MetricWeights = {
-        // "callbacks": 2,
         // "identifiers": 2,
         "ifs": 1,
         // "loops": 5,
         // "nesting": 0.5,
         // "repetition": 0.8,
         // "recursions": 2,
-        // "switches": 1,
         "words": 9
     }
 

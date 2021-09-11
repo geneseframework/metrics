@@ -39,11 +39,8 @@ export abstract class FlagService {
         const astLinesInReverseOrder: AstLine[] = astFile.astLines.filter(a => a.astNodes.length > 0)
             .sort((a, b) => b.issue - a.issue);
         const astLinesOutsideTraceProcessFunction: AstLine[] = astLinesInReverseOrder.filter(a => !this.isInTraceProcessBlock(a, sourceFile));
-        console.log(chalk.magentaBright('OUTTTT TPPPP'), astLinesOutsideTraceProcessFunction.map(a => a.text));
         for (const astLine of astLinesOutsideTraceProcessFunction) {
-            // if (!this.isInTraceProcessBlock(astLine, sourceFile)) {
-                sourceFile.insertText(astLine.end, `\nflag('${astFile.name}', ${astLine.issue});`);
-            // }
+            sourceFile.insertText(astLine.end, `\nflag('${astFile.name}', ${astLine.issue});`);
         }
         sourceFile.addImportDeclaration({defaultImport: '{flag, startTrace}', moduleSpecifier: './flagger/flagger.util.js'});
         this.addStartTracingFunction(sourceFile);
@@ -52,7 +49,6 @@ export abstract class FlagService {
     private static isInTraceProcessBlock(astLine: AstLine, sourceFile: SourceFile): boolean {
         let traceProcessBlock: FunctionDeclaration = this.getTraceProcessDeclaration(sourceFile);
         const interval: Interval = [traceProcessBlock.getPos(), traceProcessBlock.getEnd()];
-        console.log(chalk.magentaBright('IS IN TPPPP'), astLine.pos, astLine.text, interval, isInInterval(astLine.pos, interval));
         return isInInterval(astLine.pos, interval);
     }
 
