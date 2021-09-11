@@ -21,7 +21,6 @@ export class DynamicService {
             FlagService.start(astModel);
             const processTraces: ProcessTrace[] = ExecutionService.start(astModel);
             this.setDynamicAstLines(astModel, processTraces);
-            // console.log(chalk.magentaBright('DYNAMICCCCC END'), astModel.astMetrics);
         }
     }
 
@@ -50,14 +49,9 @@ export class DynamicService {
         const dynamicAstFile = new AstFile(astFile.jsonAstFile);
         const astLines: AstLine[] = [];
         const processTrace: ProcessTrace = processTraces.find(p => p.fileName === astFile.name);
-        let hasCalledStartMethod = false;
         for (const line of processTrace.lines) {
             const astLine: AstLine = astFile.astLines.find(a => a.issue === line);
-            // if (hasCalledStartMethod) {
-                astLines.push(astLine);
-            // } else {
-            //     hasCalledStartMethod = this.hasCalledStartMethod(astLine);
-            // }
+            astLines.push(astLine);
         }
         dynamicAstFile.astLines = astLines;
         return dynamicAstFile;
@@ -65,10 +59,5 @@ export class DynamicService {
 
     static hasTraceFunction(astFile: AstFile): boolean {
         return !!astFile.astNode.children.find(c => c.kind === 'FunctionDeclaration' && c.name === Options.traceFunctionName);
-    }
-
-    private static hasCalledStartMethod(astLine: AstLine): boolean {
-        const callExpression: AstNode = astLine.astNodes.find(a => a.kind === SyntaxKind.CallExpression);
-        return callExpression?.children[0]?.name === 'start';
     }
 }

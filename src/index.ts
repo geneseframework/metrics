@@ -20,8 +20,8 @@ import { ReportModel } from './report-generation/models/report.model';
 
 
 async function start(): Promise<void> {
-    // const pathToAnalyse = `${process.cwd()}/src/core/mocks/code-snippets`;
-    const pathToAnalyse = `${process.cwd()}/src/core/mocks/siegmund-2012`;
+    const pathToAnalyse = `${process.cwd()}/src/core/mocks/code-snippets`;
+    // const pathToAnalyse = `${process.cwd()}/src/core/mocks/siegmund-2012`;
     Options.setOptions(pathToAnalyse);
     createOutDir();
     console.log(chalk.yellowBright('Json AST generation...'));
@@ -32,15 +32,13 @@ async function start(): Promise<void> {
     await DynamicService.start(astModel);
     console.log(chalk.yellowBright('Collect measures from dataset...'));
     DatasetService.setMeasures(astModel);
-    // const measures: Measure[] = DatasetService.getMeasures();
     console.log(chalk.yellowBright('Evaluation for each metric...'));
     let jsonReport: JsonReportInterface = Options.generateJsonReport ? EvaluationService.evaluate(astModel) : require(Options.jsonReportPath);
     // if (hasCorrectDataset(measures, jsonReport)) {
-        // console.log(chalk.yellowBright('Optimization...'));
+        console.log(chalk.yellowBright('Optimization...'), jsonReport);
         // OptimizationService.optimize(astModel, jsonReport);
         console.log(chalk.yellowBright('Correlation...'));
         CorrelationService.setStats(jsonReport);
-        // CorrelationService.setStats(jsonReport, measures);
     // }
     console.log(chalk.yellowBright('Report generation...'));
     ReportService.start(jsonReport);

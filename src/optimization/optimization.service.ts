@@ -79,13 +79,9 @@ export class OptimizationService {
     private static getDataToCorrelate(): DataToCorrelate[] {
         const dataToCorrelate: DataToCorrelate[] = [];
         for (const astFile of this.astModel.astFiles) {
-            // console.log(chalk.blueBright('MWEIGHTTTTTT'), this.metricService.metricWeights);
             const score: number = this.metricService.getFileScore(astFile);
-            // console.log(chalk.blueBright('SCOREEEE'), score);
-            // const score: number = this.getLineScore(astFile.metricWeights);
             dataToCorrelate.push(new DataToCorrelate(astFile.measureValue, score));
         }
-        // console.log(chalk.magentaBright('DATAAAA'), dataToCorrelate);
         return dataToCorrelate;
     }
 
