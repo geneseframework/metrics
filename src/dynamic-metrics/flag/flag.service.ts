@@ -36,20 +36,32 @@ export abstract class FlagService {
     }
 
     private static flagAstFile(astFile: AstFile, sourceFile: SourceFile): void {
+        this.flagLines(astFile, sourceFile);
+        sourceFile.addImportDeclaration({defaultImport: '{flag, startTrace}', moduleSpecifier: './flagger/flagger.util.js'});
+        this.addStartTracingFunction(sourceFile);
+    }
+
+    private static flagLines(astFile: AstFile, sourceFile: SourceFile): void {
         const astLinesInReverseOrder: AstLine[] = astFile.astLines.filter(a => a.astNodes.length > 0)
             .sort((a, b) => b.issue - a.issue);
         const astLinesOutsideTraceProcessFunction: AstLine[] = astLinesInReverseOrder.filter(a => !this.isInTraceProcessBlock(a, sourceFile));
         for (const astLine of astLinesOutsideTraceProcessFunction) {
-            sourceFile.insertText(astLine.end, `\nflag('${astFile.name}', ${astLine.issue});`);
+            if (this.isFunctionDeclarationLine(astLine)) {
+                sourceFile.insertText(astLine.end, `\nflag('${astFile.name}', ${astLine.issue});`);
+            } else {
+                sourceFile.insertText(astLine.pos, `flag('${astFile.name}', ${astLine.issue});\n`);
+            }
         }
-        sourceFile.addImportDeclaration({defaultImport: '{flag, startTrace}', moduleSpecifier: './flagger/flagger.util.js'});
-        this.addStartTracingFunction(sourceFile);
     }
 
     private static isInTraceProcessBlock(astLine: AstLine, sourceFile: SourceFile): boolean {
         let traceProcessBlock: FunctionDeclaration = this.getTraceProcessDeclaration(sourceFile);
         const interval: Interval = [traceProcessBlock.getPos(), traceProcessBlock.getEnd()];
         return isInInterval(astLine.pos, interval);
+    }
+
+    private static isFunctionDeclarationLine(astLine: AstLine): boolean {
+        return astLine.astNodes?.[0]?.kind === 'FunctionDeclaration';
     }
 
     private static addStartTracingFunction(sourceFile: SourceFile): void {
