@@ -1,9 +1,8 @@
 import { Options } from '../../../core/models/options.model';
-import { FunctionDeclaration, SourceFile, SyntaxKind } from 'ts-morph';
+import { Block, FunctionDeclaration, SourceFile, SyntaxKind } from 'ts-morph';
 import { AstModel } from '../../../core/models/ast-model/ast.model';
 import { AstFile } from '../../../core/models/ast-model/ast-file.model';
 import { AstLine } from '../../../core/models/ast-model/ast-line.model';
-import { addImportDeclaration } from '../utils/ast-imports.util';
 import { ensureDirAndCopy } from '../../../core/utils/file-system.util';
 import { execSync } from 'child_process';
 import * as chalk from 'chalk';
@@ -48,15 +47,17 @@ export abstract class FlagService {
     }
 
     private static addStartTracingFunction(sourceFile: SourceFile): void {
-        let traceProcessDeclaration: FunctionDeclaration = this.getTraceProcessDeclaration(sourceFile);
-        console.log(chalk.magentaBright('TRACE NODEEEE'), traceProcessDeclaration?.getName());
-        sourceFile.insertText(traceProcessDeclaration.getEnd() - 1, 'endTrace();\n');
+        let traceProcessDeclaration: Block = this.getTraceProcessDeclaration(sourceFile);
+        // console.log(chalk.magentaBright('TRACE NODEEEE'), traceProcessDeclaration?.getName());
+        // sourceFile.insertText(traceProcessDeclaration.getEnd() + 1, 'endTrace();\n');
         traceProcessDeclaration = this.getTraceProcessDeclaration(sourceFile);
-        sourceFile.insertText(traceProcessDeclaration.getPos(), '\nstartTrace();\n');
+        sourceFile.insertText(traceProcessDeclaration.getStart() + 1, '\nstartTrace();\n');
     }
 
-    private static getTraceProcessDeclaration(sourceFile: SourceFile): FunctionDeclaration {
-        return sourceFile.getDescendantsOfKind(SyntaxKind.FunctionDeclaration).find(d => d.getName() === Options.traceFunctionName);
+    private static getTraceProcessDeclaration(sourceFile: SourceFile): Block {
+        return sourceFile.getDescendantsOfKind(SyntaxKind.FunctionDeclaration)
+            .find(d => d.getName() === Options.traceFunctionName)
+            .getChildrenOfKind(SyntaxKind.Block)[0];
     }
 
     private static transpile(): void {

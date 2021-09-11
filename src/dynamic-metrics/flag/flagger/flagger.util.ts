@@ -1,11 +1,12 @@
 import { ProcessTrace } from './process-trace.model';
 
 export const PROCESS_TRACES: ProcessTrace[] = [];
-export let STARTED_TRACING = true;
+export let STARTED_TRACING = false;
 
 export function flag(fileName: string, line: number) {
     console.log('FLAG LINE ', fileName, line);
     if (STARTED_TRACING) {
+        console.log('IS TRACINGGGGG');
         const fileProcess = PROCESS_TRACES.find(p => p.fileName === fileName);
         if (fileProcess) {
             fileProcess.lines.push(line);
@@ -17,10 +18,12 @@ export function flag(fileName: string, line: number) {
 }
 
 export function startTrace(): void {
+    console.log('STARTTTTTT');
     STARTED_TRACING = true;
 }
 
 
 export function endTrace(): void {
-    STARTED_TRACING = true;
+    console.log('ENDDDD');
+    STARTED_TRACING = false;
 }
