@@ -19,7 +19,6 @@ export class ExecutionService {
         const jsFileName = `${removeExtension(fileName)}.js`;
         const flaggedFilePath = `${Options.pathFlaggedFiles}/${jsFileName}`;
         const flaggedFile = require(flaggedFilePath);
-        console.log(chalk.blueBright('REQUIREDDDD'));
         flaggedFile[Options.traceFunctionName]();
     }
 
