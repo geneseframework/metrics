@@ -5,14 +5,12 @@ import { round } from '../core/utils/numbers.util';
 import { AstModel } from '../core/models/ast-model/ast.model';
 import { AstFile } from '../core/models/ast-model/ast-file.model';
 import { removeExtension } from '../core/utils/file-system.util';
-import * as chalk from 'chalk';
 
 const XLSX = require('xlsx');
 
 export class DatasetService {
 
     static setMeasures(astModel: AstModel): void {
-        console.log(chalk.blueBright('SET MEASURESSSS astModel'), astModel);
         if (!Options.hasMeasures) {
             return;
         }
@@ -21,14 +19,6 @@ export class DatasetService {
         const measures: Measure[] = this.getDataFromWorkSheet(dataSheet);
         this.setMeasuresToAstModel(astModel, measures);
     }
-    // static getMeasures(): Measure[] {
-    //     if (!Options.hasMeasures) {
-    //         return [];
-    //     }
-    //     const wb: WorkBook = XLSX.readFile(Options.pathDataset);
-    //     const dataSheet: WorkSheet = wb.Sheets[wb.SheetNames[0]];
-    //     return this.getDataFromWorkSheet(dataSheet);
-    // }
 
     private static getDataFromWorkSheet(dataSheet: WorkSheet): Measure[] {
         const topLeft: CellAddress = this.getTopLeftCell(dataSheet);
@@ -61,7 +51,6 @@ export class DatasetService {
     }
 
     private static setMeasuresToAstModel(astModel: AstModel, measures: Measure[]) {
-        // console.log(chalk.cyan('SET MEASURESSSS measures'), measures);
         for (const measure of measures) {
             const astFile: AstFile = astModel.astFiles.find(a => removeExtension(a.name) === measure.codeSnippetName);
             astFile.measureValue = measure.measureValue;

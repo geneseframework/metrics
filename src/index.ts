@@ -35,8 +35,6 @@ async function start(): Promise<void> {
     console.log(chalk.yellowBright('Evaluation for each metric...'));
     let jsonReport: JsonReportInterface = Options.generateJsonReport ? EvaluationService.evaluate(astModel) : require(Options.jsonReportPath);
     // if (hasCorrectDataset(measures, jsonReport)) {
-        console.log(chalk.yellowBright('Optimization...'), jsonReport);
-        // OptimizationService.optimize(astModel, jsonReport);
         console.log(chalk.yellowBright('Correlation...'));
         CorrelationService.setStats(jsonReport);
     // }

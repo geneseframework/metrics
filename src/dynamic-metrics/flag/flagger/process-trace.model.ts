@@ -1,4 +1,5 @@
 export class ProcessTrace {
+
     fileName: string = undefined;
     lines: number[] = [];
 

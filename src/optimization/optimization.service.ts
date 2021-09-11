@@ -4,7 +4,6 @@ import { sampleCorrelation } from 'simple-statistics';
 import { DataToCorrelate } from '../report-generation/models/data-to-correlate.model';
 import { METRIC_SERVICES } from '../evaluation/metrics/const/metric-services.const';
 import { Options } from '../core/models/options.model';
-import { OptimizationFile } from './optimization-file.model';
 import { nelderMead } from 'fmin';
 import { ReportMetric } from '../report-generation/models/report-metric.model';
 import { ReportSnippet } from '../report-generation/models/report-snippet.model';
@@ -18,12 +17,10 @@ import { ReportModel } from '../report-generation/models/report.model';
 export class OptimizationService {
 
     static astModel: AstModel = undefined;
-    static dataToCorrelate: DataToCorrelate[] = [];
     static metricService: AbstractMetricService = undefined;
 
     static optimize(astModel: AstModel, reportModel: ReportModel): void {
         // console.log(chalk.magentaBright('OPTIM FILESSSS'), reportModel);
-        // console.log(chalk.cyan('OPTIM FILESSSS'), astModel.astFiles.map(a => a.measureValue));
         this.astModel = astModel;
         this.metricService = METRIC_SERVICES.metricServices[Options.metricToOptimize];
         const initialValues: number[] = this.getInitialValues();
@@ -48,28 +45,21 @@ export class OptimizationService {
     }
 
     private static fitnessFunction(values: number[]): number {
-        // console.log(chalk.redBright('VALUESSSS'), values);
         this.modifyOriginalMetricWeights(values);
-        // console.log(chalk.redBright('MODIFIED  WWWWWthis.metricService.metricWeights'), this.metricService.metricWeights);
         const dataToCorrelate: DataToCorrelate[] = this.getDataToCorrelate();
-        // console.log(chalk.redBright('DATAAAAAAA'), dataToCorrelate.map(d => [d.measureValue, d.metricScore]));
         const measureValues: number[] = dataToCorrelate.map(d => d.measureValue);
         const metricScores: number[] = dataToCorrelate.map(d => d.metricScore);
         const pearson: number = sampleCorrelation(measureValues, metricScores);
         const valueToMinimize: number = 1 - pearson;
-        // console.log(chalk.redBright('PEARSON : '), 1 - valueToMinimize);
         return valueToMinimize;
     }
 
     private static modifyOriginalMetricWeights(values: number[]): MetricWeights {
-        const zzz = Object.assign(this.metricService.metricWeights, this.getOptimizedMetricWeights(values));
-        // console.log(chalk.magentaBright('MODIGY WWWWW'), zzz);
-        return zzz;
+        return Object.assign(this.metricService.metricWeights, this.getOptimizedMetricWeights(values));
     }
 
     private static getOptimizedMetricWeights(values: number[]): MetricWeights {
         const metricWeights: MetricWeights = {};
-        // console.log(chalk.yellowBright('this.metricService.parametersToOptimize WWWWW'), this.metricService.parametersToOptimize);
         for (let i = 0; i < values.length; i++) {
             metricWeights[this.metricService.parametersToOptimize[i]] = values[i];
         }
@@ -83,15 +73,6 @@ export class OptimizationService {
             dataToCorrelate.push(new DataToCorrelate(astFile.measureValue, score));
         }
         return dataToCorrelate;
-    }
-
-    private static getScore(metricWeights: MetricWeights): number {
-        let total = 0;
-        // for (const astLine of )
-        for (const [parameter, weight] of Object.entries(this.metricService.metricWeights)) {
-            total += !isNaN(metricWeights[parameter]) ? metricWeights[parameter] * weight : 0;
-        }
-        return total;
     }
 
     private static getReportOptimizedMetric(astModel: AstModel, jsonReport: JsonReportInterface): ReportMetric {
