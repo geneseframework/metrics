@@ -3,7 +3,7 @@ import * as chalk from 'chalk';
 import { Project } from 'ts-morph';
 import { Options } from '../core/models/options.model';
 import { ensureDirAndCopy } from '../core/utils/file-system.util';
-import { FlagService } from './flag/services/flag.service';
+import { FlagService } from './flag/flag.service';
 import { ExecutionService } from './execution/execution.service';
 import { ProcessTrace } from './flag/flagger/process-trace.model';
 import { AstFile } from '../core/models/ast-model/ast-file.model';
@@ -36,6 +36,8 @@ export class DynamicService {
         for (const astFile of astModel.astFiles) {
             if (this.hasTraceFunction(astFile)) {
                 astFiles.push(this.getAstFileWithDynamicCode(astFile, processTraces));
+            } else {
+                astFiles.push(astFile);
             }
         }
         for (const astMetric of astModel.astMetrics) {
@@ -47,14 +49,9 @@ export class DynamicService {
         const dynamicAstFile = new AstFile(astFile.jsonAstFile);
         const astLines: AstLine[] = [];
         const processTrace: ProcessTrace = processTraces.find(p => p.fileName === astFile.name);
-        let hasCalledStartMethod = false;
         for (const line of processTrace.lines) {
             const astLine: AstLine = astFile.astLines.find(a => a.issue === line);
-            if (hasCalledStartMethod) {
-                astLines.push(astLine);
-            } else {
-                hasCalledStartMethod = this.hasCalledStartMethod(astLine);
-            }
+            astLines.push(astLine);
         }
         dynamicAstFile.astLines = astLines;
         return dynamicAstFile;
@@ -62,10 +59,5 @@ export class DynamicService {
 
     static hasTraceFunction(astFile: AstFile): boolean {
         return !!astFile.astNode.children.find(c => c.kind === 'FunctionDeclaration' && c.name === Options.traceFunctionName);
-    }
-
-    private static hasCalledStartMethod(astLine: AstLine): boolean {
-        const callExpression: AstNode = astLine.astNodes.find(a => a.kind === SyntaxKind.CallExpression);
-        return callExpression?.children[0]?.name === 'start';
     }
 }

@@ -1,9 +1,9 @@
 import { JsonAstFileInterface } from '../../interfaces/json-ast/json-ast-file.interface';
-import { MetricParamValues } from '../../../evaluation/metrics/models/metric-param-value.model';
 import { AstLine } from './ast-line.model';
 import { AstNode } from './ast-node.model';
 import { JsonAstNodeInterface } from '../../interfaces/json-ast/json-ast-node.interface';
 import { AstNodeService } from '../../../json-ast-to-ast-model/services/ast-node.service';
+import { MetricWeights } from '../../../evaluation/metrics/models/metric-weights.model';
 
 export class AstFile {
 
@@ -12,7 +12,7 @@ export class AstFile {
     jsonAstFile: JsonAstFileInterface = undefined;
     jsonAstNode: JsonAstNodeInterface = undefined;
     measureValue: number;
-    metricParamValues: MetricParamValues = {};
+    metricParamValues: MetricWeights = {};
     name = undefined;
     text = '';
 

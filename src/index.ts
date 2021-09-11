@@ -20,9 +20,9 @@ import { ReportModel } from './report-generation/models/report.model';
 
 
 async function start(): Promise<void> {
-    // const pathToAnalyse = `${process.cwd()}/src/core/mocks/code-snippets`;
-    const pathToAnalyse = `${process.cwd()}/src/core/mocks/siegmund-2012`;
-    Options.setOptions(pathToAnalyse, __dirname);
+    const pathToAnalyse = `${process.cwd()}/src/core/mocks/code-snippets`;
+    // const pathToAnalyse = `${process.cwd()}/src/core/mocks/siegmund-2012`;
+    Options.setOptions(pathToAnalyse);
     createOutDir();
     console.log(chalk.yellowBright('Json AST generation...'));
     const jsonAst: JsonAstInterface = Options.generateJsonAst ? JsonAstCreationService.start(Options.pathFolderToAnalyze) : require(Options.pathJsonAst);
@@ -31,20 +31,18 @@ async function start(): Promise<void> {
     console.log(chalk.yellowBright('Execute dynamic metrics...'));
     await DynamicService.start(astModel);
     console.log(chalk.yellowBright('Collect measures from dataset...'));
-    const measures: Measure[] = DatasetService.getMeasures();
+    DatasetService.setMeasures(astModel);
     console.log(chalk.yellowBright('Evaluation for each metric...'));
-    let jsonReport: JsonReportInterface = Options.generateJsonReport ? EvaluationService.evaluate(astModel, measures) : require(Options.jsonReportPath);
-    if (hasCorrectDataset(measures, jsonReport)) {
-        console.log(chalk.yellowBright('Optimization...'));
-        OptimizationService.optimize(astModel, jsonReport);
+    let jsonReport: JsonReportInterface = Options.generateJsonReport ? EvaluationService.evaluate(astModel) : require(Options.jsonReportPath);
+    // if (hasCorrectDataset(measures, jsonReport)) {
         console.log(chalk.yellowBright('Correlation...'));
-        CorrelationService.setStats(jsonReport, measures);
-    }
+        CorrelationService.setStats(jsonReport);
+    // }
     console.log(chalk.yellowBright('Report generation...'));
     ReportService.start(jsonReport);
 }
 
-function hasCorrectDataset(measures: Measure[], jsonReport: JsonReportInterface): boolean {
+export function hasCorrectDataset(measures: Measure[], jsonReport: JsonReportInterface): boolean {
     const codeSnippetNamesInDataset: string[] = measures.map(m => m.codeSnippetName).sort();
     const codeSnippetNamesInJsonReport: string[] = new ReportModel(jsonReport).codeSnippetNames;
     return haveSameElements(codeSnippetNamesInDataset, codeSnippetNamesInJsonReport);

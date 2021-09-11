@@ -6,19 +6,17 @@ import { MetricWeights } from '../models/metric-weights.model';
 export class DynamicMetricService extends AbstractMetricService {
 
     metricWeights: MetricWeights = {
-        // "callbacks": 2,
-        // "identifiers": 3,
-        "ifs": 8,
+        "ifs": 0.5,
         "loops": 1,
         "nesting": 0.5,
-        // "recursions": 2,
-        // "switches": 1,
-        "words": 0.1
+        // "repetition": 0.8,
+        "recursions": 2,
+        "words": 9
     }
 
     parametersToOptimize = ['ifs', 'loops', 'nesting'];
 
     evaluate(astFile: AstFile, reportFile: ReportSnippet): void {
-        this.evaluateMetric(astFile, reportFile, this.metricWeights);
+        this.evaluateMetric(astFile.astLines, reportFile);
     }
 }

@@ -13,7 +13,7 @@ export class AstMetricService extends AbstractMetricService {
 
     evaluate(astFile: AstFile, reportFile: ReportSnippet): void {
         this.setMetricWeights();
-        this.evaluateMetric(astFile, reportFile, this.metricWeights);
+        this.evaluateMetric(astFile.astLines, reportFile);
     }
 
     setMetricWeights(): void {

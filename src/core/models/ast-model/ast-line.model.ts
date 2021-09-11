@@ -12,6 +12,7 @@ export class AstLine {
     astNodeIdentifiers: AstNode[] = [];
     issue ?= 0;                                             // The number of the line in its Code parentFunction (method)
     pos ?= 0;                                               // The absolute pos (in number of characters) of the line in the SourceFile
+    score = 0;
     text ?= '';                                             // The text of the line
 
 
@@ -66,24 +67,24 @@ export class AstLine {
     private getNbElements(isKindOf: string): number {
         return this.astNodes.filter(a => a[isKindOf]).length;
     }
-
-    getScore(metricWeights: MetricWeights): number {
-        let total = 0;
-        for (const [parameter, weight] of Object.entries(metricWeights)) {
-            total += !isNaN(this[parameter]) ? this[parameter] * weight : 0;
-        }
-        return round(total, 1);
-    }
-
-    getComments(metricWeights: MetricWeights): any {
-        const score: number = this.getScore(metricWeights);
-        if (score === 0) {
-            return '';
-        }
-        let text = `+ ${score} (`;
-        for (const [parameter, weight] of Object.entries(metricWeights)) {
-            text = this[parameter] > 0 ? `${text}${capitalize(parameter)}: +${round(this[parameter] * weight, 1)}, ` : `${text}`;
-        }
-        return `${text.slice(0, -2)})`;
-    }
+    //
+    // getLineScore(metricWeights: MetricWeights): number {
+    //     let total = 0;
+    //     for (const [parameter, weight] of Object.entries(metricWeights)) {
+    //         total += !isNaN(this[parameter]) ? this[parameter] * weight : 0;
+    //     }
+    //     return round(total, 1);
+    // }
+    //
+    // getComments(metricWeights: MetricWeights): any {
+    //     const score: number = this.getLineScore(metricWeights);
+    //     if (score === 0) {
+    //         return '';
+    //     }
+    //     let text = `+ ${score} (`;
+    //     for (const [parameter, weight] of Object.entries(metricWeights)) {
+    //         text = this[parameter] > 0 ? `${text}${capitalize(parameter)}: +${round(this[parameter] * weight, 1)}, ` : `${text}`;
+    //     }
+    //     return `${text.slice(0, -2)})`;
+    // }
 }
