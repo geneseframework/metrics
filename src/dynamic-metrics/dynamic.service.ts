@@ -3,7 +3,7 @@ import * as chalk from 'chalk';
 import { Project } from 'ts-morph';
 import { Options } from '../core/models/options.model';
 import { ensureDirAndCopy } from '../core/utils/file-system.util';
-import { FlagService } from './flag/services/flag.service';
+import { FlagService } from './flag/flag.service';
 import { ExecutionService } from './execution/execution.service';
 import { ProcessTrace } from './flag/flagger/process-trace.model';
 import { AstFile } from '../core/models/ast-model/ast-file.model';

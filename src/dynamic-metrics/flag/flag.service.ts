@@ -1,12 +1,12 @@
-import { Options } from '../../../core/models/options.model';
+import { Options } from '../../core/models/options.model';
 import { Block, FunctionDeclaration, SourceFile, SyntaxKind } from 'ts-morph';
-import { AstModel } from '../../../core/models/ast-model/ast.model';
-import { AstFile } from '../../../core/models/ast-model/ast-file.model';
-import { AstLine } from '../../../core/models/ast-model/ast-line.model';
-import { ensureDirAndCopy } from '../../../core/utils/file-system.util';
+import { AstModel } from '../../core/models/ast-model/ast.model';
+import { AstFile } from '../../core/models/ast-model/ast-file.model';
+import { AstLine } from '../../core/models/ast-model/ast-line.model';
+import { ensureDirAndCopy } from '../../core/utils/file-system.util';
 import { execSync } from 'child_process';
 import * as chalk from 'chalk';
-import { Interval, isInInterval } from '../../../json-ast-to-ast-model/types/interval.type';
+import { Interval, isInInterval } from '../../json-ast-to-ast-model/types/interval.type';
 
 
 export abstract class FlagService {

@@ -1,6 +1,6 @@
 {
     "name": "@genese/metrics",
-    "version": "0.0.1",
+    "version": "0.1.0",
     "description": "Analyzes complexity of source code for multiple metrics. Part of the @genese tool suite.",
     "scripts": {
         "build": "rm -rf report && tsc",
