@@ -13,7 +13,7 @@ export class GeneseCpxService extends AbstractMetricService {
         // "nesting": 0.5,
         // "recursions": 2,
         // "switches": 1,
-        "words": 0.1
+        "words": 9
     }
 
     parametersToOptimize = ['ifs'];

@@ -1,3 +1,5 @@
-function start(p: number) {
-    let a = 3;
+
+function zzz(a) {
+    if (a > 0) {
+    }
 }
