@@ -51,7 +51,8 @@ import { SourceFile } from 'ts-morph';
 
 
 export function addImportDeclaration(sourceFile: SourceFile, importName: string, path: string): void {
-    const defaultImport = `{ ${importName} }`;
+    const defaultImport = `* as path`;
+    // const defaultImport = `{ ${importName} }`;
     sourceFile.addImportDeclaration({
         defaultImport: defaultImport,
         moduleSpecifier: path

@@ -1,5 +1,5 @@
 import { Options } from '../../../core/models/options.model';
-import { SourceFile } from 'ts-morph';
+import { FunctionDeclaration, SourceFile, SyntaxKind } from 'ts-morph';
 import { AstModel } from '../../../core/models/ast-model/ast.model';
 import { AstFile } from '../../../core/models/ast-model/ast-file.model';
 import { AstLine } from '../../../core/models/ast-model/ast-line.model';
@@ -41,8 +41,22 @@ export abstract class FlagService {
         for (const astLine of astLinesInReverseOrder) {
             sourceFile.insertText(astLine.pos, `flag('${astFile.name}', ${astLine.issue});\n`);
         }
-        addImportDeclaration(sourceFile, 'flag', './flagger/flagger.util.js');
+        sourceFile.addImportDeclaration({defaultImport: '{flag, startTrace, endTrace}', moduleSpecifier: './flagger/flagger.util.js'});
+        // addImportDeclaration(sourceFile, 'flag', './flagger/flagger.util.js');
+        this.addStartTracingFunction(sourceFile);
         // console.log(chalk.blueBright('FILE TXTTTTT'), sourceFile.getFullText());
+    }
+
+    private static addStartTracingFunction(sourceFile: SourceFile): void {
+        let traceProcessDeclaration: FunctionDeclaration = this.getTraceProcessDeclaration(sourceFile);
+        console.log(chalk.magentaBright('TRACE NODEEEE'), traceProcessDeclaration?.getName());
+        sourceFile.insertText(traceProcessDeclaration.getEnd() - 1, 'endTrace();\n');
+        traceProcessDeclaration = this.getTraceProcessDeclaration(sourceFile);
+        sourceFile.insertText(traceProcessDeclaration.getPos(), '\nstartTrace();\n');
+    }
+
+    private static getTraceProcessDeclaration(sourceFile: SourceFile): FunctionDeclaration {
+        return sourceFile.getDescendantsOfKind(SyntaxKind.FunctionDeclaration).find(d => d.getName() === Options.traceFunctionName);
     }
 
     private static transpile(): void {
