@@ -40,18 +40,15 @@ export abstract class FlagService {
         for (const astLine of astLinesInReverseOrder) {
             sourceFile.insertText(astLine.pos, `flag('${astFile.name}', ${astLine.issue});\n`);
         }
-        sourceFile.addImportDeclaration({defaultImport: '{flag, startTrace, endTrace}', moduleSpecifier: './flagger/flagger.util.js'});
+        sourceFile.addImportDeclaration({defaultImport: '{flag, startTrace}', moduleSpecifier: './flagger/flagger.util.js'});
         // addImportDeclaration(sourceFile, 'flag', './flagger/flagger.util.js');
         this.addStartTracingFunction(sourceFile);
         // console.log(chalk.blueBright('FILE TXTTTTT'), sourceFile.getFullText());
     }
 
     private static addStartTracingFunction(sourceFile: SourceFile): void {
-        let traceProcessDeclaration: Block = this.getTraceProcessDeclaration(sourceFile);
-        // console.log(chalk.magentaBright('TRACE NODEEEE'), traceProcessDeclaration?.getName());
-        // sourceFile.insertText(traceProcessDeclaration.getEnd() + 1, 'endTrace();\n');
-        traceProcessDeclaration = this.getTraceProcessDeclaration(sourceFile);
-        sourceFile.insertText(traceProcessDeclaration.getStart() + 1, '\nstartTrace();\n');
+        let traceProcessBlock: Block = this.getTraceProcessDeclaration(sourceFile);
+        sourceFile.insertText(traceProcessBlock.getStart() + 1, '\nstartTrace();\n');
     }
 
     private static getTraceProcessDeclaration(sourceFile: SourceFile): Block {
