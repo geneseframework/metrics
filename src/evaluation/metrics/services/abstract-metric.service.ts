@@ -31,11 +31,11 @@ export abstract class AbstractMetricService {
 
     getLineScore(astLine: AstLine): number {
         let total = 0;
-        console.log(chalk.cyanBright('GET LINE SCORRRRR'), astLine.text, this.metricWeights);
+        // console.log(chalk.cyanBright('GET LINE SCORRRRR'), astLine.text, this.metricWeights);
         for (const [parameter, weight] of Object.entries(this.metricWeights)) {
             total += !isNaN(astLine[parameter]) ? astLine[parameter] * weight : 0;
         }
-        console.log(chalk.cyanBright('GET LINE SCORRRRR TOTAL'), total);
+        // console.log(chalk.cyanBright('GET LINE SCORRRRR TOTAL'), total);
         return total;
         // return round(total, 1);
     }

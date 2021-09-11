@@ -53,11 +53,11 @@ export class DynamicService {
         let hasCalledStartMethod = false;
         for (const line of processTrace.lines) {
             const astLine: AstLine = astFile.astLines.find(a => a.issue === line);
-            if (hasCalledStartMethod) {
+            // if (hasCalledStartMethod) {
                 astLines.push(astLine);
-            } else {
-                hasCalledStartMethod = this.hasCalledStartMethod(astLine);
-            }
+            // } else {
+            //     hasCalledStartMethod = this.hasCalledStartMethod(astLine);
+            // }
         }
         dynamicAstFile.astLines = astLines;
         return dynamicAstFile;
