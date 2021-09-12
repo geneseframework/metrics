@@ -58,6 +58,7 @@ export abstract class FlagService {
             case SyntaxKind.FunctionDeclaration:
                 flagsToInsert.push(this.getFlagToInsertForFunctionDeclaration(node as FunctionDeclaration));
                 break;
+            case SyntaxKind.ExpressionStatement:
             case SyntaxKind.ForInStatement:
             case SyntaxKind.ForOfStatement:
             case SyntaxKind.ForStatement:

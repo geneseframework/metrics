@@ -28,7 +28,7 @@ export abstract class AbstractMetricService {
         return sum(astFile.astLines.map(a => this.getLineScore(a)));
     }
 
-    getLineScore(astLine: AstLine): number {
+    getLineScore(astLine: AstLine, ...args: any[]): number {
         let total = 0;
         for (const [parameter, weight] of Object.entries(this.metricWeights)) {
             total += !isNaN(astLine[parameter]) ? astLine[parameter] * weight : 0;
