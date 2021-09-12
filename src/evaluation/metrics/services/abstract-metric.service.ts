@@ -38,8 +38,7 @@ export abstract class AbstractMetricService {
     }
 
     getComments(astLine: AstLine): any {
-        // const score: number = 0;
-        const score: number = astLine.score;
+        const score: number = round(astLine.score, 3);
         if (score === 0) {
             return '';
         }

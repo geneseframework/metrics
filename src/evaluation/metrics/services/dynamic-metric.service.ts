@@ -33,7 +33,7 @@ export class DynamicMetricService extends AbstractMetricService {
             lineRepetitions.numberOfRepetitions++;
             const reportLine = new ReportLine(astLine.issue, astLine.text, this.getComments(astLine), lineScore);
             reportFile.lines.push(reportLine);
-            reportFile.score = round(reportFile.score + reportLine.score, 1);
+            reportFile.score = round(reportFile.score + reportLine.score, 2);
         }
     }
 
