@@ -1,5 +1,5 @@
 import { Options } from '../../core/models/options.model';
-import { Block, FunctionDeclaration, SourceFile, Statement, SyntaxKind } from 'ts-morph';
+import { Block, FunctionDeclaration, Node, SourceFile, Statement, SyntaxKind } from 'ts-morph';
 import { AstModel } from '../../core/models/ast-model/ast.model';
 import { AstFile } from '../../core/models/ast-model/ast-file.model';
 import { AstLine } from '../../core/models/ast-model/ast-line.model';
@@ -54,50 +54,59 @@ export abstract class FlagService {
         this.insertFlags(sourceFile, flagsToInsert);
     }
 
-    private static getFlagsToInsert(sourceFile: SourceFile, statement: Statement): TextToInsert[] {
+    private static getFlagsToInsert(sourceFile: SourceFile, node: Node): TextToInsert[] {
         const flagsToInsert: TextToInsert[] = [];
-        if (this.isFunctionDeclaration(statement)) {
-            return this.addFlagsForFunctionDeclaration(statement);// sourceFile.insertText(statement.getEnd(), `\nflag('${sourceFile.getBaseName()}', ${statement.getEndLineNumber()});`);
-        } else {
-            console.log(chalk.cyanBright('NOT FUNC DECLLLL'), statement.getKindName(), `\nflag('${sourceFile.getBaseName()}', ${statement.getEndLineNumber()});`);
-            return [{position: statement.getPos(), text: `\nflag('${sourceFile.getBaseName()}', ${statement.getEndLineNumber()});`}];
+        if (this.isInTraceProcessBlock(sourceFile, node)) {
+            return [];
         }
-    }
-
-    private static isFunctionDeclaration(statement: Statement): statement is FunctionDeclaration {
-        return statement.getKindName() === 'FunctionDeclaration';
-    }
-
-    private static addFlagsForFunctionDeclaration(functionDeclaration: FunctionDeclaration): TextToInsert[] {
-        const block: Block = functionDeclaration.getFirstChildByKind(SyntaxKind.Block);
-        const flagsToInsert: TextToInsert[] = [{position: block.getStart() + 1, text: `\nflag('${functionDeclaration.getSourceFile().getBaseName()}', ${functionDeclaration.getEndLineNumber()});`}];
+        switch (node.getKind()) {
+            case SyntaxKind.FunctionDeclaration:
+                flagsToInsert.push(this.getFlagToInsertForFunctionDeclaration(node as FunctionDeclaration));
+                break;
+            case SyntaxKind.ForInStatement:
+            case SyntaxKind.ForOfStatement:
+            case SyntaxKind.ForStatement:
+            case SyntaxKind.IfStatement:
+            case SyntaxKind.ReturnStatement:
+            case SyntaxKind.VariableStatement:
+                flagsToInsert.push({position: node.getPos(), text: `\nflag('${sourceFile.getBaseName()}', ${node.getStartLineNumber()});`, sortPosition: node.getPos()});
+                break;
+        }
+        for (const child of node.getChildren()) {
+            flagsToInsert.push(...this.getFlagsToInsert(sourceFile, child));
+        }
         return flagsToInsert;
     }
 
+    private static getFlagToInsertForFunctionDeclaration(functionDeclaration: FunctionDeclaration): TextToInsert {
+        const block: Block = functionDeclaration.getFirstChildByKind(SyntaxKind.Block);
+        return {position: block.getStart() + 1, text: `\nflag('${functionDeclaration.getSourceFile().getBaseName()}', ${functionDeclaration.getStartLineNumber()});`, sortPosition: block.getStart() - 0.5};
+    }
+
     private static insertFlags(sourceFile: SourceFile, flagsToInsert: TextToInsert[]): void {
-        flagsToInsert = flagsToInsert.sort((a, b) => b.position - a.position);
+        flagsToInsert = flagsToInsert.sort((a, b) => b.sortPosition - a.sortPosition);
         for (const flagToInsert of flagsToInsert) {
             sourceFile.insertText(flagToInsert.position, flagToInsert.text);
         }
     }
 
-    private static flagLines(astFile: AstFile, sourceFile: SourceFile): void {
-        const astLinesInReverseOrder: AstLine[] = astFile.astLines.filter(a => a.astNodes.length > 0)
-            .sort((a, b) => b.issue - a.issue);
-        const astLinesOutsideTraceProcessFunction: AstLine[] = astLinesInReverseOrder.filter(a => !this.isInTraceProcessBlock(a, sourceFile));
-        for (const astLine of astLinesOutsideTraceProcessFunction) {
-            if (this.isFunctionDeclarationLine(astLine)) {
-                sourceFile.insertText(astLine.end, `\nflag('${astFile.name}', ${astLine.issue});`);
-            } else if (astLine.pos < sourceFile.getEnd()) {
-                sourceFile.insertText(astLine.pos, `flag('${astFile.name}', ${astLine.issue});\n`);
-            }
-        }
-    }
+    // private static flagLines(astFile: AstFile, sourceFile: SourceFile): void {
+    //     const astLinesInReverseOrder: AstLine[] = astFile.astLines.filter(a => a.astNodes.length > 0)
+    //         .sort((a, b) => b.issue - a.issue);
+    //     const astLinesOutsideTraceProcessFunction: AstLine[] = astLinesInReverseOrder.filter(a => !this.isInTraceProcessBlock(a, sourceFile));
+    //     for (const astLine of astLinesOutsideTraceProcessFunction) {
+    //         if (this.isFunctionDeclarationLine(astLine)) {
+    //             sourceFile.insertText(astLine.end, `\nflag('${astFile.name}', ${astLine.issue});`);
+    //         } else if (astLine.pos < sourceFile.getEnd()) {
+    //             sourceFile.insertText(astLine.pos, `flag('${astFile.name}', ${astLine.issue});\n`);
+    //         }
+    //     }
+    // }
 
-    private static isInTraceProcessBlock(astLine: AstLine, sourceFile: SourceFile): boolean {
+    private static isInTraceProcessBlock(sourceFile: SourceFile, node: Node): boolean {
         let traceProcessBlock: FunctionDeclaration = this.getTraceProcessDeclaration(sourceFile);
         const interval: Interval = [traceProcessBlock.getPos(), traceProcessBlock.getEnd()];
-        return isInInterval(astLine.pos, interval);
+        return isInInterval(node.getStart(), interval);
     }
 
     private static isFunctionDeclarationLine(astLine: AstLine): boolean {

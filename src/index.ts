@@ -33,13 +33,13 @@ async function start(): Promise<void> {
     console.log(chalk.yellowBright('Collect measures from dataset...'));
     DatasetService.setMeasures(astModel);
     console.log(chalk.yellowBright('Evaluation for each metric...'));
-    // let jsonReport: JsonReportInterface = Options.generateJsonReport ? EvaluationService.evaluate(astModel) : require(Options.jsonReportPath);
+    let jsonReport: JsonReportInterface = Options.generateJsonReport ? EvaluationService.evaluate(astModel) : require(Options.jsonReportPath);
     // if (hasCorrectDataset(measures, jsonReport)) {
         console.log(chalk.yellowBright('Correlation...'));
-        // CorrelationService.setStats(jsonReport);
+        CorrelationService.setStats(jsonReport);
     // }
     console.log(chalk.yellowBright('Report generation...'));
-    // ReportService.start(jsonReport);
+    ReportService.start(jsonReport);
 }
 
 export function hasCorrectDataset(measures: Measure[], jsonReport: JsonReportInterface): boolean {
