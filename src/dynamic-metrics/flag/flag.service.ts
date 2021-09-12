@@ -2,7 +2,6 @@ import { Options } from '../../core/models/options.model';
 import { Block, FunctionDeclaration, Node, SourceFile, Statement, SyntaxKind } from 'ts-morph';
 import { AstModel } from '../../core/models/ast-model/ast.model';
 import { AstFile } from '../../core/models/ast-model/ast-file.model';
-import { AstLine } from '../../core/models/ast-model/ast-line.model';
 import { ensureDirAndCopy } from '../../core/utils/file-system.util';
 import { execSync } from 'child_process';
 import * as chalk from 'chalk';
@@ -18,7 +17,7 @@ export abstract class FlagService {
         for (const astFile of astModel.astFiles) {
             const sourceFile: SourceFile = Options.flaggedProject.getSourceFile(astFile.name);
             if (this.hasTraceFunction(astFile)) {
-                this.flagAstFile(astFile, sourceFile);
+                this.flagSourceFile(sourceFile);
             }
             this.addLocalModuleScopeInfo(sourceFile);
             sourceFile.saveSync();
@@ -36,14 +35,13 @@ export abstract class FlagService {
         ensureDirAndCopy(source2, target2);
     }
 
-    private static flagAstFile(astFile: AstFile, sourceFile: SourceFile): void {
-        this.flagStatements(astFile, sourceFile);
-        // this.flagLines(astFile, sourceFile);
-        sourceFile.addImportDeclaration({defaultImport: '{flag, startTrace}', moduleSpecifier: './flagger/flagger.util.js'});
+    private static flagSourceFile(sourceFile: SourceFile): void {
+        this.flagStatements(sourceFile);
+        sourceFile.addImportDeclaration({defaultImport: '{flag, startTrace, endTrace}', moduleSpecifier: './flagger/flagger.util.js'});
         this.addStartTracingFunction(sourceFile);
     }
 
-    private static flagStatements(astFile: AstFile, sourceFile: SourceFile): void {
+    private static flagStatements(sourceFile: SourceFile): void {
         const statements: Statement[] = sourceFile.getStatements().sort((a, b) => b.getPos() - a.getPos());
         console.log(chalk.magentaBright('STTTT'), statements.map(s => s.getKindName()));
         const flagsToInsert: TextToInsert[] = [];
@@ -90,32 +88,17 @@ export abstract class FlagService {
         }
     }
 
-    // private static flagLines(astFile: AstFile, sourceFile: SourceFile): void {
-    //     const astLinesInReverseOrder: AstLine[] = astFile.astLines.filter(a => a.astNodes.length > 0)
-    //         .sort((a, b) => b.issue - a.issue);
-    //     const astLinesOutsideTraceProcessFunction: AstLine[] = astLinesInReverseOrder.filter(a => !this.isInTraceProcessBlock(a, sourceFile));
-    //     for (const astLine of astLinesOutsideTraceProcessFunction) {
-    //         if (this.isFunctionDeclarationLine(astLine)) {
-    //             sourceFile.insertText(astLine.end, `\nflag('${astFile.name}', ${astLine.issue});`);
-    //         } else if (astLine.pos < sourceFile.getEnd()) {
-    //             sourceFile.insertText(astLine.pos, `flag('${astFile.name}', ${astLine.issue});\n`);
-    //         }
-    //     }
-    // }
-
     private static isInTraceProcessBlock(sourceFile: SourceFile, node: Node): boolean {
         let traceProcessBlock: FunctionDeclaration = this.getTraceProcessDeclaration(sourceFile);
         const interval: Interval = [traceProcessBlock.getPos(), traceProcessBlock.getEnd()];
         return isInInterval(node.getStart(), interval);
     }
 
-    private static isFunctionDeclarationLine(astLine: AstLine): boolean {
-        return astLine.astNodes?.[0]?.kind === 'FunctionDeclaration';
-    }
-
     private static addStartTracingFunction(sourceFile: SourceFile): void {
         let traceProcessBlock: Block = this.getTraceProcessBlock(sourceFile);
-        sourceFile.insertText(traceProcessBlock.getStart() + 1, '\nstartTrace();\n');
+        sourceFile.insertText(traceProcessBlock.getEnd() - 1, '\n    endTrace();\n');
+        traceProcessBlock = this.getTraceProcessBlock(sourceFile);
+        sourceFile.insertText(traceProcessBlock.getStart() + 1, '\n    startTrace();\n');
     }
 
     private static getTraceProcessBlock(sourceFile: SourceFile): Block {

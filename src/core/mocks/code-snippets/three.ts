@@ -1,16 +1,28 @@
-const b = 12;
 
-function zzz(a) {
-    if (a > 0) {
-        a = 2;
-    } else if (a < -1) {
-        return 3;
+// 2. Count same chars at same positions in String
+function start(args: string[]): void {
+    let string1 = "Magdeburg";
+    let string2 = "Hamburg";
+
+    let length;
+    if (string1.length < string2.length) {
+        length = string1.length;
+    } else {
+        length = string2.length;
     }
-    return a;
+
+    let counter=0;
+
+    for (let i = 0; i < length; i++) {
+        if (string1.charAt(i) == string2.charAt(i)) {
+            counter++;
+        }
+    }
+    // console.log(counter);
 }
 
 export function traceProcess() {
-    zzz(-2);
+    start([]);
 }
+const console = {log: (...args) => {}}
 
-let a = 3;

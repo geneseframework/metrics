@@ -19,3 +19,7 @@ export function flag(fileName: string, line: number) {
 export function startTrace(): void {
     STARTED_TRACING = true;
 }
+
+export function endTrace(): void {
+    STARTED_TRACING = false;
+}
