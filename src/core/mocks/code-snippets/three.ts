@@ -1,13 +1,16 @@
-const b = 12;
 
-function zzz(a) {
-    if (a > 0) {
 
+function zzz(a: any) {
+    // if (a > 0) {
+    //
+    // }
+    let b = 1;
+    for (let i = 0; i < a.length; i++) {
+        b = b + 1;
     }
 }
 
 export function traceProcess() {
-    zzz(-2);
+    zzz([2, 5, 8]);
 }
 
-let a = 3;

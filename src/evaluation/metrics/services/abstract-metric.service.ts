@@ -28,23 +28,23 @@ export abstract class AbstractMetricService {
         return sum(astFile.astLines.map(a => this.getLineScore(a)));
     }
 
-    getLineScore(astLine: AstLine): number {
+    getLineScore(astLine: AstLine, ...args: any[]): number {
         let total = 0;
         for (const [parameter, weight] of Object.entries(this.metricWeights)) {
             total += !isNaN(astLine[parameter]) ? astLine[parameter] * weight : 0;
         }
+        astLine.score = total;
         return total;
     }
 
     getComments(astLine: AstLine): any {
-        const score: number = this.getLineScore(astLine);
+        const score: number = round(astLine.score, 3);
         if (score === 0) {
             return '';
         }
         let text = `+ ${score} (`;
-        // console.log(chalk.blueBright('this.metricWeightsSSS'), this.metricWeights);
         for (const [parameter, weight] of Object.entries(this.metricWeights)) {
-            text = !isNaN(this[parameter]) && this[parameter] !== 0 ? `${text}${capitalize(parameter)}: +${round(this[parameter] * weight, 1)}, ` : `${text}`;
+            text = !isNaN(astLine[parameter]) && astLine[parameter] !== 0 ? `${text}${capitalize(parameter)}: +${round(astLine[parameter] * weight, 1)}, ` : `${text}`;
         }
         return `${text.slice(0, -2)})`;
     }
