@@ -42,9 +42,8 @@ export abstract class AbstractMetricService {
             return '';
         }
         let text = `+ ${score} (`;
-        // console.log(chalk.blueBright('this.metricWeightsSSS'), this.metricWeights);
         for (const [parameter, weight] of Object.entries(this.metricWeights)) {
-            text = !isNaN(this[parameter]) && this[parameter] !== 0 ? `${text}${capitalize(parameter)}: +${round(this[parameter] * weight, 1)}, ` : `${text}`;
+            text = !isNaN(astLine[parameter]) && astLine[parameter] !== 0 ? `${text}${capitalize(parameter)}: +${round(astLine[parameter] * weight, 1)}, ` : `${text}`;
         }
         return `${text.slice(0, -2)})`;
     }
