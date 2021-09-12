@@ -4,7 +4,6 @@ import { AstModel } from '../../core/models/ast-model/ast.model';
 import { AstFile } from '../../core/models/ast-model/ast-file.model';
 import { ensureDirAndCopy } from '../../core/utils/file-system.util';
 import { execSync } from 'child_process';
-import * as chalk from 'chalk';
 import { Interval, isInInterval } from '../../json-ast-to-ast-model/types/interval.type';
 import { TextToInsert } from './text-to-insert.type';
 
@@ -43,12 +42,10 @@ export abstract class FlagService {
 
     private static flagStatements(sourceFile: SourceFile): void {
         const statements: Statement[] = sourceFile.getStatements().sort((a, b) => b.getPos() - a.getPos());
-        console.log(chalk.magentaBright('STTTT'), statements.map(s => s.getKindName()));
         const flagsToInsert: TextToInsert[] = [];
         for (const statement of statements) {
             flagsToInsert.push(...this.getFlagsToInsert(sourceFile, statement));
         }
-        console.log(chalk.magentaBright('TEXTSSSS TO INSERT'), flagsToInsert);
         this.insertFlags(sourceFile, flagsToInsert);
     }
 
