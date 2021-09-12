@@ -1,12 +1,11 @@
 import { Options } from '../../core/models/options.model';
-import { Block, FunctionDeclaration, SourceFile, SyntaxKind } from 'ts-morph';
+import { Block, FunctionDeclaration, Node, SourceFile, Statement, SyntaxKind } from 'ts-morph';
 import { AstModel } from '../../core/models/ast-model/ast.model';
 import { AstFile } from '../../core/models/ast-model/ast-file.model';
-import { AstLine } from '../../core/models/ast-model/ast-line.model';
 import { ensureDirAndCopy } from '../../core/utils/file-system.util';
 import { execSync } from 'child_process';
-import * as chalk from 'chalk';
 import { Interval, isInInterval } from '../../json-ast-to-ast-model/types/interval.type';
+import { TextToInsert } from './text-to-insert.type';
 
 
 export abstract class FlagService {
@@ -17,7 +16,7 @@ export abstract class FlagService {
         for (const astFile of astModel.astFiles) {
             const sourceFile: SourceFile = Options.flaggedProject.getSourceFile(astFile.name);
             if (this.hasTraceFunction(astFile)) {
-                this.flagAstFile(astFile, sourceFile);
+                this.flagSourceFile(sourceFile);
             }
             this.addLocalModuleScopeInfo(sourceFile);
             sourceFile.saveSync();
@@ -35,38 +34,68 @@ export abstract class FlagService {
         ensureDirAndCopy(source2, target2);
     }
 
-    private static flagAstFile(astFile: AstFile, sourceFile: SourceFile): void {
-        this.flagLines(astFile, sourceFile);
-        sourceFile.addImportDeclaration({defaultImport: '{flag, startTrace}', moduleSpecifier: './flagger/flagger.util.js'});
+    private static flagSourceFile(sourceFile: SourceFile): void {
+        this.flagStatements(sourceFile);
+        sourceFile.addImportDeclaration({defaultImport: '{flag, startTrace, endTrace}', moduleSpecifier: './flagger/flagger.util.js'});
         this.addStartTracingFunction(sourceFile);
     }
 
-    private static flagLines(astFile: AstFile, sourceFile: SourceFile): void {
-        const astLinesInReverseOrder: AstLine[] = astFile.astLines.filter(a => a.astNodes.length > 0)
-            .sort((a, b) => b.issue - a.issue);
-        const astLinesOutsideTraceProcessFunction: AstLine[] = astLinesInReverseOrder.filter(a => !this.isInTraceProcessBlock(a, sourceFile));
-        for (const astLine of astLinesOutsideTraceProcessFunction) {
-            if (this.isFunctionDeclarationLine(astLine)) {
-                sourceFile.insertText(astLine.end, `\nflag('${astFile.name}', ${astLine.issue});`);
-            } else {
-                sourceFile.insertText(astLine.pos, `flag('${astFile.name}', ${astLine.issue});\n`);
-            }
+    private static flagStatements(sourceFile: SourceFile): void {
+        const statements: Statement[] = sourceFile.getStatements().sort((a, b) => b.getPos() - a.getPos());
+        const flagsToInsert: TextToInsert[] = [];
+        for (const statement of statements) {
+            flagsToInsert.push(...this.getFlagsToInsert(sourceFile, statement));
+        }
+        this.insertFlags(sourceFile, flagsToInsert);
+    }
+
+    private static getFlagsToInsert(sourceFile: SourceFile, node: Node): TextToInsert[] {
+        const flagsToInsert: TextToInsert[] = [];
+        if (this.isInTraceProcessBlock(sourceFile, node)) {
+            return [];
+        }
+        switch (node.getKind()) {
+            case SyntaxKind.FunctionDeclaration:
+                flagsToInsert.push(this.getFlagToInsertForFunctionDeclaration(node as FunctionDeclaration));
+                break;
+            case SyntaxKind.ForInStatement:
+            case SyntaxKind.ForOfStatement:
+            case SyntaxKind.ForStatement:
+            case SyntaxKind.IfStatement:
+            case SyntaxKind.ReturnStatement:
+            case SyntaxKind.VariableStatement:
+                flagsToInsert.push({position: node.getPos(), text: `\nflag('${sourceFile.getBaseName()}', ${node.getStartLineNumber()});`, sortPosition: node.getPos()});
+                break;
+        }
+        for (const child of node.getChildren()) {
+            flagsToInsert.push(...this.getFlagsToInsert(sourceFile, child));
+        }
+        return flagsToInsert;
+    }
+
+    private static getFlagToInsertForFunctionDeclaration(functionDeclaration: FunctionDeclaration): TextToInsert {
+        const block: Block = functionDeclaration.getFirstChildByKind(SyntaxKind.Block);
+        return {position: block.getStart() + 1, text: `\nflag('${functionDeclaration.getSourceFile().getBaseName()}', ${functionDeclaration.getStartLineNumber()});`, sortPosition: block.getStart() - 0.5};
+    }
+
+    private static insertFlags(sourceFile: SourceFile, flagsToInsert: TextToInsert[]): void {
+        flagsToInsert = flagsToInsert.sort((a, b) => b.sortPosition - a.sortPosition);
+        for (const flagToInsert of flagsToInsert) {
+            sourceFile.insertText(flagToInsert.position, flagToInsert.text);
         }
     }
 
-    private static isInTraceProcessBlock(astLine: AstLine, sourceFile: SourceFile): boolean {
+    private static isInTraceProcessBlock(sourceFile: SourceFile, node: Node): boolean {
         let traceProcessBlock: FunctionDeclaration = this.getTraceProcessDeclaration(sourceFile);
         const interval: Interval = [traceProcessBlock.getPos(), traceProcessBlock.getEnd()];
-        return isInInterval(astLine.pos, interval);
-    }
-
-    private static isFunctionDeclarationLine(astLine: AstLine): boolean {
-        return astLine.astNodes?.[0]?.kind === 'FunctionDeclaration';
+        return isInInterval(node.getStart(), interval);
     }
 
     private static addStartTracingFunction(sourceFile: SourceFile): void {
         let traceProcessBlock: Block = this.getTraceProcessBlock(sourceFile);
-        sourceFile.insertText(traceProcessBlock.getStart() + 1, '\nstartTrace();\n');
+        sourceFile.insertText(traceProcessBlock.getEnd() - 1, '\n    endTrace();\n');
+        traceProcessBlock = this.getTraceProcessBlock(sourceFile);
+        sourceFile.insertText(traceProcessBlock.getStart() + 1, '\n    startTrace();\n');
     }
 
     private static getTraceProcessBlock(sourceFile: SourceFile): Block {

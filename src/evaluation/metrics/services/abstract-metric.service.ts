@@ -6,6 +6,7 @@ import { round } from '../../../core/utils/numbers.util';
 import { ReportLine } from '../../../report-generation/models/report-line.model';
 import { capitalize } from '../../../core/utils/strings.util';
 import { sum } from '../../../core/utils/arrays.util';
+import * as chalk from 'chalk';
 
 export abstract class AbstractMetricService {
 
@@ -41,8 +42,9 @@ export abstract class AbstractMetricService {
             return '';
         }
         let text = `+ ${score} (`;
+        // console.log(chalk.blueBright('this.metricWeightsSSS'), this.metricWeights);
         for (const [parameter, weight] of Object.entries(this.metricWeights)) {
-            text = this[parameter] > 0 ? `${text}${capitalize(parameter)}: +${round(this[parameter] * weight, 1)}, ` : `${text}`;
+            text = !isNaN(this[parameter]) && this[parameter] !== 0 ? `${text}${capitalize(parameter)}: +${round(this[parameter] * weight, 1)}, ` : `${text}`;
         }
         return `${text.slice(0, -2)})`;
     }
