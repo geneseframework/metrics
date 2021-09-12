@@ -12,7 +12,6 @@ import { EvaluationService } from './evaluation/evaluation.service';
 import { ReportService } from './report-generation/report.service';
 import { Measure } from './report-generation/models/measure.model';
 import { DatasetService } from './dataset-import/dataset.service';
-import { OptimizationService } from './optimization/optimization.service';
 import { CorrelationService } from './correlation/correlation.service';
 import { DynamicService } from './dynamic-metrics/dynamic.service';
 import { haveSameElements } from './core/utils/arrays.util';
@@ -20,8 +19,8 @@ import { ReportModel } from './report-generation/models/report.model';
 
 
 async function start(): Promise<void> {
-    const pathToAnalyse = `${process.cwd()}/src/core/mocks/code-snippets`;
-    // const pathToAnalyse = `${process.cwd()}/src/core/mocks/siegmund-2012`;
+    // const pathToAnalyse = `${process.cwd()}/src/core/mocks/code-snippets`;
+    const pathToAnalyse = `${process.cwd()}/src/core/mocks/siegmund-2012`;
     Options.setOptions(pathToAnalyse);
     createOutDir();
     console.log(chalk.yellowBright('Json AST generation...'));

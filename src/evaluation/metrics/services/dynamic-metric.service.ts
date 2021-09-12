@@ -17,16 +17,15 @@ export class DynamicMetricService extends AbstractMetricService {
         "ifs": 0.5,
         "loops": 1,
         "nesting": 0.5,
-        "repetition": 0.7,
-        "recursions": 2,
-        "words": 9
+        "repetition": 0.4,
+        "words": 0.1
     }
 
     parametersToOptimize = ['ifs', 'loops', 'nesting'];
+    // parametersToOptimize = ['ifs', 'loops', 'nesting', 'repetition'];
 
     evaluate(astFile: AstFile, reportFile: ReportSnippet): void {
         this.astFile = astFile;
-        // this.evaluateMetric(astFile.astLines, reportFile);
         const linesRepetitions: LineRepetitions[] = astFile.astLines.map(a => {return {issue: a.issue, numberOfRepetitions: 0}});
         for (const astLine of astFile.astLines) {
             const lineRepetitions: LineRepetitions = linesRepetitions.find(l => l.issue === astLine.issue);
@@ -38,47 +37,26 @@ export class DynamicMetricService extends AbstractMetricService {
         }
     }
 
-    // getNumberOfRepetitions(astLine: AstLine, lineRepetitions: LineRepetitions[]): number {
-    //     return lineRepetitions.find(l => l.issue === astLine.issue);
-    // }
 
-    addRepetition(astLine: AstLine, lineRepetitions: LineRepetitions[]): void {
-        const previousLineRepetition: LineRepetitions = lineRepetitions.find(l => l.issue === astLine.issue);
-        if (previousLineRepetition) {
-            previousLineRepetition.numberOfRepetitions ++;
-        } else {
-            lineRepetitions.push({issue: astLine.issue, numberOfRepetitions: 1});
+    getFileScore(astFile: AstFile): number {
+        let score = 0;
+        const linesRepetitions: LineRepetitions[] = astFile.astLines.map(a => {return {issue: a.issue, numberOfRepetitions: 0}});
+        for (const astLine of astFile.astLines) {
+            const lineRepetitions: LineRepetitions = linesRepetitions.find(l => l.issue === astLine.issue);
+            score += this.getLineScore(astLine, lineRepetitions.numberOfRepetitions);
+            lineRepetitions.numberOfRepetitions++;
         }
+        return score;
     }
-
-    // getFileScore(astFile: AstFile): number {
-    //     let score = 0;
-    //     for (const astLine of astFile.astLines) {
-    //         score += super.getLineScore(astLine) * this.metricWeights['repetition'];
-    //     }
-    // console.log(chalk.blueBright('GET F SCORRRR'), astFile.name, score);
-    //     return score;
-    // }
 
     getLineScore(astLine: AstLine, numberOfRepetitions: number): number {
         let total = 0;
-        if (this.astFile.name === 'three.ts') {
-            console.log(chalk.blueBright('GET L SCORRRRR'), this.astFile.name, astLine.issue, astLine.text);
-        }
+        const absRepetition = Math.abs(this.metricWeights['repetition']);
+        const repetitionCoefficient: number = Math.pow(absRepetition, numberOfRepetitions);
         for (const [parameter, weight] of Object.entries(this.metricWeights)) {
-            total += !isNaN(astLine[parameter]) ? astLine[parameter] * weight : 0;
-        }
-        return total;
-    }
-
-    setLineScore(astLine: AstLine): void {
-        if (this.astFile.name === 'three.ts') {
-            console.log(chalk.blueBright('GET L SCORRRRR'), this.astFile.name, astLine.issue, astLine.text);
-        }
-        let total = 0;
-        for (const [parameter, weight] of Object.entries(this.metricWeights)) {
-            total += !isNaN(astLine[parameter]) ? astLine[parameter] * weight : 0;
+            total += !isNaN(astLine[parameter]) ? astLine[parameter] * weight * repetitionCoefficient : 0;
         }
         astLine.score = total;
+        return total;
     }
 }

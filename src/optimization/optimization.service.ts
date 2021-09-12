@@ -39,9 +39,9 @@ export class OptimizationService {
 
     private static applyFitnessFunctionAndOptimizeMetricWeights(values: number[]): void {
         const solution = nelderMead(this.fitnessFunction.bind(this), values, {maxIterations: 200});
-        // console.log(chalk.magentaBright('SOLUTION : '), solution);
-        // console.log(chalk.magentaBright('OPTIMIZED METRIC : '), this.metricService.metricWeights);
-        // console.log(chalk.magentaBright('PEARSON : '), 1 - solution.fx);
+        console.log(chalk.magentaBright('SOLUTION : '), solution);
+        console.log(chalk.magentaBright('OPTIMIZED METRIC : '), this.metricService.metricWeights);
+        console.log(chalk.magentaBright('PEARSON : '), 1 - solution.fx);
     }
 
     private static fitnessFunction(values: number[]): number {

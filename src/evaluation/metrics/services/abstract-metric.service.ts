@@ -33,11 +33,13 @@ export abstract class AbstractMetricService {
         for (const [parameter, weight] of Object.entries(this.metricWeights)) {
             total += !isNaN(astLine[parameter]) ? astLine[parameter] * weight : 0;
         }
+        astLine.score = total;
         return total;
     }
 
     getComments(astLine: AstLine): any {
-        const score: number = this.getLineScore(astLine);
+        // const score: number = 0;
+        const score: number = astLine.score;
         if (score === 0) {
             return '';
         }
