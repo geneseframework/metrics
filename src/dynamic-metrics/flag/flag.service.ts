@@ -1,5 +1,5 @@
 import { Options } from '../../core/models/options.model';
-import { Block, FunctionDeclaration, SourceFile, SyntaxKind } from 'ts-morph';
+import { Block, FunctionDeclaration, SourceFile, Statement, SyntaxKind } from 'ts-morph';
 import { AstModel } from '../../core/models/ast-model/ast.model';
 import { AstFile } from '../../core/models/ast-model/ast-file.model';
 import { AstLine } from '../../core/models/ast-model/ast-line.model';
@@ -7,6 +7,7 @@ import { ensureDirAndCopy } from '../../core/utils/file-system.util';
 import { execSync } from 'child_process';
 import * as chalk from 'chalk';
 import { Interval, isInInterval } from '../../json-ast-to-ast-model/types/interval.type';
+import { TextToInsert } from './text-to-insert.type';
 
 
 export abstract class FlagService {
@@ -36,9 +37,48 @@ export abstract class FlagService {
     }
 
     private static flagAstFile(astFile: AstFile, sourceFile: SourceFile): void {
-        this.flagLines(astFile, sourceFile);
+        this.flagStatements(astFile, sourceFile);
+        // this.flagLines(astFile, sourceFile);
         sourceFile.addImportDeclaration({defaultImport: '{flag, startTrace}', moduleSpecifier: './flagger/flagger.util.js'});
         this.addStartTracingFunction(sourceFile);
+    }
+
+    private static flagStatements(astFile: AstFile, sourceFile: SourceFile): void {
+        const statements: Statement[] = sourceFile.getStatements().sort((a, b) => b.getPos() - a.getPos());
+        console.log(chalk.magentaBright('STTTT'), statements.map(s => s.getKindName()));
+        const flagsToInsert: TextToInsert[] = [];
+        for (const statement of statements) {
+            flagsToInsert.push(...this.getFlagsToInsert(sourceFile, statement));
+        }
+        console.log(chalk.magentaBright('TEXTSSSS TO INSERT'), flagsToInsert);
+        this.insertFlags(sourceFile, flagsToInsert);
+    }
+
+    private static getFlagsToInsert(sourceFile: SourceFile, statement: Statement): TextToInsert[] {
+        const flagsToInsert: TextToInsert[] = [];
+        if (this.isFunctionDeclaration(statement)) {
+            return this.addFlagsForFunctionDeclaration(statement);// sourceFile.insertText(statement.getEnd(), `\nflag('${sourceFile.getBaseName()}', ${statement.getEndLineNumber()});`);
+        } else {
+            console.log(chalk.cyanBright('NOT FUNC DECLLLL'), statement.getKindName(), `\nflag('${sourceFile.getBaseName()}', ${statement.getEndLineNumber()});`);
+            return [{position: statement.getPos(), text: `\nflag('${sourceFile.getBaseName()}', ${statement.getEndLineNumber()});`}];
+        }
+    }
+
+    private static isFunctionDeclaration(statement: Statement): statement is FunctionDeclaration {
+        return statement.getKindName() === 'FunctionDeclaration';
+    }
+
+    private static addFlagsForFunctionDeclaration(functionDeclaration: FunctionDeclaration): TextToInsert[] {
+        const block: Block = functionDeclaration.getFirstChildByKind(SyntaxKind.Block);
+        const flagsToInsert: TextToInsert[] = [{position: block.getStart() + 1, text: `\nflag('${functionDeclaration.getSourceFile().getBaseName()}', ${functionDeclaration.getEndLineNumber()});`}];
+        return flagsToInsert;
+    }
+
+    private static insertFlags(sourceFile: SourceFile, flagsToInsert: TextToInsert[]): void {
+        flagsToInsert = flagsToInsert.sort((a, b) => b.position - a.position);
+        for (const flagToInsert of flagsToInsert) {
+            sourceFile.insertText(flagToInsert.position, flagToInsert.text);
+        }
     }
 
     private static flagLines(astFile: AstFile, sourceFile: SourceFile): void {
@@ -48,7 +88,7 @@ export abstract class FlagService {
         for (const astLine of astLinesOutsideTraceProcessFunction) {
             if (this.isFunctionDeclarationLine(astLine)) {
                 sourceFile.insertText(astLine.end, `\nflag('${astFile.name}', ${astLine.issue});`);
-            } else {
+            } else if (astLine.pos < sourceFile.getEnd()) {
                 sourceFile.insertText(astLine.pos, `flag('${astFile.name}', ${astLine.issue});\n`);
             }
         }
